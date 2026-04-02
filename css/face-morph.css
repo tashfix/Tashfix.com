@@ -1669,11 +1669,19 @@ body.player-expanded .morph__menu-line {
   .morph__volume-row { width: 76px; }
   .morph__info-card { display: none !important; }
 
-  /* Hero intro — already left-aligned, just adjust spacing on mobile */
+  /* Hero intro — keep it well within the viewport on mobile */
   .morph__hero-intro {
-    bottom: 24px;
+    bottom: auto;
+    top: 50%;
+    transform: translateY(10%);
     left: 20px;
     right: 20px;
+  }
+
+  /* Keep revealed state working with new positioning */
+  .morph__hero-intro.revealed {
+    opacity: 1;
+    transform: translateY(10%);
   }
 
   /* Stronger scrim on mobile — face fills more of the frame */

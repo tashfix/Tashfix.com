@@ -19,10 +19,14 @@
 
   var mobileGradient = document.getElementById('mobile-top-gradient');
 
+  // On mobile, push the zoom-out start down so the first scroll doesn't
+  // immediately swallow the "View My Work" button
+  var zoomStart = window.innerWidth <= 768 ? 'top -15%' : 'top top';
+
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: hero,
-      start: 'top top',
+      start: zoomStart,
       end: 'bottom bottom',
       pin: '.zoomout__sticky',
       scrub: 0.6,
