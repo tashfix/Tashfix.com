@@ -56,8 +56,8 @@
     mobileTl.to(morphOverlay, { opacity: 0, duration: 0.45, ease: 'power1.in' }, 0);
     mobileTl.fromTo(morphAura, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'none' }, 0);
 
-    // Portrait: stays visible through the first half, fades out in the second half
-    mobileTl.to(portraitCtn, { opacity: 0, duration: 0.5, ease: 'power1.inOut' }, 0.5);
+    // Portrait: no animation — scrolls off-screen like a static image.
+    // The CSS mask-image + bg gradient handle the visual blend.
 
     // Background crossfade: beige → cobalt — starts mid-scroll, completes at 100%
     mobileTl.to(heroBg, {

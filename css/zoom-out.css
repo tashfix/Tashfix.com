@@ -130,6 +130,11 @@
     position: relative;
   }
 
+  /* No GPU transform hints — portrait is purely static on mobile */
+  .zoomout__portrait-container {
+    will-change: auto;
+  }
+
   /* ── Smooth bottom fade on portrait ──
      Mask only affects the portrait images (canvas, metallic, static),
      NOT the hero-intro text (which lives in the sibling morph__overlay). */
