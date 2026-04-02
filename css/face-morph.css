@@ -563,11 +563,10 @@
 .morph__hero-intro::before {
   content: '';
   position: absolute;
-  inset: -40px -80px -60px -48px;
-  background: radial-gradient(ellipse at bottom left, rgba(245, 241, 235, 0.88) 0%, rgba(245, 241, 235, 0.5) 50%, rgba(245, 241, 235, 0) 78%);
+  inset: -60px -160px -80px -60px;
+  background: radial-gradient(ellipse at bottom left, rgba(245, 241, 235, 0.88) 0%, rgba(245, 241, 235, 0.55) 35%, rgba(245, 241, 235, 0) 68%);
   z-index: -1;
   pointer-events: none;
-  border-radius: 0;
 }
 
 .morph__hero-role {
