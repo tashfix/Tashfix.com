@@ -119,14 +119,14 @@
 }
 
 @media (max-width: 768px) {
+  /* No pin, no extra scroll height — section is exactly one viewport tall */
   .zoomout {
+    height: 100vh;
     overflow: hidden;
-    height: 110vh;
   }
 
-  /* Fade the portrait's bottom edge via CSS mask so the hard crop disappears */
-  .zoomout__portrait-clip {
-    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
-    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+  /* No sticky pin on mobile — the section scrolls normally */
+  .zoomout__sticky {
+    position: relative;
   }
 }

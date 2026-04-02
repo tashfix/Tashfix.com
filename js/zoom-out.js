@@ -9,6 +9,7 @@
   var sigSvg        = document.getElementById('zoomout-signature');
   var morphOverlay  = document.getElementById('morph-overlay');
   var morphAura     = document.getElementById('morph-aura');
+  var mobileGradient = document.getElementById('mobile-top-gradient');
 
   var tStrokes  = sigSvg.querySelectorAll('use.t');
   var aStrokes  = sigSvg.querySelectorAll('use.a');
@@ -17,32 +18,94 @@
   // Initialize scroll progress tracker
   window.TashBrand.zoomProgress = 0;
 
-  var mobileGradient = document.getElementById('mobile-top-gradient');
+  // ── Shared logo references ──────────────────────────────────
+  var siteLogo = document.getElementById('site-logo');
+  var logoDark  = siteLogo ? siteLogo.querySelector('.site-logo__dark')  : null;
+  var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
+  var menuBtn   = document.getElementById('menu-btn');
 
-  // On mobile, push the zoom-out start down so the first scroll doesn't
-  // immediately swallow the "View My Work" button
-  var zoomStart = window.innerWidth <= 768 ? 'top -15%' : 'top top';
+  // ══════════════════════════════════════════════════════════════
+  // MOBILE PATH — simple crossfade, no pin, no zoom animation
+  // ══════════════════════════════════════════════════════════════
+  if (window.innerWidth <= 768) {
+    // Silence signature strokes so they never flash on mobile
+    gsap.set([tStrokes, aStrokes, xbStrokes], { opacity: 0 });
 
+    var mobileTl = gsap.timeline({
+      scrollTrigger: {
+        trigger: hero,
+        start: 'top top',
+        end: 'bottom top',
+        scrub: 0.4,
+        onUpdate: function(self) {
+          window.TashBrand.zoomProgress = self.progress;
+          if (mobileGradient) {
+            mobileGradient.style.opacity = Math.max(0, 1 - self.progress * 5);
+          }
+        },
+        onLeave: function() {
+          if (mobileGradient) mobileGradient.style.opacity = '0';
+        },
+        onEnterBack: function() {
+          if (mobileGradient) mobileGradient.style.opacity = '1';
+        }
+      }
+    });
+
+    // Hero text + aura: fade out during the first half of scroll
+    mobileTl.to(morphOverlay, { opacity: 0, duration: 0.45, ease: 'power1.in' }, 0);
+    mobileTl.fromTo(morphAura, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'none' }, 0);
+
+    // Portrait: stays visible through the first half, fades out in the second half
+    mobileTl.to(portraitCtn, { opacity: 0, duration: 0.5, ease: 'power1.inOut' }, 0.5);
+
+    // Background crossfade: beige → cobalt — starts mid-scroll, completes at 100%
+    mobileTl.to(heroBg, {
+      backgroundColor: '#0A1A4A',
+      duration: 0.5,
+      ease: 'power1.inOut',
+    }, 0.5);
+
+    // Logo: dark → light swap at ~40% scroll
+    if (logoDark && logoLight) {
+      mobileTl.to(logoDark,  { opacity: 0, duration: 0.25, ease: 'power2.inOut' }, 0.4);
+      mobileTl.to(logoLight, { opacity: 1, duration: 0.25, ease: 'power2.inOut' }, 0.4);
+    }
+
+    // Menu button: crossfade to light
+    if (menuBtn) {
+      var menuLines = menuBtn.querySelectorAll('.morph__menu-line');
+      mobileTl.to(menuBtn, {
+        borderColor: 'rgba(255,255,255,0.45)',
+        duration: 0.25,
+        ease: 'power2.inOut',
+      }, 0.4);
+      menuLines.forEach(function(line) {
+        mobileTl.to(line, {
+          backgroundColor: 'rgba(255,255,255,0.85)',
+          duration: 0.25,
+          ease: 'power2.inOut',
+        }, 0.4);
+      });
+    }
+
+    return; // skip desktop animation
+  }
+
+  // ══════════════════════════════════════════════════════════════
+  // DESKTOP PATH — full pin + zoom animation
+  // ══════════════════════════════════════════════════════════════
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: hero,
-      start: zoomStart,
+      start: 'top top',
       end: 'bottom bottom',
       pin: '.zoomout__sticky',
       scrub: 0.6,
       anticipatePin: 1,
       onUpdate: function(self) {
         window.TashBrand.zoomProgress = self.progress;
-        if (mobileGradient) {
-          mobileGradient.style.opacity = Math.max(0, 1 - self.progress * 5);
-        }
       },
-      onLeave: function() {
-        if (mobileGradient) mobileGradient.style.opacity = '0';
-      },
-      onEnterBack: function() {
-        if (mobileGradient) mobileGradient.style.opacity = '1';
-      }
     }
   });
 
@@ -61,7 +124,7 @@
     ease: 'power1.inOut',
   }, 0.02);
 
-  // Phase 3: Show static portrait over canvas + desaturate clip (not container, so signature stays orange)
+  // Phase 3: Show static portrait over canvas + desaturate clip
   tl.to('#zoomout-portrait-static', {
     opacity: 1,
     duration: 0.15,
@@ -82,12 +145,8 @@
   }, 0);
 
   // Phase 4b: Logo crossfade (dark → light) and shrink into corner
-  var siteLogo = document.getElementById('site-logo');
-  if (siteLogo) {
-    var logoDark = siteLogo.querySelector('.site-logo__dark');
-    var logoLight = siteLogo.querySelector('.site-logo__light');
-
-    tl.to(logoDark, { opacity: 0, duration: 0.2, ease: 'power2.inOut' }, 0.05);
+  if (siteLogo && logoDark && logoLight) {
+    tl.to(logoDark,  { opacity: 0, duration: 0.2, ease: 'power2.inOut' }, 0.05);
     tl.to(logoLight, { opacity: 1, duration: 0.2, ease: 'power2.inOut' }, 0.05);
     tl.to(siteLogo, {
       scale: 0.55,
@@ -96,8 +155,7 @@
     }, 0.05);
   }
 
-  // Phase 4c: Hamburger button shrinks + crossfades to light mode (mirrors logo)
-  var menuBtn = document.getElementById('menu-btn');
+  // Phase 4c: Hamburger button shrinks + crossfades to light mode
   if (menuBtn) {
     var menuLines = menuBtn.querySelectorAll('.morph__menu-line');
     tl.to(menuBtn, {
@@ -114,7 +172,6 @@
       }, 0.05);
     });
   }
-
 
   tl.fromTo(morphAura,
     { opacity: 1 },
