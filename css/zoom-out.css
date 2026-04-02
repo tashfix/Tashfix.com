@@ -119,22 +119,15 @@
 }
 
 @media (max-width: 768px) {
-  /* Reduce scroll distance — desktop needs 220vh but mobile feels too far */
+  /* Tight scroll distance on mobile — 110vh gives just enough room for the animation */
   .zoomout {
     overflow: hidden;
-    height: 140vh;
+    height: 110vh;
   }
 
-  /* Bottom gradient fades portrait into cobalt — must sit above morph overlay (z:100) */
-  .zoomout__sticky::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 32vh;
-    background: linear-gradient(to bottom, transparent 0%, #0A1A4A 100%);
-    z-index: 150;
-    pointer-events: none;
+  /* Fade the portrait's bottom edge via CSS mask so the hard crop disappears */
+  .zoomout__portrait-clip {
+    -webkit-mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
+    mask-image: linear-gradient(to bottom, black 55%, transparent 100%);
   }
 }
