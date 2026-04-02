@@ -1685,8 +1685,8 @@ body.player-expanded .morph__menu-line {
 
   /* Stronger scrim on mobile — face fills more of the frame */
   .morph__hero-intro::before {
-    inset: -40px -24px -60px -24px;
-    background: radial-gradient(ellipse at bottom left, rgba(245, 241, 235, 0.94) 0%, rgba(245, 241, 235, 0.6) 55%, rgba(245, 241, 235, 0) 80%);
+    inset: -80px -120px -120px -30px;
+    background: radial-gradient(ellipse at bottom left, rgba(245, 241, 235, 0.94) 0%, rgba(245, 241, 235, 0.6) 38%, rgba(245, 241, 235, 0) 65%);
   }
 
   .morph__hero-headline {
