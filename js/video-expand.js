@@ -332,12 +332,8 @@
       if (isExpanded) return;
       isExpanded = true;
 
-      // Snapshot current position before going fixed
+      // Insert a placeholder to keep scroll height stable
       var rect = lastItem.getBoundingClientRect();
-      var vw = window.innerWidth;
-      var vh = window.innerHeight;
-
-      // Insert a placeholder to keep scroll height stable (prevents jitter)
       placeholder = document.createElement('div');
       placeholder.style.width = rect.width + 'px';
       placeholder.style.height = rect.height + 'px';
@@ -345,23 +341,24 @@
       placeholder.style.visibility = 'hidden';
       lastItem.parentElement.insertBefore(placeholder, lastItem);
 
-      // Go fixed in place — no reparenting, just override styles via cssText
-      lastItem.style.cssText = 'position:fixed!important; left:' + rect.left + 'px!important; top:' + rect.top + 'px!important; width:' + rect.width + 'px!important; height:' + rect.height + 'px!important; max-width:none!important; z-index:8000!important; margin:0!important; pointer-events:none!important; opacity:1!important;';
+      // Skip the zoom animation — go straight to fullscreen with a fade
+      if (lastCaption) lastCaption.style.opacity = '0';
+      lastItem.style.cssText = 'position:fixed!important; left:0!important; top:0!important; width:100vw!important; height:100vh!important; max-width:none!important; z-index:8000!important; margin:0!important; pointer-events:none!important; opacity:0!important;';
+      lastMedia.style.setProperty('border-radius', '0px', 'important');
+      lastMedia.style.setProperty('max-height', 'none', 'important');
+      lastMedia.style.setProperty('aspect-ratio', 'auto', 'important');
+      lastMedia.style.setProperty('width', '100%', 'important');
+      lastMedia.style.setProperty('height', '100%', 'important');
+      lastMedia.style.setProperty('object-fit', 'cover', 'important');
 
-      // Fade caption
-      if (lastCaption) {
-        gsap.to(lastCaption, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      }
-
-      // Animate to fullscreen
-      expandTl = gsap.timeline({
+      // Fade in
+      gsap.to(lastItem, { opacity: 1, duration: 0.4, ease: 'power2.out',
         onComplete: function() {
           if (heroVideo) {
             heroVideo.currentTime = 0;
             var playPromise = heroVideo.play();
             if (playPromise && playPromise.catch) {
               playPromise.catch(function() {
-                // Safari may reject the first attempt — retry once after a short delay
                 setTimeout(function() {
                   var retry = heroVideo.play();
                   if (retry && retry.catch) retry.catch(function() {});
@@ -372,30 +369,9 @@
         }
       });
 
-      expandTl.to({ p: 0 }, {
-        p: 1,
-        duration: 1.2,
-        ease: 'power2.inOut',
-        onUpdate: function() {
-          var p = this.targets()[0].p;
-          var curLeft   = rect.left * (1 - p);
-          var curTop    = rect.top * (1 - p);
-          var curWidth  = rect.width + (vw - rect.width) * p;
-          var curHeight = rect.height + (vh - rect.height) * p;
-          var curRadius = 6 * (1 - p);
-          lastItem.style.cssText = 'position:fixed!important; left:' + curLeft + 'px!important; top:' + curTop + 'px!important; width:' + curWidth + 'px!important; height:' + curHeight + 'px!important; max-width:none!important; z-index:8000!important; margin:0!important; pointer-events:none!important; opacity:1!important;';
-          lastMedia.style.setProperty('border-radius', curRadius + 'px', 'important');
-          lastMedia.style.setProperty('max-height', 'none', 'important');
-          lastMedia.style.setProperty('aspect-ratio', 'auto', 'important');
-          lastMedia.style.setProperty('width', '100%', 'important');
-          lastMedia.style.setProperty('height', '100%', 'important');
-          lastMedia.style.setProperty('object-fit', 'cover', 'important');
-        }
-      });
-
       // Swap logo + hamburger to white
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.4, delay: 0.6, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.4, delay: 0.6, ease: 'power2.out' });
+      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
       mSetMenuLight();
     }
 
@@ -405,32 +381,34 @@
 
       if (expandTl) { expandTl.kill(); expandTl = null; }
 
-      if (heroVideo) {
-        heroVideo.pause();
-        heroVideo.currentTime = 0;
-        heroVideo.style.filter = '';
-      }
+      // Fade out, then clean up
+      gsap.to(lastItem, { opacity: 0, duration: 0.3, ease: 'power2.in',
+        onComplete: function() {
+          if (heroVideo) {
+            heroVideo.pause();
+            heroVideo.currentTime = 0;
+            heroVideo.style.filter = '';
+          }
 
-      // Hide quotes
-      if (videoQuotesMobile) {
-        videoQuotesMobile.classList.remove('visible');
-        mobileQuotesShown = false;
-      }
+          if (videoQuotesMobile) {
+            videoQuotesMobile.classList.remove('visible');
+            mobileQuotesShown = false;
+          }
 
-      // Clear all inline overrides
-      lastItem.style.cssText = '';
-      lastMedia.style.cssText = '';
-      if (lastCaption) gsap.set(lastCaption, { opacity: 1 });
+          lastItem.style.cssText = '';
+          lastMedia.style.cssText = '';
+          if (lastCaption) gsap.set(lastCaption, { opacity: 1 });
 
-      // Remove placeholder
-      if (placeholder && placeholder.parentElement) {
-        placeholder.parentElement.removeChild(placeholder);
-        placeholder = null;
-      }
+          if (placeholder && placeholder.parentElement) {
+            placeholder.parentElement.removeChild(placeholder);
+            placeholder = null;
+          }
+        }
+      });
 
-      // Restore logo + hamburger
-      if (logoDark) gsap.set(logoDark, { opacity: 1 });
-      if (logoLight) gsap.set(logoLight, { opacity: 0 });
+      // Restore logo + hamburger immediately
+      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
       mSetMenuDark();
     }
 

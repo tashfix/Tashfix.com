@@ -752,9 +752,10 @@
     padding: 0;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    padding-top: 35vh;
+    padding-top: 18vh;
     padding-bottom: 3rem;
-    background: linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.5) 30%, rgba(0,0,0,0.7) 100%);
+    /* Opaque from top so video beneath is never visible when scrolling */
+    background: linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.72) 40%, rgba(0,0,0,0.65) 100%);
   }
 
   .video-quotes__item {
@@ -771,10 +772,9 @@
     margin-bottom: 0.6rem;
   }
 
-  /* Show only Alice Lee (1st) and So Eun Ahn (3rd) on mobile */
+  /* Show Alice Lee (1st), So Eun Ahn (3rd), Ashaya Sharma (5th) on mobile */
   .video-quotes__item:nth-child(2),
-  .video-quotes__item:nth-child(4),
-  .video-quotes__item:nth-child(5) {
+  .video-quotes__item:nth-child(4) {
     display: none;
   }
 
