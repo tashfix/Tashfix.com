@@ -341,9 +341,17 @@
       placeholder.style.visibility = 'hidden';
       lastItem.parentElement.insertBefore(placeholder, lastItem);
 
-      // Skip the zoom animation — go straight to fullscreen with a fade
+      // Kill any CSS transitions on the media element so there's no slide animation
+      lastMedia.style.setProperty('transition', 'none', 'important');
+
+      // Lock body scroll so the page behind the overlay can't be scrolled
+      document.body.style.overflow = 'hidden';
+      document.body.style.position = 'fixed';
+      document.body.style.width = '100%';
+
+      // Snap directly to fullscreen, start transparent for fade-in
       if (lastCaption) lastCaption.style.opacity = '0';
-      lastItem.style.cssText = 'position:fixed!important; left:0!important; top:0!important; width:100vw!important; height:100vh!important; max-width:none!important; z-index:8000!important; margin:0!important; pointer-events:none!important; opacity:0!important;';
+      lastItem.style.cssText = 'position:fixed!important; left:0!important; top:0!important; width:100vw!important; height:100vh!important; max-width:none!important; z-index:8000!important; margin:0!important; pointer-events:none!important; opacity:0!important; transition:none!important;';
       lastMedia.style.setProperty('border-radius', '0px', 'important');
       lastMedia.style.setProperty('max-height', 'none', 'important');
       lastMedia.style.setProperty('aspect-ratio', 'auto', 'important');
@@ -403,6 +411,11 @@
             placeholder.parentElement.removeChild(placeholder);
             placeholder = null;
           }
+
+          // Unlock body scroll
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
         }
       });
 
