@@ -2,10 +2,16 @@
    FOOTER — gradient fade to black, contact + copyright
    ═══════════════════════════════════════════════════════════ */
 
+/* Desktop: footer is embedded in testimonial overlay — hide standalone */
+@media (min-width: 769px) {
+  .site-footer {
+    display: none;
+  }
+}
+
 .site-footer {
   position: relative;
   z-index: 10;
-  /* Desktop: scrolls in behind the dark testimonial overlay */
   padding: clamp(12rem, 22vh, 16rem) 0 clamp(2.5rem, 4vh, 3.5rem);
   background: #000000;
   margin-top: 0;

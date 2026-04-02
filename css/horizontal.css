@@ -297,7 +297,7 @@
   opacity: 0;
   will-change: transform, opacity;
   z-index: 1;
-  cursor: pointer;
+  cursor: default;
 }
 
 .hscroll__item:hover {
@@ -585,16 +585,26 @@
   top: 0;
   left: 0;
   right: 0;
+  bottom: 0;
   z-index: 8500;
   display: flex;
   flex-wrap: wrap;
-  align-items: stretch;
+  align-items: flex-start;
+  align-content: center;
   justify-content: center;
   gap: clamp(0.75rem, 1.5vw, 1.5rem);
-  padding: clamp(8rem, 16vh, 12rem) 3vw 0;
+  padding: 0 3vw;
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.8s ease;
+}
+
+/* Desktop: hide 4th and 5th testimonial cards — keep to one row */
+@media (min-width: 769px) {
+  .video-quotes__item:nth-child(4),
+  .video-quotes__item:nth-child(5) {
+    display: none;
+  }
 }
 
 .video-quotes.visible {
@@ -736,6 +746,98 @@
   transform: translateX(3px);
 }
 
+/* ── Embedded footer inside testimonial overlay (desktop) ── */
+.video-quotes__footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  padding: clamp(3rem, 5vh, 4rem) 3vw clamp(1.2rem, 2vh, 1.8rem);
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(0, 0, 0, 0.7) 30%,
+    rgba(0, 0, 0, 0.92) 60%,
+    #000000 85%);
+  text-align: center;
+  pointer-events: auto;
+}
+
+.video-quotes__footer-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  flex-wrap: wrap;
+}
+
+.video-quotes__footer-link {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: clamp(0.78rem, 0.9vw, 0.88rem);
+  font-weight: 400;
+  color: rgba(255, 255, 255, 0.75);
+  text-decoration: none;
+  transition: color 0.3s ease;
+  cursor: pointer;
+}
+
+.video-quotes__footer-link svg {
+  flex-shrink: 0;
+  opacity: 0.85;
+  transition: opacity 0.3s ease;
+}
+
+.video-quotes__footer-link:hover {
+  color: #ffffff;
+}
+
+.video-quotes__footer-link:hover svg {
+  opacity: 1;
+}
+
+.video-quotes__footer-copy {
+  flex-basis: 100%;
+  font-family: 'Share Tech Mono', monospace;
+  font-size: clamp(0.6rem, 0.7vw, 0.7rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.video-quotes__footer-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(4px);
+  padding: 7px 13px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 0.72rem;
+  font-weight: 500;
+  color: #ffffff;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(14px) saturate(1.4);
+  -webkit-backdrop-filter: blur(14px) saturate(1.4);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.video-quotes__footer-tooltip.visible {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 @media (max-width: 768px) {
   .video-expand { display: none; }
 
@@ -827,6 +929,11 @@
     font-size: 0.8rem;
     width: 100%;
     justify-content: center;
+  }
+
+  /* Hide embedded footer on mobile — standalone footer handles it */
+  .video-quotes__footer {
+    display: none;
   }
 }
 
