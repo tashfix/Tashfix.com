@@ -1221,9 +1221,7 @@
           } else {
             var journeySection = document.getElementById('about');
             if (journeySection) {
-              setTimeout(function() {
-                journeySection.scrollIntoView({ behavior: 'smooth' });
-              }, 400);
+              journeySection.scrollIntoView({ behavior: 'smooth' });
             }
           }
         } else if (action === 'case-studies') {

@@ -367,6 +367,7 @@
 
 .hscroll__item video {
   aspect-ratio: auto !important;
+  background: rgba(0, 0, 0, 0.15);
 }
 
 .hscroll__size-sm {

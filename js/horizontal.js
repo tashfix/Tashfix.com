@@ -28,7 +28,7 @@
     };
     if (opts.containerAnimation) {
       triggerOpts.containerAnimation = opts.containerAnimation;
-      triggerOpts.start = opts.start || 'left 130%';
+      triggerOpts.start = opts.start || 'left 95%';
     }
 
     triggerOpts.onEnter = function() {
