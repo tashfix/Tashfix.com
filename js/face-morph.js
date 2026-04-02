@@ -653,6 +653,35 @@
         isTransitioning = true;
         player.classList.add('transitioning');
 
+        // On mobile: collapse the video fullscreen first, THEN scroll to top
+        // (body is position:fixed during video fullscreen — scrollTo gets overridden otherwise)
+        if (window.innerWidth <= 768) {
+          // Release body lock and collapse video fullscreen
+          document.body.style.overflow = '';
+          document.body.style.position = '';
+          document.body.style.width = '';
+          document.body.style.top = '';
+          // Scroll to top of page
+          window.scrollTo({ top: 0, behavior: 'instant' });
+          // Clean up player state
+          player.classList.remove('expanded', 'transitioning');
+          player.style.left = '';
+          player.style.top = '';
+          player.style.right = '';
+          player.style.bottom = '';
+          player.style.transform = '';
+          player.style.transformOrigin = '';
+          player.style.width = '';
+          player.style.height = '';
+          document.body.classList.remove('player-expanded');
+          isExpanded = false;
+          isTransitioning = false;
+          if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
+          if (window.TashBrand.stopCaseStudyVideos) window.TashBrand.stopCaseStudyVideos();
+          ScrollTrigger.refresh();
+          return;
+        }
+
         // Scroll to top so user lands on face morph hero after collapse
         window.scrollTo({ top: 0, behavior: 'instant' });
 
