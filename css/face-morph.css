@@ -584,7 +584,7 @@
   font-size: clamp(38px, 7.5vw, 148px);
   font-weight: 400;
   line-height: 0.9;
-  color: #C8102E;
+  color: rgba(26, 26, 26, 0.82);
   margin: 0 0 16px;
   letter-spacing: -0.025em;
 }

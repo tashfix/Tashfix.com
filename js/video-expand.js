@@ -4,6 +4,25 @@
    position / size each frame via ScrollTrigger.onUpdate.
    ═══════════════════════════════════════════════════════════ */
 (function() {
+
+  // ── Safari autoplay fix ──
+  // Safari blocks autoplay until a user gesture occurs. On first scroll/touch,
+  // force-play all muted gallery videos so they don't show a play button.
+  var safariVideosUnlocked = false;
+  function unlockSafariVideos() {
+    if (safariVideosUnlocked) return;
+    safariVideosUnlocked = true;
+    var galleryVideos = document.querySelectorAll('.hscroll__item video');
+    galleryVideos.forEach(function(v) {
+      var p = v.play();
+      if (p && p.catch) p.catch(function() {});
+    });
+    document.removeEventListener('touchstart', unlockSafariVideos, true);
+    document.removeEventListener('scroll', unlockSafariVideos, true);
+  }
+  document.addEventListener('touchstart', unlockSafariVideos, { once: true, capture: true });
+  document.addEventListener('scroll', unlockSafariVideos, { once: true, capture: true });
+
   var mm = gsap.matchMedia();
 
   mm.add('(min-width: 769px)', function() {
@@ -339,7 +358,16 @@
         onComplete: function() {
           if (heroVideo) {
             heroVideo.currentTime = 0;
-            heroVideo.play();
+            var playPromise = heroVideo.play();
+            if (playPromise && playPromise.catch) {
+              playPromise.catch(function() {
+                // Safari may reject the first attempt — retry once after a short delay
+                setTimeout(function() {
+                  var retry = heroVideo.play();
+                  if (retry && retry.catch) retry.catch(function() {});
+                }, 300);
+              });
+            }
           }
         }
       });
@@ -406,11 +434,12 @@
       mSetMenuDark();
     }
 
-    // Trigger when last item scrolls into view, with a pause to observe
+    // Trigger when last item is well into view — use 25% to avoid premature
+    // firing from Safari's collapsing address bar causing scroll height changes
     var mobileExpandTimer = null;
     ScrollTrigger.create({
       trigger: lastItem,
-      start: 'top 70%',
+      start: 'top 25%',
       onEnter: function() {
         mobileExpandTimer = setTimeout(function() {
           expandToFullscreen();
