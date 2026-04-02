@@ -1690,18 +1690,6 @@ body.player-expanded .morph__menu-line {
     background: radial-gradient(ellipse at bottom left, rgba(245, 241, 235, 0.94) 0%, rgba(245, 241, 235, 0.6) 55%, rgba(245, 241, 235, 0) 80%);
   }
 
-  /* Bottom-edge gradient to cover the gap between portrait and zoom-out section */
-  .morph__overlay::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 18vh;
-    background: linear-gradient(to bottom, transparent 0%, var(--color-beige) 100%);
-    pointer-events: none;
-    z-index: 50;
-  }
   .morph__hero-headline {
     font-size: clamp(40px, 12vw, 60px);
   }

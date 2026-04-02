@@ -344,10 +344,13 @@
       // Kill any CSS transitions on the media element so there's no slide animation
       lastMedia.style.setProperty('transition', 'none', 'important');
 
-      // Lock body scroll so the page behind the overlay can't be scrolled
+      // Lock body scroll — save scroll position so restoring doesn't jump to top
+      var savedScrollY = window.scrollY;
       document.body.style.overflow = 'hidden';
       document.body.style.position = 'fixed';
       document.body.style.width = '100%';
+      document.body.style.top = '-' + savedScrollY + 'px';
+      document.body.dataset.scrollY = savedScrollY;
 
       // Snap directly to fullscreen, start transparent for fade-in
       if (lastCaption) lastCaption.style.opacity = '0';
@@ -412,10 +415,13 @@
             placeholder = null;
           }
 
-          // Unlock body scroll
+          // Unlock body scroll and restore scroll position
+          var restoreY = parseInt(document.body.dataset.scrollY || '0', 10);
           document.body.style.overflow = '';
           document.body.style.position = '';
           document.body.style.width = '';
+          document.body.style.top = '';
+          window.scrollTo(0, restoreY);
         }
       });
 
