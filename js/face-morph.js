@@ -656,7 +656,11 @@
         // On mobile: collapse the video fullscreen first, THEN scroll to top
         // (body is position:fixed during video fullscreen — scrollTo gets overridden otherwise)
         if (window.innerWidth <= 768) {
-          // Release body lock and collapse video fullscreen
+          // Collapse video fullscreen overlay (hides testimonials, stops video)
+          if (window.TashBrand && window.TashBrand.mobileCollapseFullscreen) {
+            window.TashBrand.mobileCollapseFullscreen();
+          }
+          // Release body lock
           document.body.style.overflow = '';
           document.body.style.position = '';
           document.body.style.width = '';

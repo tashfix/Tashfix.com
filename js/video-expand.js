@@ -456,5 +456,9 @@
       });
     }, { threshold: [0, 0.6] });
     expandObs.observe(lastItem);
+
+    // Expose so face-morph.js can force-collapse when logo is tapped
+    window.TashBrand = window.TashBrand || {};
+    window.TashBrand.mobileCollapseFullscreen = collapseFromFullscreen;
   });
 })();
