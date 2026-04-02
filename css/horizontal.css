@@ -478,7 +478,7 @@
     display: flex;
     flex-direction: column;
     gap: 2.5rem;
-    padding: 3rem 1.25rem 60vh;
+    padding: 3rem 1.25rem 4rem;
   }
 
   .hscroll__item {
@@ -739,23 +739,40 @@
 @media (max-width: 768px) {
   .video-expand { display: none; }
 
+  /* Quotes flow as normal scroll content — no fullscreen overlay on mobile */
   .video-quotes {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: relative;
+    top: auto;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    width: 100%;
+    height: auto;
     flex-direction: column;
     flex-wrap: nowrap;
     align-items: stretch;
     gap: 0;
-    padding: 0;
-    overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    padding-top: 18vh;
-    padding-bottom: 3rem;
-    /* Opaque from top so video beneath is never visible when scrolling */
-    background: linear-gradient(to bottom, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.72) 40%, rgba(0,0,0,0.65) 100%);
+    padding: 3rem 0 2rem;
+    overflow: visible;
+    background: var(--color-cobalt);
+    /* Always visible — no .visible class needed on mobile */
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+  }
+
+  /* Override desktop hidden defaults — always show on mobile */
+  .video-quotes .video-quotes__item {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  .video-quotes .video-quotes__cta {
+    opacity: 1;
+    transform: none;
+    pointer-events: auto;
+    transition-delay: 0s;
   }
 
   .video-quotes__item {
@@ -765,9 +782,7 @@
     margin: 0 1.25rem;
     padding: 0.75rem 1.1rem 0.8rem;
     border-radius: 10px;
-    background: rgba(0, 0, 0, 0.35);
-    -webkit-backdrop-filter: saturate(120%);
-    backdrop-filter: saturate(120%);
+    background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.08);
     margin-bottom: 0.6rem;
   }
