@@ -129,4 +129,25 @@
   .zoomout__sticky {
     position: relative;
   }
+
+  /* ── Smooth bottom fade on portrait ──
+     Mask only affects the portrait images (canvas, metallic, static),
+     NOT the hero-intro text (which lives in the sibling morph__overlay). */
+  .zoomout__portrait-clip {
+    -webkit-mask-image: linear-gradient(to bottom, black 40%, transparent 82%);
+    mask-image: linear-gradient(to bottom, black 40%, transparent 82%);
+  }
+
+  /* ── Beige-to-cobalt gradient on the background layer ──
+     Softens the beige → cobalt boundary before the JS animation even starts. */
+  .zoomout__bg::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 55%;
+    background: linear-gradient(to bottom, transparent, var(--color-cobalt));
+    pointer-events: none;
+  }
 }
