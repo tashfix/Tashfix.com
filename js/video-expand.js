@@ -259,48 +259,6 @@
       }
     });
 
-    // ── Footer reveal: fade out testimonials + video as footer enters ──
-    var siteFooter = document.getElementById('site-footer');
-    if (siteFooter) {
-      ScrollTrigger.create({
-        trigger: siteFooter,
-        start: 'top bottom',
-        end: 'top 30%',
-        scrub: 0.4,
-        onUpdate: function(self) {
-          var p = self.progress;
-          // Fade out the quotes overlay
-          if (videoQuotes) {
-            videoQuotes.style.opacity = 1 - p;
-            videoQuotes.style.pointerEvents = p > 0.5 ? 'none' : '';
-          }
-          // Fade out the expanded video
-          if (lastItem && isReparented) {
-            lastItem.style.opacity = String(1 - p);
-          }
-        },
-        onLeaveBack: function() {
-          // Restore testimonials when scrolling back up
-          if (videoQuotes && quotesShown) {
-            videoQuotes.style.opacity = '';
-            videoQuotes.style.pointerEvents = '';
-          }
-          if (lastItem && isReparented) {
-            lastItem.style.opacity = '1';
-          }
-        },
-        onLeave: function() {
-          // Fully hidden — clean up
-          if (videoQuotes) {
-            videoQuotes.style.opacity = '0';
-            videoQuotes.style.pointerEvents = 'none';
-          }
-          if (lastItem && isReparented) {
-            lastItem.style.opacity = '0';
-          }
-        }
-      });
-    }
   });
 
   /* ── Mobile: no expand/collapse — item 14 scrolls like any other item ── */
