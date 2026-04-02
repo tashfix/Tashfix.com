@@ -5,9 +5,8 @@
 .site-footer {
   position: relative;
   z-index: 10;
-  /* Desktop: extra top padding provides scroll runway for the
-     testimonial → footer fade transition */
-  padding: 70vh 0 clamp(2.5rem, 4vh, 3.5rem);
+  /* Desktop: scrolls in behind the dark testimonial overlay */
+  padding: clamp(12rem, 22vh, 16rem) 0 clamp(2.5rem, 4vh, 3.5rem);
   background: #000000;
   margin-top: 0;
 }

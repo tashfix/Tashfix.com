@@ -265,20 +265,18 @@
       ScrollTrigger.create({
         trigger: siteFooter,
         start: 'top bottom',
-        end: 'top 55%',
-        scrub: 0.3,
+        end: 'top 30%',
+        scrub: 0.4,
         onUpdate: function(self) {
           var p = self.progress;
-          var opVal = String(1 - p);
           // Fade out the quotes overlay
           if (videoQuotes) {
-            videoQuotes.style.opacity = opVal;
+            videoQuotes.style.opacity = 1 - p;
             videoQuotes.style.pointerEvents = p > 0.5 ? 'none' : '';
           }
-          // Fade out the expanded video (query DOM directly to avoid closure issues)
-          var expItem = document.querySelector('.hscroll__item--expanding');
-          if (expItem) {
-            expItem.style.setProperty('opacity', opVal, 'important');
+          // Fade out the expanded video
+          if (lastItem && isReparented) {
+            lastItem.style.opacity = String(1 - p);
           }
         },
         onLeaveBack: function() {
@@ -287,20 +285,18 @@
             videoQuotes.style.opacity = '';
             videoQuotes.style.pointerEvents = '';
           }
-          var expItem = document.querySelector('.hscroll__item--expanding');
-          if (expItem) {
-            expItem.style.setProperty('opacity', '1', 'important');
+          if (lastItem && isReparented) {
+            lastItem.style.opacity = '1';
           }
         },
         onLeave: function() {
-          // Fully hidden
+          // Fully hidden — clean up
           if (videoQuotes) {
             videoQuotes.style.opacity = '0';
             videoQuotes.style.pointerEvents = 'none';
           }
-          var expItem = document.querySelector('.hscroll__item--expanding');
-          if (expItem) {
-            expItem.style.setProperty('opacity', '0', 'important');
+          if (lastItem && isReparented) {
+            lastItem.style.opacity = '0';
           }
         }
       });
