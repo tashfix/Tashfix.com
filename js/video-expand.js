@@ -431,21 +431,30 @@
       mSetMenuDark();
     }
 
-    // Trigger when last item is well into view — use 25% to avoid premature
-    // firing from Safari's collapsing address bar causing scroll height changes
+    // Use IntersectionObserver instead of ScrollTrigger — immune to body scroll lock
+    // changing scroll metrics mid-animation which caused the glitch/collapse loop
     var mobileExpandTimer = null;
-    ScrollTrigger.create({
-      trigger: lastItem,
-      start: 'top 25%',
-      onEnter: function() {
-        mobileExpandTimer = setTimeout(function() {
-          expandToFullscreen();
-        }, 2000);
-      },
-      onLeaveBack: function() {
-        if (mobileExpandTimer) { clearTimeout(mobileExpandTimer); mobileExpandTimer = null; }
-        collapseFromFullscreen();
-      }
-    });
+    var expandObs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.6) {
+          if (!isExpanded && !mobileExpandTimer) {
+            mobileExpandTimer = setTimeout(function() {
+              mobileExpandTimer = null;
+              expandToFullscreen();
+            }, 1500);
+          }
+        } else {
+          if (mobileExpandTimer) {
+            clearTimeout(mobileExpandTimer);
+            mobileExpandTimer = null;
+          }
+          // Only collapse if fully visible check fails (user scrolled back up)
+          if (!entry.isIntersecting && isExpanded) {
+            collapseFromFullscreen();
+          }
+        }
+      });
+    }, { threshold: [0, 0.6] });
+    expandObs.observe(lastItem);
   });
 })();

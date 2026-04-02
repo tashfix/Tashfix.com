@@ -124,16 +124,16 @@
     overflow: hidden;
   }
 
-  /* Bottom gradient fades portrait into cobalt — seamless transition */
+  /* Bottom gradient fades portrait into cobalt — must sit above morph overlay (z:100) */
   .zoomout__sticky::after {
     content: '';
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    height: 28vh;
+    height: 32vh;
     background: linear-gradient(to bottom, transparent 0%, #0A1A4A 100%);
-    z-index: 10;
+    z-index: 150;
     pointer-events: none;
   }
 }
