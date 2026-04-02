@@ -1,0 +1,184 @@
+/* ═══════════════════════════════════════════════════════════
+   LOADING SEQUENCE — fixed overlay with canvas grid
+   ═══════════════════════════════════════════════════════════ */
+
+#loader-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: #ffffff;
+  transition: opacity 0.3s ease;
+}
+
+#loader-overlay.fade-out {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.loader__canvas {
+  position: absolute;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+}
+
+
+/* ═══════════════════════════════════════════════════════════
+   AUDIO CONSENT MODAL
+   ═══════════════════════════════════════════════════════════ */
+
+/* Frosted veil — blurs the entire interface until user interacts */
+.audio-consent {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(24px) saturate(0.6);
+  -webkit-backdrop-filter: blur(24px) saturate(0.6);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.4s ease, backdrop-filter 0.8s ease, -webkit-backdrop-filter 0.8s ease;
+}
+
+.audio-consent.visible {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* Unveil: blur lifts, modal fades, interface revealed */
+.audio-consent.fade-out {
+  backdrop-filter: blur(0px) saturate(1);
+  -webkit-backdrop-filter: blur(0px) saturate(1);
+  opacity: 0;
+  pointer-events: none;
+  transition: backdrop-filter 0.8s ease, -webkit-backdrop-filter 0.8s ease, opacity 0.6s ease 0.3s;
+}
+
+/* Modal card — warm, editorial */
+.audio-consent__card {
+  width: 90vw;
+  max-width: 320px;
+  padding: 2.8rem 2.4rem 2.2rem;
+  border-radius: 4px;
+  text-align: center;
+  background: var(--color-offwhite, #f5f5f0);
+  border: 1px solid rgba(26, 26, 26, 0.08);
+
+  box-shadow:
+    0 20px 60px rgba(10, 26, 74, 0.12),
+    0 2px 6px rgba(10, 26, 74, 0.06);
+
+  transform: translateY(12px);
+  opacity: 1;
+  transition: transform 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94), opacity 0.4s ease;
+}
+
+.audio-consent.visible .audio-consent__card {
+  transform: translateY(0);
+}
+
+.audio-consent.fade-out .audio-consent__card {
+  opacity: 0;
+  transform: translateY(-6px);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+}
+
+/* Animated waveform bars — refined, thin */
+.audio-consent__waveform {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  height: 28px;
+  margin-bottom: 1.6rem;
+}
+
+.audio-consent__waveform span {
+  display: block;
+  width: 1.5px;
+  height: 6px;
+  border-radius: 1px;
+  background: var(--color-tangerine, #FF6B35);
+  opacity: 0.7;
+  animation: audio-wave 1.4s ease-in-out infinite;
+}
+
+.audio-consent__waveform span:nth-child(1) { animation-delay: 0s; }
+.audio-consent__waveform span:nth-child(2) { animation-delay: 0.12s; }
+.audio-consent__waveform span:nth-child(3) { animation-delay: 0.24s; }
+.audio-consent__waveform span:nth-child(4) { animation-delay: 0.36s; }
+.audio-consent__waveform span:nth-child(5) { animation-delay: 0.48s; }
+
+@keyframes audio-wave {
+  0%, 100% { height: 4px; opacity: 0.35; }
+  50% { height: 22px; opacity: 0.8; }
+}
+
+/* Typography */
+.audio-consent__title {
+  font-family: var(--font-cormorant, 'Cormorant Garamond', serif);
+  font-size: 1.55rem;
+  font-weight: 300;
+  font-style: italic;
+  color: var(--color-ink, #1a1a1a);
+  margin: 0 0 0.5rem;
+  line-height: 1.35;
+  letter-spacing: 0.01em;
+}
+
+.audio-consent__subtitle {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: rgba(26, 26, 26, 0.55);
+  margin: 0 0 2rem;
+  line-height: 1.6;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+/* Buttons */
+.audio-consent__btn {
+  display: block;
+  width: 100%;
+  border: none;
+  cursor: pointer;
+}
+
+.audio-consent__btn--primary {
+  padding: 0.75rem 1.5rem;
+  border-radius: 2px;
+  background: var(--color-ink, #1a1a1a);
+  color: var(--color-offwhite, #f5f5f0);
+  font-family: var(--font-cormorant, 'Cormorant Garamond', serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin-bottom: 1rem;
+  transition: background 0.5s ease;
+}
+
+.audio-consent__btn--primary:hover {
+  background: var(--color-cobalt, #0A1A4A);
+}
+
+.audio-consent__btn--secondary {
+  padding: 0.4rem 1rem;
+  border-radius: 0;
+  background: transparent;
+  color: rgba(26, 26, 26, 0.55);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: lowercase;
+  transition: color 0.5s ease;
+}
+
+.audio-consent__btn--secondary:hover {
+  color: rgba(26, 26, 26, 0.8);
+}

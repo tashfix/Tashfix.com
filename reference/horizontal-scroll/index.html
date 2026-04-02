@@ -1,0 +1,974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Horizontal Scroll Showcase</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Cormorant+Garamond:wght@600;700&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f5f5f0;
+      color: #1a1a1a;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Spacer sections for testing as embeddable section */
+    .spacer {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      letter-spacing: 0.05em;
+    }
+
+    .spacer-intro {
+      background: linear-gradient(to bottom,
+        #09163A 0%,
+        #09163A 55%,
+        #0a1840 62%,
+        #0d1f4a 68%,
+        #132a58 73%,
+        #1e3a6a 78%,
+        #2e4f7d 82%,
+        #4a6d94 86%,
+        #6d8caa 89%,
+        #92aabf 92%,
+        #b5c5d4 94%,
+        #d1dbe4 96%,
+        #e8ecf0 98%,
+        #f5f5f0 100%);
+      color: rgba(255, 255, 255, 0.5);
+      position: relative;
+      flex-direction: column;
+      z-index: 20;
+    }
+
+    /* Laurel emblem */
+    .emblem {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 3.5vh;
+      position: relative;
+      z-index: 1;
+    }
+    .emblem .laurel-wrap {
+      position: relative;
+      width: 100px;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .emblem .laurel-img {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      top: 0;
+      left: 0;
+      object-fit: contain;
+      filter: brightness(0) invert(1);
+      opacity: 0.75;
+    }
+    .emblem .cursor-wrap {
+      perspective: 200px;
+      z-index: 1;
+      margin-top: -4px;
+    }
+    .emblem .cursor-wrap svg {
+      animation: cursor-spin 4s linear infinite;
+      transform-style: preserve-3d;
+    }
+    @keyframes cursor-spin {
+      0% { transform: rotateY(0deg); }
+      100% { transform: rotateY(360deg); }
+    }
+
+    .hero-text {
+      font-family: 'Cormorant Garamond', serif;
+      font-weight: 700;
+      font-size: clamp(2rem, 5.8vw, 5.5rem);
+      line-height: 1.05;
+      text-transform: uppercase;
+      color: rgba(225, 230, 240, 0.95);
+      text-align: center;
+      max-width: 88vw;
+      letter-spacing: 0.02em;
+      position: relative;
+      z-index: 1;
+    }
+
+    .hero-text .accent {
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 500;
+      font-style: normal;
+      color: #FF6B35;
+      letter-spacing: -0.02em;
+    }
+
+    /* Logo marquee */
+    .logo-marquee {
+      position: relative;
+      margin-top: 4vh;
+      width: min(80vw, 900px);
+      overflow: hidden;
+      z-index: 1;
+      mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+      -webkit-mask-image: linear-gradient(to right, transparent 0%, black 10%, black 90%, transparent 100%);
+    }
+    .logo-marquee-track {
+      display: flex;
+      align-items: center;
+      gap: 4rem;
+      animation: marqueeScroll 15s linear infinite;
+      width: max-content;
+      will-change: transform;
+    }
+    .logo-marquee-track img {
+      height: 40px;
+      width: auto;
+      flex-shrink: 0;
+      opacity: 0.6;
+      filter: brightness(0) invert(1);
+      object-fit: contain;
+    }
+    @keyframes marqueeScroll {
+      0% { transform: translateX(0); }
+      100% { transform: translateX(-33.333%); }
+    }
+
+    #aura-lines {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      z-index: 0;
+      pointer-events: none;
+      opacity: 0.4;
+    }
+
+
+    .spacer-outro {
+      background: #f5f5f0;
+      color: #aaa;
+    }
+
+    /* Cobalt-to-white transition overlay — sits between intro spacer and horizontal section */
+    .cobalt-fade {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100vh;
+      background: linear-gradient(to bottom,
+        #09163A 0%,
+        #09163A 30%,
+        #0d1f4a 50%,
+        #1e3a6a 65%,
+        #4a6d94 75%,
+        #92aabf 84%,
+        #d1dbe4 92%,
+        #f5f5f0 100%);
+      pointer-events: none;
+      z-index: 10;
+      opacity: 0;
+    }
+
+    /* ===== HORIZONTAL SCROLL SECTION ===== */
+    .horizontal-section {
+      position: relative;
+      overflow: hidden;
+      background: #f5f5f0;
+    }
+
+    .horizontal-track {
+      display: flex;
+      position: relative;
+      height: 100vh;
+      padding: 6vh 0;
+    }
+
+    /* Mesh grid canvas — sits behind all media items, scrolls with track */
+    .mesh-canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Ensure media items sit above the mesh */
+    .media-item {
+      z-index: 1;
+    }
+
+    /* ===== MEDIA ITEMS ===== */
+    .media-item {
+      position: absolute;
+      left: var(--x);
+      top: var(--y);
+      transform: none;
+      opacity: 0;
+      will-change: transform, opacity;
+    }
+
+    .media-item {
+      cursor: pointer;
+    }
+
+    .media-item:hover {
+      z-index: 10 !important;
+    }
+
+    .media-item img,
+    .media-item video {
+      width: 100%;
+      object-fit: cover;
+      border-radius: 6px;
+      display: block;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
+      transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    }
+
+    .media-item:hover img,
+    .media-item:hover video {
+      transform: scale(1.1);
+    }
+
+    .caption {
+      margin-top: 10px;
+      font-size: 0.65rem;
+      font-weight: 500;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: #fff;
+      text-align: center;
+      line-height: 1.4;
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Typewriter animation */
+    .caption .typewriter-text {
+      display: inline-block;
+      overflow: hidden;
+      white-space: nowrap;
+      max-width: 0;
+      vertical-align: top;
+      border-right: 1.5px solid #fff;
+      background: rgba(0, 0, 0, 0.75);
+      padding: 2px 6px;
+      border-radius: 3px;
+      -webkit-box-decoration-break: clone;
+      box-decoration-break: clone;
+    }
+
+    .caption .typewriter-text.done {
+      white-space: normal;
+      border-right: none;
+      overflow: visible;
+      max-width: none;
+    }
+
+    .size-featured {
+      width: 32vw;
+      max-width: 520px;
+    }
+    .size-featured img,
+    .size-featured video {
+      aspect-ratio: auto;
+    }
+
+    /* Videos show full frame at native aspect ratio */
+    .media-item video {
+      aspect-ratio: auto !important;
+    }
+
+    /* Size classes */
+    .size-sm {
+      width: 22vw;
+      max-width: 320px;
+    }
+    .size-sm img,
+    .size-sm video {
+      aspect-ratio: 1 / 1;
+    }
+
+    .size-md {
+      width: 30vw;
+      max-width: 520px;
+    }
+    .size-md img,
+    .size-md video {
+      aspect-ratio: 16 / 10;
+    }
+
+    .size-md-tall {
+      width: 24vw;
+      max-width: 420px;
+    }
+    .size-md-tall img,
+    .size-md-tall video {
+      aspect-ratio: 3 / 4;
+    }
+
+    .size-lg {
+      width: 38vw;
+      max-width: 680px;
+    }
+    .size-lg img,
+    .size-lg video {
+      aspect-ratio: 3 / 2;
+    }
+
+    .size-portrait {
+      width: 24vw;
+      max-width: 400px;
+    }
+    .size-portrait img,
+    .size-portrait video {
+      aspect-ratio: 3 / 4;
+    }
+
+    .square img,
+    .square video {
+      aspect-ratio: 1 / 1 !important;
+      object-fit: cover;
+    }
+
+
+    /* ===== MOBILE FALLBACK ===== */
+    @media (max-width: 768px) {
+      .horizontal-track {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 2.5rem;
+        padding: 3rem 1.25rem;
+      }
+
+      .media-item {
+        position: relative !important;
+        left: auto !important;
+        top: auto !important;
+        transform: none !important;
+        width: 85vw !important;
+        max-width: 400px !important;
+        margin: 0 auto;
+        opacity: 1;
+      }
+
+      .media-item img,
+      .media-item video {
+        aspect-ratio: auto !important;
+        max-height: 60vh;
+      }
+
+      .size-portrait img,
+      .size-portrait video {
+        aspect-ratio: 3 / 4 !important;
+      }
+
+      .caption {
+        font-size: 0.6rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Cobalt-to-white transition overlay -->
+  <div class="cobalt-fade" id="cobaltFade"></div>
+
+  <!-- Intro spacer — cobalt background -->
+  <div class="spacer spacer-intro" id="introSpacer">
+    <svg id="aura-lines" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <path id="aura-0" stroke="rgba(255,180,120,0.50)" stroke-width="2.5" />
+      <path id="aura-1" stroke="rgba(255,200,150,0.40)" stroke-width="2.0" />
+      <path id="aura-2" stroke="rgba(255,160,100,0.55)" stroke-width="3.0" />
+      <path id="aura-3" stroke="rgba(255,210,170,0.30)" stroke-width="1.8" />
+      <path id="aura-4" stroke="rgba(255,180,120,0.45)" stroke-width="2.2" />
+      <path id="aura-5" stroke="rgba(255,200,150,0.35)" stroke-width="2.0" />
+      <path id="aura-6" stroke="rgba(255,160,100,0.50)" stroke-width="2.8" />
+    </svg>
+    <div class="emblem">
+      <div class="laurel-wrap">
+        <img class="laurel-img" src="assets/laurel.png" alt="Laurel wreath">
+        <!-- Spinning macOS cursor -->
+        <div class="cursor-wrap">
+          <svg width="28" height="36" viewBox="0 0 28 36" fill="rgba(225,230,240,0.9)" stroke="none">
+            <path d="M2 1 L2 28 L8 22 L14 34 L18 32 L12 20 L20 20 Z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="hero-text">
+      AN <span class="accent">AWARD-WINNING</span><br>
+      DESIGNER,<br>
+      CRAFTED THROUGH A<br>
+      <span class="accent">LIFETIME</span> OF BUILDING<br>
+      &amp; SHAPING EXPERIENCES<br>
+      AT A <span class="accent">GLOBAL SCALE</span>.
+    </div>
+    <div class="logo-marquee">
+      <div class="logo-marquee-track">
+        <!-- Set 1 -->
+        <img src="assets/micosoft.png" alt="Microsoft">
+        <img src="assets/samsung.png" alt="Samsung">
+        <img src="assets/ces.png" alt="CES">
+        <img src="assets/bing.png" alt="Bing">
+        <img src="assets/cbc.png" alt="CBC">
+        <img src="assets/msn.png" alt="MSN">
+        <!-- Set 2 (duplicate for seamless loop) -->
+        <img src="assets/micosoft.png" alt="Microsoft">
+        <img src="assets/samsung.png" alt="Samsung">
+        <img src="assets/ces.png" alt="CES">
+        <img src="assets/bing.png" alt="Bing">
+        <img src="assets/cbc.png" alt="CBC">
+        <img src="assets/msn.png" alt="MSN">
+        <!-- Set 3 (extra for seamless density) -->
+        <img src="assets/micosoft.png" alt="Microsoft">
+        <img src="assets/samsung.png" alt="Samsung">
+        <img src="assets/ces.png" alt="CES">
+        <img src="assets/bing.png" alt="Bing">
+        <img src="assets/cbc.png" alt="CBC">
+        <img src="assets/msn.png" alt="MSN">
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HORIZONTAL SCROLL SHOWCASE SECTION ===== -->
+  <section class="horizontal-section">
+    <div class="horizontal-track">
+      <canvas class="mesh-canvas" id="meshCanvas"></canvas>
+
+      <!-- 1. UBC Capstone (UP) -->
+      <div class="media-item size-md" style="--x: 3vw; --y: 8vh;">
+        <video src="assets/1-iaconic.mp4" muted autoplay loop playsinline preload="auto"></video>
+        <p class="caption"><span class="typewriter-text">Presenting my final designs for my UBC Capstone project</span></p>
+      </div>
+
+      <!-- 2. VoltSafe Founding Team (DOWN) -->
+      <div class="media-item size-sm" style="--x: 18vw; --y: 52vh;">
+        <img src="assets/2 (The VoltSafe Founding Team).png" alt="The VoltSafe Founding Team" loading="lazy">
+        <p class="caption"><span class="typewriter-text">Joined the VoltSafe founding team of four</span></p>
+      </div>
+
+      <!-- 3. Dragon's Den (UP) -->
+      <div class="media-item size-md" style="--x: 36vw; --y: 8vh;">
+        <video src="assets/3 dragonden.mp4" muted autoplay loop playsinline preload="auto"></video>
+        <p class="caption"><span class="typewriter-text">Product I designed appearing on Dragon's Den</span></p>
+      </div>
+
+      <!-- 4. Smart Home Mobile App (DOWN, FEATURED) -->
+      <div class="media-item size-featured" style="--x: 60vw; --y: 46vh;">
+        <video src="assets/4. smarthome.mp4" muted autoplay loop playsinline preload="auto"></video>
+        <p class="caption"><span class="typewriter-text">Smart Home Mobile App I designed end to end</span></p>
+      </div>
+
+      <!-- 5. Winning 2 awards at CES (UP, FEATURED) -->
+      <div class="media-item size-featured" style="--x: 90vw; --y: 8vh;">
+        <img src="assets/5 (Winning 2 awards at CES).png" alt="Winning 2 awards at CES" loading="lazy">
+        <p class="caption"><span class="typewriter-text">Winning 2 awards at CES</span></p>
+      </div>
+
+      <!-- 6. Marine ecosystem (DOWN) -->
+      <div class="media-item size-lg" style="--x: 118vw; --y: 46vh;">
+        <img src="assets/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy">
+        <p class="caption"><span class="typewriter-text">Marine ecosystem I designed end to end</span></p>
+      </div>
+
+      <!-- 7. IBEX Award (UP) -->
+      <div class="media-item size-md" style="--x: 148vw; --y: 8vh;">
+        <img src="assets/7. (IBEX Award for Marine Enterprise Dashboard).jpg" alt="IBEX Award for Marine Enterprise Dashboard" loading="lazy">
+        <p class="caption"><span class="typewriter-text">IBEX Award for Marine Enterprise Dashboard</span></p>
+      </div>
+
+      <!-- 8. YES! (DOWN, FEATURED) -->
+      <div class="media-item size-featured" style="--x: 172vw; --y: 46vh;">
+        <img src="assets/8.(%22YES!%22).png" alt="YES!" loading="lazy">
+        <p class="caption"><span class="typewriter-text">"YES!"</span></p>
+      </div>
+
+      <!-- 9. Brain Station (UP) -->
+      <div class="media-item size-sm" style="--x: 200vw; --y: 8vh;">
+        <img src="assets/9. (%22industry expert%22 panel at Brain Station).png" alt="Industry expert panel at Brain Station" loading="lazy">
+        <p class="caption"><span class="typewriter-text">"Industry expert" panel at Brain Station</span></p>
+      </div>
+
+      <!-- 10. Microsoft AI (DOWN, FEATURED) -->
+      <div class="media-item size-featured" style="--x: 220vw; --y: 46vh;">
+        <img src="assets/10. (Recruited onto the MSAN team at Microsoft AI) .jpeg" alt="Recruited onto the MSAN team at Microsoft AI" loading="lazy">
+        <p class="caption"><span class="typewriter-text">Recruited onto the MSAN team at Microsoft AI</span></p>
+      </div>
+
+      <!-- 11. Dan and Dave (UP) -->
+      <div class="media-item size-portrait" style="--x: 248vw; --y: 8vh;">
+        <img src="assets/11. (Meeting my design heros Dan and Dave).jpeg" alt="Meeting my design heroes Dan and Dave" loading="lazy">
+        <p class="caption"><span class="typewriter-text">Meeting my design heroes Dan and Dave</span></p>
+      </div>
+
+      <!-- 12. First DJ performance (DOWN) -->
+      <div class="media-item size-sm" style="--x: 268vw; --y: 52vh;">
+        <img src="assets/12. (First DJ performance).png" alt="First DJ performance" loading="lazy">
+        <p class="caption"><span class="typewriter-text">First DJ performance</span></p>
+      </div>
+
+      <!-- 13. Samsung (UP, FEATURED) -->
+      <div class="media-item size-featured" style="--x: 288vw; --y: 8vh;">
+        <img src="assets/13. (Joing the Samsung Research Canada Team).png" alt="Joining the Samsung Research Canada Team" loading="lazy">
+        <p class="caption"><span class="typewriter-text">Joining the Samsung Research Canada Team</span></p>
+      </div>
+
+      <!-- 14. And here we are (DOWN, FEATURED) -->
+      <div class="media-item size-featured square" style="--x: 316vw; --y: 42vh;">
+        <img src="assets/14. and here we are (2).jpeg" alt="And here we are" loading="lazy">
+        <p class="caption"><span class="typewriter-text">And here we are</span></p>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Outro spacer -->
+  <div class="spacer spacer-outro">
+    <p>&#8593; End of showcase</p>
+  </div>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Cobalt-to-white fade: starts fully visible (cobalt), fades out as user scrolls into showcase
+    const cobaltFade = document.getElementById('cobaltFade');
+    const introSpacer = document.getElementById('introSpacer');
+
+    // Set initial state: fully visible cobalt overlay
+    gsap.set(cobaltFade, { opacity: 1 });
+
+    gsap.to(cobaltFade, {
+      opacity: 0,
+      ease: "power3.in",
+      scrollTrigger: {
+        trigger: introSpacer,
+        start: "80% bottom",
+        end: "bottom bottom",
+        scrub: 0.3,
+        onLeave: () => { cobaltFade.style.display = 'none'; },
+        onEnterBack: () => { cobaltFade.style.display = ''; },
+      }
+    });
+
+    const mm = gsap.matchMedia();
+
+    mm.add("(min-width: 769px)", () => {
+      const track = document.querySelector(".horizontal-track");
+      const section = document.querySelector(".horizontal-section");
+      const items = gsap.utils.toArray(".media-item");
+
+      // Dynamically size track: when fully scrolled, last item's left edge aligns to viewport left
+      function setTrackWidth() {
+        const lastItem = items[items.length - 1];
+        track.style.width = (lastItem.offsetLeft + window.innerWidth) + "px";
+      }
+      setTrackWidth();
+      window.addEventListener("resize", () => {
+        setTrackWidth();
+        ScrollTrigger.refresh();
+      });
+
+      // Function-based scroll distance — recalculates on every refresh/resize
+      function getScrollDistance() {
+        return track.scrollWidth - window.innerWidth;
+      }
+
+      // Main horizontal scroll tween
+      const horizontalTween = gsap.to(track, {
+        x: () => -getScrollDistance(),
+        ease: "none",
+        scrollTrigger: {
+          trigger: section,
+          pin: true,
+          scrub: 0.8,
+          start: "top top",
+          end: () => `+=${getScrollDistance()}`,
+          invalidateOnRefresh: true,
+        }
+      });
+
+      // Per-item reveal animations + typewriter
+      items.forEach((item) => {
+        const tw = item.querySelector(".typewriter-text");
+
+        // Fade/scale in
+        gsap.fromTo(item,
+          { opacity: 0, scale: 0.88, y: 35 },
+          {
+            opacity: 1, scale: 1, y: 0,
+            duration: 1,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              containerAnimation: horizontalTween,
+              start: "left 98%",
+              end: "left 70%",
+              scrub: true,
+            }
+          }
+        );
+
+        // Typewriter — measure real width, then animate max-width from 0
+        if (tw) {
+          // Temporarily show to measure
+          tw.style.maxWidth = "none";
+          tw.style.visibility = "hidden";
+          tw.style.position = "absolute";
+          const fullWidth = tw.scrollWidth + 2; // +2 for rounding safety
+          tw.style.maxWidth = "0";
+          tw.style.visibility = "";
+          tw.style.position = "";
+
+          const chars = tw.textContent.length;
+          const steps = Math.max(10, chars);
+
+          ScrollTrigger.create({
+            trigger: item,
+            containerAnimation: horizontalTween,
+            start: "left 95%",
+            onEnter: () => {
+              gsap.to(tw, {
+                maxWidth: fullWidth,
+                ease: `steps(${steps})`,
+                duration: 1.2,
+                delay: 0.3,
+                onComplete: () => {
+                  tw.classList.add("done");
+                  tw.style.maxWidth = "none";
+                }
+              });
+            },
+            onLeaveBack: () => {
+              gsap.killTweensOf(tw);
+              gsap.set(tw, { maxWidth: 0 });
+              tw.classList.remove("done");
+            }
+          });
+        }
+      });
+
+    });
+
+    mm.add("(max-width: 768px)", () => {
+      const items = gsap.utils.toArray(".media-item");
+      items.forEach((item) => {
+        const tw = item.querySelector(".typewriter-text");
+        gsap.fromTo(item,
+          { opacity: 0, y: 30 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top 85%",
+              toggleActions: "play none none none",
+              onEnter: () => {
+                if (tw && !tw.classList.contains("done")) {
+                  tw.style.maxWidth = "none";
+                  tw.style.visibility = "hidden";
+                  tw.style.position = "absolute";
+                  const fullW = tw.scrollWidth + 2;
+                  tw.style.maxWidth = "0";
+                  tw.style.visibility = "";
+                  tw.style.position = "";
+                  const chars = tw.textContent.length;
+                  gsap.to(tw, {
+                    maxWidth: fullW,
+                    ease: `steps(${Math.max(10, chars)})`,
+                    duration: 1.2,
+                    delay: 0.3,
+                    onComplete: () => {
+                      tw.classList.add("done");
+                      tw.style.maxWidth = "none";
+                    }
+                  });
+                }
+              }
+            }
+          }
+        );
+      });
+    });
+
+    /* ===== MESH GRID ANIMATION ===== */
+    (function() {
+      const canvas = document.getElementById('meshCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+
+      // ROWS is fixed; COLS computed dynamically for square cells
+      const ROWS = 32;
+
+      const waves = [
+        { cx: 0.35, cy: 0.4, amp: 55, freq: 0.0025, speed: 0.8 },
+        { cx: 0.65, cy: 0.5, amp: 35, freq: 0.003, speed: -0.6 },
+        { cx: 0.5, cy: 0.3, amp: 25, freq: 0.004, speed: 1.1 },
+      ];
+
+      const maxH = waves.reduce((sum, w) => sum + w.amp, 0);
+
+      // Blue color gradient matching the loading sequence
+      function coolColor(t) {
+        t = Math.max(0, Math.min(1, t));
+        let r, g, b;
+        if (t < 0.25) {
+          const s = t / 0.25;
+          r = 20 + s * 10; g = 40 + s * 30; b = 120 + s * 40;
+        } else if (t < 0.5) {
+          const s = (t - 0.25) / 0.25;
+          r = 30 - s * 10; g = 70 + s * 60; b = 160 + s * 30;
+        } else if (t < 0.75) {
+          const s = (t - 0.5) / 0.25;
+          r = 20 + s * 20; g = 130 + s * 60; b = 190 + s * 20;
+        } else {
+          const s = (t - 0.75) / 0.25;
+          r = 40 + s * 60; g = 190 + s * 40; b = 210 + s * 30;
+        }
+        return [Math.round(r), Math.round(g), Math.round(b)];
+      }
+
+      function getHeight(x, y, t, W, H) {
+        let h = 0;
+        for (const w of waves) {
+          const dx = x - w.cx * W;
+          const dy = y - w.cy * H;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          h += w.amp * Math.sin(dist * w.freq + t * w.speed);
+        }
+        return h;
+      }
+
+      function project(x, y, z, W, H) {
+        const viewHeight = H * 0.45;
+        const depth = H * 1.2;
+        const scale = depth / (depth + viewHeight - z);
+        return {
+          x: W / 2 + (x - W / 2) * scale,
+          y: H * 0.55 + (y - H * 0.5) * scale * 0.55 - z * scale * 0.4,
+        };
+      }
+
+      function edgeAlpha(col, row, cols) {
+        const fade = 0.15;
+        const cx = col / cols;
+        const cy = row / ROWS;
+        let ax = 1, ay = 1;
+        if (cx < fade) ax = cx / fade;
+        else if (cx > 1 - fade) ax = (1 - cx) / fade;
+        if (cy < fade) ay = cy / fade;
+        else if (cy > 1 - fade) ay = (1 - cy) / fade;
+        return ax * ay;
+      }
+
+      let time = 0;
+      let animId;
+
+      function sizeCanvas() {
+        const track = canvas.parentElement;
+        const W = track.scrollWidth;
+        const H = track.offsetHeight;
+        canvas.width = W * dpr;
+        canvas.height = H * dpr;
+        canvas.style.width = W + 'px';
+        canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function draw() {
+        const track = canvas.parentElement;
+        const W = track.scrollWidth;
+        const H = track.offsetHeight;
+        ctx.clearRect(0, 0, W, H);
+        time += 0.015;
+
+        // Compute COLS to keep cells square based on aspect ratio
+        const COLS = Math.round(ROWS * (W / H));
+
+        const gridW = W * 1.0;
+        const gridH = H * 1.6;
+        const offsetX = (W - gridW) / 2;
+        const offsetY = (H - gridH) / 2;
+
+        const points = [];
+        const alphaGrid = [];
+        const heights = [];
+
+        for (let r = 0; r <= ROWS; r++) {
+          const rowP = [], rowA = [], rowH = [];
+          for (let c = 0; c <= COLS; c++) {
+            const x = offsetX + (c / COLS) * gridW;
+            const y = offsetY + (r / ROWS) * gridH;
+            const z = getHeight(x, y, time, W, H);
+            rowP.push(project(x, y, z, W, H));
+            rowA.push(edgeAlpha(c, r, COLS));
+            rowH.push((z + maxH) / (2 * maxH));
+          }
+          points.push(rowP);
+          alphaGrid.push(rowA);
+          heights.push(rowH);
+        }
+
+        // Breathing animation — more visible
+        const breath = 0.35 + 0.15 * Math.sin(time * 0.8);
+        ctx.lineWidth = 1.0;
+
+        // Horizontal lines
+        for (let r = 0; r <= ROWS; r++) {
+          for (let c = 0; c < COLS; c++) {
+            const a = Math.min(alphaGrid[r][c], alphaGrid[r][c + 1]);
+            if (a < 0.01) continue;
+            const hN = (heights[r][c] + heights[r][c + 1]) / 2;
+            const [cr, cg, cb] = coolColor(hN);
+            ctx.strokeStyle = `rgba(${cr},${cg},${cb},${a * breath})`;
+            ctx.beginPath();
+            ctx.moveTo(points[r][c].x, points[r][c].y);
+            ctx.lineTo(points[r][c + 1].x, points[r][c + 1].y);
+            ctx.stroke();
+          }
+        }
+
+        // Vertical lines
+        for (let c = 0; c <= COLS; c++) {
+          for (let r = 0; r < ROWS; r++) {
+            const a = Math.min(alphaGrid[r][c], alphaGrid[r + 1][c]);
+            if (a < 0.01) continue;
+            const hN = (heights[r][c] + heights[r + 1][c]) / 2;
+            const [cr, cg, cb] = coolColor(hN);
+            ctx.strokeStyle = `rgba(${cr},${cg},${cb},${a * breath})`;
+            ctx.beginPath();
+            ctx.moveTo(points[r][c].x, points[r][c].y);
+            ctx.lineTo(points[r + 1][c].x, points[r + 1][c].y);
+            ctx.stroke();
+          }
+        }
+
+        animId = requestAnimationFrame(draw);
+      }
+
+      // Start when section is in view, stop when not
+      function initMesh() {
+        sizeCanvas();
+        draw();
+      }
+
+      // Observe when section enters viewport
+      const section = document.querySelector('.horizontal-section');
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            sizeCanvas();
+            if (!animId) draw();
+          } else {
+            if (animId) {
+              cancelAnimationFrame(animId);
+              animId = null;
+            }
+          }
+        });
+      }, { threshold: 0.01 });
+      observer.observe(section);
+
+      // Resize canvas when track width changes
+      window.addEventListener('resize', () => {
+        if (animId) sizeCanvas();
+      });
+
+      // Also re-size after GSAP sets the track width
+      setTimeout(() => { sizeCanvas(); }, 500);
+    })();
+
+    /* ===== AURA LINES ANIMATION ===== */
+    (function() {
+      const NUM_LINES = 7;
+      const lines = [];
+      for (let i = 0; i < NUM_LINES; i++) {
+        lines.push({
+          el: document.getElementById('aura-' + i),
+          baseY: 100 + i * 100 + (Math.random() - 0.5) * 60,
+          amplitude: 40 + Math.random() * 80,
+          frequency: 0.002 + Math.random() * 0.003,
+          speed: 0.0003 + Math.random() * 0.0004,
+          phase: Math.random() * Math.PI * 2,
+          xOffset: (Math.random() - 0.5) * 100,
+        });
+      }
+
+      let auraTime = 0;
+      let auraAnimId = null;
+
+      function animateAura() {
+        auraTime = Date.now();
+        for (const line of lines) {
+          if (!line.el) continue;
+          const pts = [];
+          const numPts = 8;
+          for (let j = 0; j <= numPts; j++) {
+            const x = line.xOffset + (j / numPts) * 1440;
+            const wave1 = Math.sin(x * line.frequency + auraTime * line.speed + line.phase);
+            const wave2 = Math.sin(x * line.frequency * 1.5 + auraTime * line.speed * 0.7 + line.phase + 1.3);
+            const y = line.baseY + line.amplitude * wave1 + line.amplitude * 0.4 * wave2;
+            pts.push({ x, y });
+          }
+          // Build cubic bezier path
+          let d = `M ${pts[0].x} ${pts[0].y}`;
+          for (let j = 0; j < pts.length - 1; j++) {
+            const p0 = pts[Math.max(0, j - 1)];
+            const p1 = pts[j];
+            const p2 = pts[j + 1];
+            const p3 = pts[Math.min(pts.length - 1, j + 2)];
+            const cp1x = p1.x + (p2.x - p0.x) / 6;
+            const cp1y = p1.y + (p2.y - p0.y) / 6;
+            const cp2x = p2.x - (p3.x - p1.x) / 6;
+            const cp2y = p2.y - (p3.y - p1.y) / 6;
+            d += ` C ${cp1x} ${cp1y}, ${cp2x} ${cp2y}, ${p2.x} ${p2.y}`;
+          }
+          line.el.setAttribute('d', d);
+        }
+        auraAnimId = requestAnimationFrame(animateAura);
+      }
+
+      // Only animate when intro is visible
+      const introObs = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            if (!auraAnimId) animateAura();
+          } else {
+            if (auraAnimId) {
+              cancelAnimationFrame(auraAnimId);
+              auraAnimId = null;
+            }
+          }
+        });
+      }, { threshold: 0.01 });
+      introObs.observe(document.getElementById('introSpacer'));
+    })();
+  </script>
+</body>
+</html>

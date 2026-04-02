@@ -1,0 +1,30 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//Users/tashfiq/**)",
+      "Bash(cp \"face morph/index.html\" \"Tashfix website 2026/reference/face-morph/\")",
+      "Bash(cp \"face morph/portrait.png\" \"Tashfix website 2026/reference/face-morph/\")",
+      "Bash(cp \"face morph/metallic.png\" \"Tashfix website 2026/reference/face-morph/\")",
+      "Bash(cp \"face morph/logo outline 2.png\" \"Tashfix website 2026/reference/face-morph/\")",
+      "Bash(cp \"face morph/portrait.png\" \"Tashfix website 2026/assets/images/portrait.png\")",
+      "Bash(cp \"face morph/metallic.png\" \"Tashfix website 2026/assets/images/metallic.png\")",
+      "Bash(cp \"face morph/logo outline 2.png\" \"Tashfix website 2026/assets/images/logo-outline.png\")",
+      "Bash(cp \"zoom out/TA_signature.svg\" \"Tashfix website 2026/assets/images/TA_signature.svg\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(grep -n \"\\\\.morph__vinyl-icon\\\\|\\\\.morph__spade-icon\\\\|\\\\.morph__cursor-icon\\\\|\\\\.vinyl-glow\" /Users/tashfiq/Tashfix website 2026/css*)",
+      "Bash(curl -s -o \"/Users/tashfiq/Tashfix website 2026/assets/fonts/Caveat-Medium.woff2\" \"https://fonts.gstatic.com/s/caveat/v18/WnznHAc5bAfYB2QRah7pcpNvOx-pjfJ9eIWpYQ.woff2\")",
+      "Bash(curl -s -o \"/Users/tashfiq/Tashfix website 2026/assets/fonts/Caveat-Bold.woff2\" \"https://fonts.gstatic.com/s/caveat/v18/WnznHAc5bAfYB2QRah7pcpNvOx-pjcl6eIWpYQ.woff2\")",
+      "Bash(curl -s -A \"Mozilla/5.0 \\(Macintosh; Intel Mac OS X 10_15_7\\) AppleWebKit/537.36\" \"https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&display=swap\")",
+      "Bash(curl -s -o \"/Users/tashfiq/Tashfix website 2026/assets/fonts/Caveat.woff2\" \"https://fonts.gstatic.com/s/caveat/v23/Wnz6HAc5bAfYB2QLZDwfqg4.woff2\")",
+      "Bash(find '/Users/tashfiq/Tashfix website 2026/assets' -type f \\\\\\(-iname *case* -o -iname *study* -o -iname *project* -o -iname *portfolio* -o -iname *work* \\\\\\))",
+      "Bash(find '/Users/tashfiq/Tashfix website 2026/assets/images' -type f \\\\\\(-iname *case* -o -iname *study* -o -iname *project* -o -iname *portfolio* -o -iname *work* \\\\\\))",
+      "Bash(grep -n \"morph.*player\\\\|player\" js/*.js)",
+      "Bash(grep -n \"morph-play-btn\\\\|morph-volume\\\\|morph-progress\\\\|morph-lcd\" js/*.js)",
+      "Bash(grep -n \"menu-btn\\\\|morph__menu\" \"/Users/tashfiq/Tashfix website 2026/js\"/*.js)",
+      "Bash(grep -rn \"data-nav\\\\|nav-overlay__link\\\\|my-journey\" '/Users/tashfiq/Tashfix website 2026/' --include=*.js --include=*.html)",
+      "Bash(find /Users/tashfiq/.claude -name *.json -o -name *.yaml -o -name *.yml)",
+      "Bash(find /Users/tashfiq/.claude -name hooks* -o -name *hook*)",
+      "Bash(grep -l -i \"ux\\\\|audit\\\\|review\\\\|checklist\\\\|tashfix\\\\|portfolio\" /Users/tashfiq/.claude/plans/*.md)"
+    ]
+  }
+}

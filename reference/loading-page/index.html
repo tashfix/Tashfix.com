@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading...</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@300;400;500&display=swap');
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: #ffffff;
+      height: 100vh;
+      overflow: hidden;
+    }
+
+    canvas {
+      position: fixed;
+      inset: 0;
+      width: 100vw;
+      height: 100vh;
+    }
+  </style>
+</head>
+<body>
+  <canvas id="grid"></canvas>
+
+  <script>
+    const canvas = document.getElementById('grid');
+    const ctx = canvas.getContext('2d');
+    let W, H;
+
+    function resize() {
+      const dpr = window.devicePixelRatio || 1;
+      W = window.innerWidth;
+      H = window.innerHeight;
+      canvas.width = W * dpr;
+      canvas.height = H * dpr;
+      canvas.style.width = W + 'px';
+      canvas.style.height = H + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    }
+    resize();
+    window.addEventListener('resize', resize);
+
+    const COLS = 48;
+    const ROWS = 32;
+
+    const waves = [
+      { cx: 0.35, cy: 0.4, amp: 55, freq: 0.0025, speed: 0.8 },
+      { cx: 0.65, cy: 0.5, amp: 35, freq: 0.003, speed: -0.6 },
+      { cx: 0.5, cy: 0.3, amp: 25, freq: 0.004, speed: 1.1 },
+    ];
+
+    // Cool gradient: deep cobalt → blue → teal → cyan → light cyan
+    function coolColor(t) {
+      t = Math.max(0, Math.min(1, t));
+      let r, g, b;
+      if (t < 0.25) {
+        // Deep cobalt
+        const s = t / 0.25;
+        r = 20 + s * 10; g = 40 + s * 30; b = 120 + s * 40;
+      } else if (t < 0.5) {
+        // Cobalt to blue-teal
+        const s = (t - 0.25) / 0.25;
+        r = 30 - s * 10; g = 70 + s * 60; b = 160 + s * 30;
+      } else if (t < 0.75) {
+        // Teal to cyan
+        const s = (t - 0.5) / 0.25;
+        r = 20 + s * 20; g = 130 + s * 60; b = 190 + s * 20;
+      } else {
+        // Cyan to light cyan
+        const s = (t - 0.75) / 0.25;
+        r = 40 + s * 60; g = 190 + s * 40; b = 210 + s * 30;
+      }
+      return [Math.round(r), Math.round(g), Math.round(b)];
+    }
+
+    let time = 0;
+    let progress = 0;
+    const maxH = waves.reduce((sum, w) => sum + w.amp, 0);
+
+    const progressInterval = setInterval(() => {
+      progress++;
+      if (progress >= 100) clearInterval(progressInterval);
+    }, 50);
+
+    function getHeight(x, y, t) {
+      let h = 0;
+      for (const w of waves) {
+        const dx = x - w.cx * W;
+        const dy = y - w.cy * H;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        h += w.amp * Math.sin(dist * w.freq + t * w.speed);
+      }
+      return h;
+    }
+
+    function project(x, y, z) {
+      const viewHeight = H * 0.45;
+      const depth = H * 1.2;
+      const scale = depth / (depth + viewHeight - z);
+      return {
+        x: W / 2 + (x - W / 2) * scale,
+        y: H * 0.55 + (y - H * 0.5) * scale * 0.55 - z * scale * 0.4,
+      };
+    }
+
+    function edgeAlpha(col, row) {
+      const fade = 0.15;
+      const cx = col / COLS;
+      const cy = row / ROWS;
+      let ax = 1, ay = 1;
+      if (cx < fade) ax = cx / fade;
+      else if (cx > 1 - fade) ax = (1 - cx) / fade;
+      if (cy < fade) ay = cy / fade;
+      else if (cy > 1 - fade) ay = (1 - cy) / fade;
+      return ax * ay;
+    }
+
+    function draw() {
+      ctx.clearRect(0, 0, W, H);
+      time += 0.02;
+
+      const gridW = W * 1.8;
+      const gridH = H * 1.6;
+      const offsetX = (W - gridW) / 2;
+      const offsetY = (H - gridH) / 2;
+
+      const points = [];
+      const alphaGrid = [];
+      const heights = [];
+
+      for (let r = 0; r <= ROWS; r++) {
+        const rowP = [], rowA = [], rowH = [];
+        for (let c = 0; c <= COLS; c++) {
+          const x = offsetX + (c / COLS) * gridW;
+          const y = offsetY + (r / ROWS) * gridH;
+          const z = getHeight(x, y, time);
+          rowP.push(project(x, y, z));
+          rowA.push(edgeAlpha(c, r));
+          rowH.push((z + maxH) / (2 * maxH));
+        }
+        points.push(rowP);
+        alphaGrid.push(rowA);
+        heights.push(rowH);
+      }
+
+      // Gentle breathing
+      const breath = 0.2 + 0.08 * Math.sin(time * 0.8);
+      ctx.lineWidth = 0.8;
+
+      // Horizontal lines
+      for (let r = 0; r <= ROWS; r++) {
+        for (let c = 0; c < COLS; c++) {
+          const a = Math.min(alphaGrid[r][c], alphaGrid[r][c + 1]);
+          if (a < 0.01) continue;
+          const hN = (heights[r][c] + heights[r][c + 1]) / 2;
+          const [cr, cg, cb] = coolColor(hN);
+          ctx.strokeStyle = `rgba(${cr},${cg},${cb},${a * breath})`;
+          ctx.beginPath();
+          ctx.moveTo(points[r][c].x, points[r][c].y);
+          ctx.lineTo(points[r][c + 1].x, points[r][c + 1].y);
+          ctx.stroke();
+        }
+      }
+
+      // Vertical lines
+      for (let c = 0; c <= COLS; c++) {
+        for (let r = 0; r < ROWS; r++) {
+          const a = Math.min(alphaGrid[r][c], alphaGrid[r + 1][c]);
+          if (a < 0.01) continue;
+          const hN = (heights[r][c] + heights[r + 1][c]) / 2;
+          const [cr, cg, cb] = coolColor(hN);
+          ctx.strokeStyle = `rgba(${cr},${cg},${cb},${a * breath})`;
+          ctx.beginPath();
+          ctx.moveTo(points[r][c].x, points[r][c].y);
+          ctx.lineTo(points[r + 1][c].x, points[r + 1][c].y);
+          ctx.stroke();
+        }
+      }
+
+      // --- Counter ---
+      const p = Math.max(1, progress);
+      const counterText = (p < 10 ? '0' + p : String(p)) + '%';
+      const fontSize = Math.max(32, Math.min(W * 0.05, 56));
+      ctx.font = `700 ${fontSize}px Rajdhani, sans-serif`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+
+      const centerX = W / 2;
+      const centerY = H / 2;
+
+      // Ghost segments
+      ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+      ctx.fillText('88%', centerX, centerY);
+
+      // Subtle flicker: 0.93–1.0 range
+      const flicker = 0.93 + Math.random() * 0.07;
+
+      // Counter
+      ctx.save();
+      ctx.globalAlpha = flicker;
+      ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+      ctx.shadowBlur = 8;
+      ctx.fillStyle = '#1a1a1a';
+      ctx.fillText(counterText, centerX, centerY);
+      ctx.restore();
+
+      // Faint CRT scanlines
+      ctx.font = `700 ${fontSize}px Rajdhani, sans-serif`;
+      const textW = ctx.measureText('888%').width;
+      const slTop = centerY - fontSize * 0.6;
+      const slBottom = centerY + fontSize * 0.6;
+      ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+      for (let sy = slTop; sy < slBottom; sy += 4) {
+        ctx.fillRect(centerX - textW / 2 - 6, sy, textW + 12, 1.5);
+      }
+
+      // "INITIALIZING" label
+      const subSize = Math.max(12, fontSize * 0.24);
+      ctx.font = `400 ${subSize}px Inter, sans-serif`;
+      ctx.fillStyle = '#888888';
+      ctx.globalAlpha = 1;
+      ctx.shadowBlur = 0;
+      ctx.fillText('I N I T I A L I Z I N G', centerX, centerY + fontSize * 0.55 + 10);
+
+      requestAnimationFrame(draw);
+    }
+
+    document.fonts.ready.then(() => draw());
+  </script>
+</body>
+</html>

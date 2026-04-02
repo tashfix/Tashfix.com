@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TA</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="preload" as="image" href="placeholder.png">
+</head>
+<body>
+
+  <!-- ===== HERO SECTION (scroll-driven) ===== -->
+  <section class="hero" id="hero">
+    <div class="hero-sticky" id="heroSticky">
+
+      <!-- Background layer: off-white → deep cobalt -->
+      <div class="hero-bg" id="heroBg"></div>
+
+      <!-- Marquee text layer (behind portrait) -->
+      <div class="marquee-layer" id="marqueeLayer">
+        <div class="marquee-track" id="marqueeTrack">
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+        </div>
+      </div>
+
+      <!-- Portrait image + signature overlay -->
+      <div class="portrait-container" id="portraitContainer">
+        <div class="portrait-clip">
+          <img class="portrait-img" id="portraitImg" src="placeholder.png" alt="Portrait">
+        </div>
+
+        <!-- Inlined TA signature SVG (CSS animation stripped, GSAP controls drawing) -->
+        <svg class="signature-svg" id="signatureSvg"
+             xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 295 278">
+          <style>
+            .pen { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+            .n0 { stroke-opacity: 1; }
+            .n1 { stroke-opacity: 0.78; }
+            .n2 { stroke-opacity: 0.42; }
+          </style>
+          <defs>
+            <path id="tp" pathLength="1000" d="M 252,33
+               C 252,33 239.937,23.741 222,29
+               C 222,29 112.974,57.844 34,96
+               C 34,96 99.465,76.1 91,138
+               C 91,138 78.415,221.344 62,242
+               C 62,242 46.245,256.58 96,134
+               L 145,26
+               C 156.243,5.905 129,87 129,87" />
+            <path id="ap" pathLength="1000" d="M 97,239
+               C 97,239 178.325,64.977 185,65
+               L 154,220
+               C 154,220 150.052,233.522 162,210" />
+            <path id="xp" pathLength="1000" d="M 89,186
+               C 89,186 141.163,157.289 207,142" />
+          </defs>
+
+          <!-- T STROKE -->
+          <use href="#tp" class="pen t n2" stroke-width="1.8" transform="translate(-3.45, -3.45)" />
+          <use href="#tp" class="pen t n1" stroke-width="3.0" transform="translate(-1.74, -1.74)" />
+          <use href="#tp" class="pen t n0" stroke-width="3.9" />
+          <use href="#tp" class="pen t n1" stroke-width="3.0" transform="translate(1.74, 1.74)" />
+          <use href="#tp" class="pen t n2" stroke-width="1.8" transform="translate(3.45, 3.45)" />
+
+          <!-- A STROKE -->
+          <use href="#ap" class="pen a n2" stroke-width="1.8" transform="translate(-3.45, -3.45)" />
+          <use href="#ap" class="pen a n1" stroke-width="3.0" transform="translate(-1.74, -1.74)" />
+          <use href="#ap" class="pen a n0" stroke-width="3.9" />
+          <use href="#ap" class="pen a n1" stroke-width="3.0" transform="translate(1.74, 1.74)" />
+          <use href="#ap" class="pen a n2" stroke-width="1.8" transform="translate(3.45, 3.45)" />
+
+          <!-- CROSSBAR -->
+          <use href="#xp" class="pen xb n2" stroke-width="1.8" transform="translate(-3.45, -3.45)" />
+          <use href="#xp" class="pen xb n1" stroke-width="3.0" transform="translate(-1.74, -1.74)" />
+          <use href="#xp" class="pen xb n0" stroke-width="3.9" />
+          <use href="#xp" class="pen xb n1" stroke-width="3.0" transform="translate(1.74, 1.74)" />
+          <use href="#xp" class="pen xb n2" stroke-width="1.8" transform="translate(3.45, 3.45)" />
+        </svg>
+      </div>
+
+      <!-- Corner UI: logo + hamburger -->
+      <header class="hero-header">
+        <div class="logo" id="logo">TA</div>
+        <div class="nav-toggle" id="navToggle">
+          <span class="hamburger" id="hamburger"></span>
+        </div>
+      </header>
+
+    </div>
+  </section>
+
+  <!-- ===== Content below the fold ===== -->
+  <section class="content">
+    <p style="opacity: 0.4; font-size: 1.2rem;">Scroll back up to replay</p>
+  </section>
+
+  <!-- GSAP + ScrollTrigger -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <script src="main.js"></script>
+</body>
+</html>

@@ -1,0 +1,87 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 295 278" width="590" height="556">
+  <!--
+    Source: TA_paths.ai  |  Angled fountain pen nib simulation
+    5 layers per stroke offset at ~45° nib angle to create calligraphic thickness variation.
+    Stroke order: T sweep → A rise/fall → crossbar strike
+  -->
+  <style>
+    .pen { fill: none; stroke: #111; stroke-linecap: round; stroke-linejoin: round; }
+
+    /* Draw-on keyframe */
+    @keyframes draw { to { stroke-dashoffset: 0; } }
+
+    /* Per-stroke timing classes */
+    .t  { stroke-dasharray: 1000; stroke-dashoffset: 1000;
+          animation: draw 0.6s cubic-bezier(0.25, 0.1, 0.25, 1.0) 0.15s forwards; }
+    .a  { stroke-dasharray: 1000; stroke-dashoffset: 1000;
+          animation: draw 0.5s cubic-bezier(0.4, 0.0, 0.2, 1.0) 0.85s forwards; }
+    .xb { stroke-dasharray: 1000; stroke-dashoffset: 1000;
+          animation: draw 0.25s cubic-bezier(0.0, 0.0, 0.2, 1.0) 1.50s forwards; }
+
+    /* Nib layers: center is full, outer layers softer */
+    .n0 { stroke-opacity: 1; }
+    .n1 { stroke-opacity: 0.78; }
+    .n2 { stroke-opacity: 0.42; }
+  </style>
+
+  <defs>
+    <!-- T stroke path data -->
+    <path id="tp" pathLength="1000" d="M 252,33
+       C 252,33 239.937,23.741 222,29
+       C 222,29 112.974,57.844 34,96
+       C 34,96 99.465,76.1 91,138
+       C 91,138 78.415,221.344 62,242
+       C 62,242 46.245,256.58 96,134
+       L 145,26
+       C 156.243,5.905 129,87 129,87" />
+
+    <!-- A stroke path data -->
+    <path id="ap" pathLength="1000" d="M 97,239
+       C 97,239 178.325,64.977 185,65
+       L 154,220
+       C 154,220 150.052,233.522 162,210" />
+
+    <!-- Crossbar path data -->
+    <path id="xp" pathLength="1000" d="M 89,186
+       C 89,186 141.163,157.289 207,142" />
+  </defs>
+
+  <!-- ============ T STROKE — 5 nib layers ============ -->
+  <!-- Outer layer -2 -->
+  <use href="#tp" class="pen t n2" stroke-width="0.6"
+       transform="translate(-1.15, -1.15)" />
+  <!-- Inner layer -1 -->
+  <use href="#tp" class="pen t n1" stroke-width="1.0"
+       transform="translate(-0.58, -0.58)" />
+  <!-- Center -->
+  <use href="#tp" class="pen t n0" stroke-width="1.3" />
+  <!-- Inner layer +1 -->
+  <use href="#tp" class="pen t n1" stroke-width="1.0"
+       transform="translate(0.58, 0.58)" />
+  <!-- Outer layer +2 -->
+  <use href="#tp" class="pen t n2" stroke-width="0.6"
+       transform="translate(1.15, 1.15)" />
+
+  <!-- ============ A STROKE — 5 nib layers ============ -->
+  <use href="#ap" class="pen a n2" stroke-width="0.6"
+       transform="translate(-1.15, -1.15)" />
+  <use href="#ap" class="pen a n1" stroke-width="1.0"
+       transform="translate(-0.58, -0.58)" />
+  <use href="#ap" class="pen a n0" stroke-width="1.3" />
+  <use href="#ap" class="pen a n1" stroke-width="1.0"
+       transform="translate(0.58, 0.58)" />
+  <use href="#ap" class="pen a n2" stroke-width="0.6"
+       transform="translate(1.15, 1.15)" />
+
+  <!-- ============ CROSSBAR — 5 nib layers ============ -->
+  <use href="#xp" class="pen xb n2" stroke-width="0.6"
+       transform="translate(-1.15, -1.15)" />
+  <use href="#xp" class="pen xb n1" stroke-width="1.0"
+       transform="translate(-0.58, -0.58)" />
+  <use href="#xp" class="pen xb n0" stroke-width="1.3" />
+  <use href="#xp" class="pen xb n1" stroke-width="1.0"
+       transform="translate(0.58, 0.58)" />
+  <use href="#xp" class="pen xb n2" stroke-width="0.6"
+       transform="translate(1.15, 1.15)" />
+
+</svg>

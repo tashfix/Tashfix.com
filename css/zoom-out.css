@@ -1,0 +1,120 @@
+/* ═══════════════════════════════════════════════════════════
+   ZOOM OUT — scroll-driven portrait transition
+   ═══════════════════════════════════════════════════════════ */
+
+.zoomout {
+  position: relative;
+  height: 220vh;
+  background: var(--color-cobalt);
+}
+
+.zoomout__sticky {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.zoomout__bg {
+  position: absolute;
+  inset: 0;
+  background: var(--color-beige);
+  z-index: 1;
+  cursor: none;
+}
+
+/* Header removed — face morph overlay provides logo + hamburger */
+
+/* ── Marquee Layer ── */
+.zoomout__marquee-layer {
+  position: absolute;
+  top: 50%;
+  left: 0;
+  transform: translateY(-50%);
+  width: 100%;
+  overflow: hidden;
+  z-index: 2;
+  opacity: 0;
+}
+
+.zoomout__marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: zoomout-marquee-scroll 60s linear infinite;
+  width: max-content;
+}
+
+.zoomout__marquee-track span {
+  font-size: clamp(6rem, 15vw, 14rem);
+  font-weight: 900;
+  text-transform: uppercase;
+  color: var(--color-cobalt);
+  -webkit-text-stroke: 4px var(--color-tangerine);
+  paint-order: stroke fill;
+  letter-spacing: 0.02em;
+  flex-shrink: 0;
+  padding-right: 0.5em;
+}
+
+@keyframes zoomout-marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+/* ── Portrait Container ── */
+.zoomout__portrait-container {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  overflow: visible;
+  will-change: transform;
+  transform-origin: center center;
+}
+
+.zoomout__portrait-clip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+/* Static portrait: hidden initially, fades in during zoom-out scroll */
+.zoomout__portrait-static {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0;
+  z-index: 2;
+  pointer-events: none;
+}
+
+/* ── Signature SVG Overlay ── */
+.zoomout__signature {
+  position: absolute;
+  top: 50%;
+  left: 48%;
+  transform: translate(-50%, -50%);
+  width: 75%;
+  max-width: none;
+  height: auto;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.zoomout__signature .pen {
+  stroke: var(--color-tangerine);
+}
+
+.zoomout__signature .t,
+.zoomout__signature .a,
+.zoomout__signature .xb {
+  animation: none !important;
+  stroke-dasharray: 1000;
+  stroke-dashoffset: 1000;
+}
+

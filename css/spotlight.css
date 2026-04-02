@@ -1,0 +1,137 @@
+/* ═══════════════════════════════════════════════════════════
+   SPOTLIGHT BORDER — mouse-tracked glow on glassmorphic elements
+   Uses CSS background-attachment:fixed + mask subtract trick
+   to show the gradient only in the border band
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── CSS variables & base ───────────────────────────────── */
+[data-glow] {
+  --base:                  20;     /* tangerine-adjacent hue */
+  --spread:                60;
+  --radius:                12;
+  --border:                1;
+  --size:                  220;
+  --outer:                 1;
+  --saturation:            90;
+  --lightness:             62;
+  --bg-spot-opacity:       0;      /* disabled by default */
+  --border-spot-opacity:   1;
+  --border-light-opacity:  0.5;
+
+  /* Derived */
+  --border-size:    calc(var(--border) * 1px);
+  --spotlight-size: calc(var(--size) * 1px);
+  --hue:            calc(var(--base) + (var(--xp, 0) * var(--spread)));
+
+  position: relative;
+}
+
+/* ── ::before — colored tangerine glow on border ────────── */
+[data-glow]::before,
+[data-glow]::after {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: calc(var(--border-size) * -1);
+  border: var(--border-size) solid transparent;
+  border-radius: calc(var(--radius) * 1px);
+  background-attachment: fixed;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size:
+    calc(100% + 2 * var(--border-size))
+    calc(100% + 2 * var(--border-size));
+
+  /* Show gradient only in the border band (not the fill area) */
+  -webkit-mask:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(white, white);
+  mask:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(white, white);
+  -webkit-mask-composite: destination-out;
+  mask-composite:         subtract;
+}
+
+[data-glow]::before {
+  background-image: radial-gradient(
+    calc(var(--spotlight-size) * 0.75) calc(var(--spotlight-size) * 0.75) at
+    calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+    hsl(var(--hue) calc(var(--saturation) * 1%) calc(var(--lightness) * 1%) / var(--border-spot-opacity)),
+    transparent 100%
+  );
+  filter: brightness(2);
+}
+
+[data-glow]::after {
+  background-image: radial-gradient(
+    calc(var(--spotlight-size) * 0.5) calc(var(--spotlight-size) * 0.5) at
+    calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+    hsl(0deg 100% 100% / var(--border-light-opacity)),
+    transparent 100%
+  );
+}
+
+/* ── Inner blur element: outer soft halo ────────────────── */
+[data-glow] > .spotlight-inner {
+  position:      absolute;
+  inset:         0;
+  border-radius: inherit;
+  pointer-events: none;
+  opacity:       var(--outer, 1);
+  will-change:   filter;
+  filter:        blur(calc(var(--border-size) * 12));
+}
+
+[data-glow] > .spotlight-inner::before {
+  content: "";
+  position: absolute;
+  inset: -8px;
+  border: 8px solid transparent;
+  border-radius: calc(var(--radius) * 1px);
+  background-attachment: fixed;
+  background-image: radial-gradient(
+    calc(var(--spotlight-size) * 0.6) calc(var(--spotlight-size) * 0.6) at
+    calc(var(--x, -9999) * 1px) calc(var(--y, -9999) * 1px),
+    hsl(var(--hue) calc(var(--saturation) * 1%) calc(var(--lightness) * 1%) / 0.6),
+    transparent 100%
+  );
+
+  -webkit-mask:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(white, white);
+  mask:
+    linear-gradient(white, white) padding-box,
+    linear-gradient(white, white);
+  -webkit-mask-composite: destination-out;
+  mask-composite:         subtract;
+}
+
+/* ── Per-element tuning ─────────────────────────────────── */
+
+/* View My Work — light pill */
+.morph__hero-cta[data-glow] {
+  --radius: 100;
+  --border: 1;
+  --size:   180;
+  --border-spot-opacity:  1;
+  --border-light-opacity: 0.45;
+}
+
+/* View Case Studies — dark pill */
+.video-quotes__cta[data-glow] {
+  --radius: 100;
+  --border: 1;
+  --size:   180;
+  --border-spot-opacity:  1;
+  --border-light-opacity: 0.4;
+}
+
+/* Testimonial cards */
+.video-quotes__item[data-glow] {
+  --radius: 12;
+  --border: 1;
+  --size:   240;
+  --border-spot-opacity:  0.9;
+  --border-light-opacity: 0.3;
+}

@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tash Alam</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:wght@600;700&family=DM+Serif+Display&family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@600&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/loader.css">
+  <link rel="stylesheet" href="css/face-morph.css?v=3">
+  <link rel="stylesheet" href="css/zoom-out.css">
+  <link rel="stylesheet" href="css/horizontal.css?v=2">
+  <link rel="stylesheet" href="css/about.css">
+
+  <!-- Preloads -->
+  <link rel="preload" as="image" href="assets/images/portrait.png">
+  <link rel="preload" as="image" href="assets/images/metallic.png">
+</head>
+<body>
+
+  <!-- ====== LOADING OVERLAY ====== -->
+  <div id="loader-overlay">
+    <canvas id="loader-canvas" class="loader__canvas"></canvas>
+  </div>
+
+  <!-- ====== AUDIO CONSENT MODAL ====== -->
+  <div id="audio-consent" class="audio-consent" role="dialog" aria-label="Audio preference">
+    <div class="audio-consent__card">
+      <div class="audio-consent__waveform" aria-hidden="true">
+        <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <p class="audio-consent__title">This experience is best with sound</p>
+      <p class="audio-consent__subtitle">Enable audio for the full immersive experience</p>
+      <button class="audio-consent__btn audio-consent__btn--primary" id="audio-consent-enable">Allow Audio</button>
+      <button class="audio-consent__btn audio-consent__btn--secondary" id="audio-consent-skip">Continue without audio</button>
+    </div>
+  </div>
+
+  <!-- ====== PERSISTENT SITE LOGO ====== -->
+  <div class="site-logo" id="site-logo">
+    <div class="site-logo__glass" id="site-logo-glass"></div>
+    <svg class="site-logo__dark" width="256" height="133" viewBox="0 0 256 133" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Alam Tashfiq">
+      <path class="site-logo__path" opacity="0.92" d="M57.3359 68.1895H25.0605L16.6621 86.5H4.40625L41.7109 6.37305L77.6973 86.5H65.2461L57.3359 68.1895ZM52.6973 57.4961L41.5156 31.8613L29.7969 57.4961H52.6973ZM83.5469 11.1094V75.8066H105.715V86.5H72.1699V11.1094H83.5469ZM149.992 68.1895H117.717L109.318 86.5H97.0625L134.367 6.37305L170.354 86.5H157.902L149.992 68.1895ZM145.354 57.4961L134.172 31.8613L122.453 57.4961H145.354ZM162.189 86.5L178.059 5.44531L203.938 64.0391L230.744 5.44531L245.002 86.5H233.332L226.057 40.9922L203.742 89.9668L182.062 40.9434L173.957 86.5H162.189Z"/>
+      <path class="site-logo__path" d="M28.52 98.768H27.296C26.4573 98.768 25.7093 98.8587 25.052 99.04C24.3947 99.1987 23.8053 99.4933 23.284 99.924C22.7627 100.332 22.298 100.91 21.89 101.658C21.482 102.406 21.108 103.358 20.768 104.514H20.326V98.292H41.644V104.514H41.202C40.862 103.358 40.488 102.406 40.08 101.658C39.672 100.91 39.2073 100.332 38.686 99.924C38.1647 99.4933 37.5753 99.1987 36.918 99.04C36.2607 98.8587 35.5127 98.768 34.674 98.768H33.45V122.024H36.578V122.5H25.392V122.024H28.52V98.768ZM61.4347 103.154L57.6267 112.436H65.4467L61.4347 103.154ZM50.2827 122.024H53.1387L63.2707 97.34H64.1887L74.8987 122.024H77.8227V122.5H66.3987V122.024H69.5607L65.6167 112.912H57.4567L53.6827 122.024H56.7087V122.5H50.2827V122.024ZM87.2335 114.952H87.7435C87.7888 115.224 87.8682 115.587 87.9815 116.04C88.0948 116.471 88.2535 116.947 88.4575 117.468C88.6842 117.967 88.9562 118.488 89.2735 119.032C89.6135 119.553 90.0215 120.041 90.4975 120.494C91.0188 121.015 91.5175 121.412 91.9935 121.684C92.4922 121.956 92.9568 122.16 93.3875 122.296C93.8408 122.409 94.2602 122.477 94.6455 122.5C95.0535 122.5 95.4275 122.5 95.7675 122.5C96.9688 122.5 97.9548 122.319 98.7255 121.956C99.4962 121.571 100.097 121.106 100.527 120.562C100.981 120.018 101.298 119.451 101.479 118.862C101.661 118.25 101.751 117.717 101.751 117.264C101.751 116.425 101.547 115.734 101.139 115.19C100.754 114.646 100.233 114.193 99.5755 113.83C98.9182 113.467 98.1702 113.161 97.3315 112.912C96.4928 112.663 95.6315 112.413 94.7475 112.164C93.8635 111.892 93.0022 111.586 92.1635 111.246C91.3248 110.883 90.5768 110.43 89.9195 109.886C89.2622 109.319 88.7295 108.628 88.3215 107.812C87.9362 106.996 87.7435 105.976 87.7435 104.752C87.7435 103.845 87.9475 102.973 88.3555 102.134C88.7635 101.295 89.3302 100.559 90.0555 99.924C90.7808 99.2667 91.6422 98.7453 92.6395 98.36C93.6595 97.952 94.7588 97.748 95.9375 97.748C96.6855 97.748 97.3428 97.816 97.9095 97.952C98.4762 98.088 98.9748 98.2353 99.4055 98.394C99.8362 98.53 100.21 98.666 100.527 98.802C100.867 98.938 101.173 99.006 101.445 99.006C101.763 99.006 101.967 98.9607 102.057 98.87C102.171 98.7567 102.284 98.564 102.397 98.292H102.941V104.752H102.499C102.227 103.959 101.933 103.177 101.615 102.406C101.321 101.635 100.935 100.944 100.459 100.332C99.9835 99.6973 99.3828 99.1873 98.6575 98.802C97.9322 98.4167 97.0142 98.224 95.9035 98.224C94.9968 98.224 94.1922 98.3487 93.4895 98.598C92.8095 98.8473 92.2315 99.176 91.7555 99.584C91.2795 99.992 90.9168 100.445 90.6675 100.944C90.4182 101.443 90.2935 101.953 90.2935 102.474C90.2935 103.267 90.4975 103.925 90.9055 104.446C91.3362 104.967 91.8915 105.421 92.5715 105.806C93.2515 106.169 94.0222 106.486 94.8835 106.758C95.7675 107.03 96.6628 107.313 97.5695 107.608C98.4988 107.903 99.3942 108.231 100.255 108.594C101.139 108.934 101.921 109.376 102.601 109.92C103.281 110.464 103.825 111.121 104.233 111.892C104.664 112.663 104.879 113.615 104.879 114.748C104.879 115.859 104.653 116.913 104.199 117.91C103.746 118.907 103.1 119.78 102.261 120.528C101.445 121.276 100.459 121.877 99.3035 122.33C98.1702 122.761 96.9008 122.976 95.4955 122.976C94.7928 122.976 94.0902 122.908 93.3875 122.772C92.7075 122.636 92.0615 122.5 91.4495 122.364C90.8602 122.205 90.3275 122.058 89.8515 121.922C89.3982 121.786 89.0582 121.718 88.8315 121.718C88.5142 121.718 88.2875 121.775 88.1515 121.888C88.0155 121.979 87.8908 122.183 87.7775 122.5H87.2335V114.952ZM117.848 98.292H129.034V98.768H125.906V109.92H135.732V98.768H132.604V98.292H143.79V98.768H140.662V122.024H143.79V122.5H132.604V122.024H135.732V110.396H125.906V122.024H129.034V122.5H117.848V122.024H120.976V98.768H117.848V98.292ZM158.887 98.768H155.759V98.292H175.853V104.106H175.411C175.093 103.29 174.742 102.553 174.357 101.896C173.994 101.239 173.563 100.683 173.065 100.23C172.566 99.754 171.977 99.3913 171.297 99.142C170.639 98.8927 169.857 98.768 168.951 98.768H163.817V109.716H165.721C166.559 109.716 167.262 109.603 167.829 109.376C168.418 109.127 168.905 108.787 169.291 108.356C169.676 107.903 169.993 107.37 170.243 106.758C170.492 106.123 170.696 105.421 170.855 104.65H171.297V115.224H170.855C170.696 114.567 170.503 113.932 170.277 113.32C170.073 112.708 169.789 112.175 169.427 111.722C169.064 111.246 168.611 110.872 168.067 110.6C167.545 110.328 166.888 110.192 166.095 110.192H163.817V122.024H166.979V122.5H155.759V122.024H158.887V98.768ZM187.262 98.292H198.448V98.768H195.32V122.024H198.448V122.5H187.262V122.024H190.39V98.768H187.262V98.292ZM214.912 110.464C214.912 112.821 215.048 114.782 215.32 116.346C215.592 117.887 216.011 119.123 216.578 120.052C217.167 120.959 217.915 121.593 218.822 121.956C219.751 122.319 220.85 122.5 222.12 122.5C223.797 122.5 225.112 122.194 226.064 121.582C227.016 120.947 227.73 120.086 228.206 118.998C228.682 117.887 228.976 116.584 229.09 115.088C229.226 113.569 229.294 111.926 229.294 110.158C229.294 108.571 229.237 107.064 229.124 105.636C229.033 104.185 228.75 102.916 228.274 101.828C227.798 100.717 227.072 99.8447 226.098 99.21C225.146 98.5527 223.82 98.224 222.12 98.224C220.533 98.224 219.264 98.53 218.312 99.142C217.36 99.7313 216.634 100.57 216.136 101.658C215.637 102.746 215.308 104.038 215.15 105.534C214.991 107.03 214.912 108.673 214.912 110.464ZM232.932 129.742C231.096 129.651 229.588 129.538 228.41 129.402C227.254 129.266 226.29 129.051 225.52 128.756C224.772 128.461 224.148 128.053 223.65 127.532C223.151 127.011 222.652 126.308 222.154 125.424C221.836 124.903 221.496 124.404 221.134 123.928C220.771 123.475 220.442 123.089 220.148 122.772C218.674 122.568 217.28 122.103 215.966 121.378C214.674 120.653 213.529 119.746 212.532 118.658C211.557 117.57 210.786 116.323 210.22 114.918C209.653 113.513 209.37 112.028 209.37 110.464C209.37 108.537 209.755 106.792 210.526 105.228C211.319 103.664 212.328 102.327 213.552 101.216C214.776 100.105 216.147 99.2553 217.666 98.666C219.184 98.054 220.669 97.748 222.12 97.748C223.684 97.748 225.225 98.0427 226.744 98.632C228.285 99.2213 229.645 100.06 230.824 101.148C232.025 102.236 232.988 103.562 233.714 105.126C234.462 106.667 234.836 108.413 234.836 110.362C234.836 112.062 234.484 113.683 233.782 115.224C233.102 116.743 232.172 118.08 230.994 119.236C229.838 120.392 228.489 121.31 226.948 121.99C225.429 122.647 223.82 122.976 222.12 122.976C221.689 122.976 221.304 122.942 220.964 122.874C221.19 123.123 221.406 123.327 221.61 123.486C221.836 123.645 222.108 123.769 222.426 123.86C222.766 123.973 223.162 124.064 223.616 124.132C224.069 124.2 224.647 124.268 225.35 124.336C226.483 124.449 227.333 124.767 227.9 125.288C228.489 125.809 228.999 126.455 229.43 127.226C229.656 127.634 229.849 127.963 230.008 128.212C230.189 128.484 230.393 128.699 230.62 128.858C230.869 129.017 231.164 129.119 231.504 129.164C231.866 129.232 232.342 129.266 232.932 129.266V129.742Z"/>
+    </svg>
+    <svg class="site-logo__light" width="256" height="133" viewBox="0 0 256 133" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Alam Tashfiq">
+      <path class="site-logo__path" opacity="0.92" d="M57.3359 68.1895H25.0605L16.6621 86.5H4.40625L41.7109 6.37305L77.6973 86.5H65.2461L57.3359 68.1895ZM52.6973 57.4961L41.5156 31.8613L29.7969 57.4961H52.6973ZM83.5469 11.1094V75.8066H105.715V86.5H72.1699V11.1094H83.5469ZM149.992 68.1895H117.717L109.318 86.5H97.0625L134.367 6.37305L170.354 86.5H157.902L149.992 68.1895ZM145.354 57.4961L134.172 31.8613L122.453 57.4961H145.354ZM162.189 86.5L178.059 5.44531L203.938 64.0391L230.744 5.44531L245.002 86.5H233.332L226.057 40.9922L203.742 89.9668L182.062 40.9434L173.957 86.5H162.189Z"/>
+      <path class="site-logo__path" d="M28.52 98.768H27.296C26.4573 98.768 25.7093 98.8587 25.052 99.04C24.3947 99.1987 23.8053 99.4933 23.284 99.924C22.7627 100.332 22.298 100.91 21.89 101.658C21.482 102.406 21.108 103.358 20.768 104.514H20.326V98.292H41.644V104.514H41.202C40.862 103.358 40.488 102.406 40.08 101.658C39.672 100.91 39.2073 100.332 38.686 99.924C38.1647 99.4933 37.5753 99.1987 36.918 99.04C36.2607 98.8587 35.5127 98.768 34.674 98.768H33.45V122.024H36.578V122.5H25.392V122.024H28.52V98.768ZM61.4347 103.154L57.6267 112.436H65.4467L61.4347 103.154ZM50.2827 122.024H53.1387L63.2707 97.34H64.1887L74.8987 122.024H77.8227V122.5H66.3987V122.024H69.5607L65.6167 112.912H57.4567L53.6827 122.024H56.7087V122.5H50.2827V122.024ZM87.2335 114.952H87.7435C87.7888 115.224 87.8682 115.587 87.9815 116.04C88.0948 116.471 88.2535 116.947 88.4575 117.468C88.6842 117.967 88.9562 118.488 89.2735 119.032C89.6135 119.553 90.0215 120.041 90.4975 120.494C91.0188 121.015 91.5175 121.412 91.9935 121.684C92.4922 121.956 92.9568 122.16 93.3875 122.296C93.8408 122.409 94.2602 122.477 94.6455 122.5C95.0535 122.5 95.4275 122.5 95.7675 122.5C96.9688 122.5 97.9548 122.319 98.7255 121.956C99.4962 121.571 100.097 121.106 100.527 120.562C100.981 120.018 101.298 119.451 101.479 118.862C101.661 118.25 101.751 117.717 101.751 117.264C101.751 116.425 101.547 115.734 101.139 115.19C100.754 114.646 100.233 114.193 99.5755 113.83C98.9182 113.467 98.1702 113.161 97.3315 112.912C96.4928 112.663 95.6315 112.413 94.7475 112.164C93.8635 111.892 93.0022 111.586 92.1635 111.246C91.3248 110.883 90.5768 110.43 89.9195 109.886C89.2622 109.319 88.7295 108.628 88.3215 107.812C87.9362 106.996 87.7435 105.976 87.7435 104.752C87.7435 103.845 87.9475 102.973 88.3555 102.134C88.7635 101.295 89.3302 100.559 90.0555 99.924C90.7808 99.2667 91.6422 98.7453 92.6395 98.36C93.6595 97.952 94.7588 97.748 95.9375 97.748C96.6855 97.748 97.3428 97.816 97.9095 97.952C98.4762 98.088 98.9748 98.2353 99.4055 98.394C99.8362 98.53 100.21 98.666 100.527 98.802C100.867 98.938 101.173 99.006 101.445 99.006C101.763 99.006 101.967 98.9607 102.057 98.87C102.171 98.7567 102.284 98.564 102.397 98.292H102.941V104.752H102.499C102.227 103.959 101.933 103.177 101.615 102.406C101.321 101.635 100.935 100.944 100.459 100.332C99.9835 99.6973 99.3828 99.1873 98.6575 98.802C97.9322 98.4167 97.0142 98.224 95.9035 98.224C94.9968 98.224 94.1922 98.3487 93.4895 98.598C92.8095 98.8473 92.2315 99.176 91.7555 99.584C91.2795 99.992 90.9168 100.445 90.6675 100.944C90.4182 101.443 90.2935 101.953 90.2935 102.474C90.2935 103.267 90.4975 103.925 90.9055 104.446C91.3362 104.967 91.8915 105.421 92.5715 105.806C93.2515 106.169 94.0222 106.486 94.8835 106.758C95.7675 107.03 96.6628 107.313 97.5695 107.608C98.4988 107.903 99.3942 108.231 100.255 108.594C101.139 108.934 101.921 109.376 102.601 109.92C103.281 110.464 103.825 111.121 104.233 111.892C104.664 112.663 104.879 113.615 104.879 114.748C104.879 115.859 104.653 116.913 104.199 117.91C103.746 118.907 103.1 119.78 102.261 120.528C101.445 121.276 100.459 121.877 99.3035 122.33C98.1702 122.761 96.9008 122.976 95.4955 122.976C94.7928 122.976 94.0902 122.908 93.3875 122.772C92.7075 122.636 92.0615 122.5 91.4495 122.364C90.8602 122.205 90.3275 122.058 89.8515 121.922C89.3982 121.786 89.0582 121.718 88.8315 121.718C88.5142 121.718 88.2875 121.775 88.1515 121.888C88.0155 121.979 87.8908 122.183 87.7775 122.5H87.2335V114.952ZM117.848 98.292H129.034V98.768H125.906V109.92H135.732V98.768H132.604V98.292H143.79V98.768H140.662V122.024H143.79V122.5H132.604V122.024H135.732V110.396H125.906V122.024H129.034V122.5H117.848V122.024H120.976V98.768H117.848V98.292ZM158.887 98.768H155.759V98.292H175.853V104.106H175.411C175.093 103.29 174.742 102.553 174.357 101.896C173.994 101.239 173.563 100.683 173.065 100.23C172.566 99.754 171.977 99.3913 171.297 99.142C170.639 98.8927 169.857 98.768 168.951 98.768H163.817V109.716H165.721C166.559 109.716 167.262 109.603 167.829 109.376C168.418 109.127 168.905 108.787 169.291 108.356C169.676 107.903 169.993 107.37 170.243 106.758C170.492 106.123 170.696 105.421 170.855 104.65H171.297V115.224H170.855C170.696 114.567 170.503 113.932 170.277 113.32C170.073 112.708 169.789 112.175 169.427 111.722C169.064 111.246 168.611 110.872 168.067 110.6C167.545 110.328 166.888 110.192 166.095 110.192H163.817V122.024H166.979V122.5H155.759V122.024H158.887V98.768ZM187.262 98.292H198.448V98.768H195.32V122.024H198.448V122.5H187.262V122.024H190.39V98.768H187.262V98.292ZM214.912 110.464C214.912 112.821 215.048 114.782 215.32 116.346C215.592 117.887 216.011 119.123 216.578 120.052C217.167 120.959 217.915 121.593 218.822 121.956C219.751 122.319 220.85 122.5 222.12 122.5C223.797 122.5 225.112 122.194 226.064 121.582C227.016 120.947 227.73 120.086 228.206 118.998C228.682 117.887 228.976 116.584 229.09 115.088C229.226 113.569 229.294 111.926 229.294 110.158C229.294 108.571 229.237 107.064 229.124 105.636C229.033 104.185 228.75 102.916 228.274 101.828C227.798 100.717 227.072 99.8447 226.098 99.21C225.146 98.5527 223.82 98.224 222.12 98.224C220.533 98.224 219.264 98.53 218.312 99.142C217.36 99.7313 216.634 100.57 216.136 101.658C215.637 102.746 215.308 104.038 215.15 105.534C214.991 107.03 214.912 108.673 214.912 110.464ZM232.932 129.742C231.096 129.651 229.588 129.538 228.41 129.402C227.254 129.266 226.29 129.051 225.52 128.756C224.772 128.461 224.148 128.053 223.65 127.532C223.151 127.011 222.652 126.308 222.154 125.424C221.836 124.903 221.496 124.404 221.134 123.928C220.771 123.475 220.442 123.089 220.148 122.772C218.674 122.568 217.28 122.103 215.966 121.378C214.674 120.653 213.529 119.746 212.532 118.658C211.557 117.57 210.786 116.323 210.22 114.918C209.653 113.513 209.37 112.028 209.37 110.464C209.37 108.537 209.755 106.792 210.526 105.228C211.319 103.664 212.328 102.327 213.552 101.216C214.776 100.105 216.147 99.2553 217.666 98.666C219.184 98.054 220.669 97.748 222.12 97.748C223.684 97.748 225.225 98.0427 226.744 98.632C228.285 99.2213 229.645 100.06 230.824 101.148C232.025 102.236 232.988 103.562 233.714 105.126C234.462 106.667 234.836 108.413 234.836 110.362C234.836 112.062 234.484 113.683 233.782 115.224C233.102 116.743 232.172 118.08 230.994 119.236C229.838 120.392 228.489 121.31 226.948 121.99C225.429 122.647 223.82 122.976 222.12 122.976C221.689 122.976 221.304 122.942 220.964 122.874C221.19 123.123 221.406 123.327 221.61 123.486C221.836 123.645 222.108 123.769 222.426 123.86C222.766 123.973 223.162 124.064 223.616 124.132C224.069 124.2 224.647 124.268 225.35 124.336C226.483 124.449 227.333 124.767 227.9 125.288C228.489 125.809 228.999 126.455 229.43 127.226C229.656 127.634 229.849 127.963 230.008 128.212C230.189 128.484 230.393 128.699 230.62 128.858C230.869 129.017 231.164 129.119 231.504 129.164C231.866 129.232 232.342 129.266 232.932 129.266V129.742Z"/>
+    </svg>
+  </div>
+
+  <!-- ====== PERSISTENT HAMBURGER MENU ====== -->
+  <button class="morph__menu-btn" id="menu-btn" aria-label="Toggle menu">
+    <span class="morph__menu-line"></span>
+    <span class="morph__menu-line"></span>
+  </button>
+
+  <!-- Mobile top gradient for logo/hamburger legibility -->
+  <div class="mobile-top-gradient" id="mobile-top-gradient"></div>
+
+  <!-- ====== SECTION 1: ZOOM OUT (with embedded Face Morph) ====== -->
+  <section id="zoom-out" class="zoomout">
+    <div class="zoomout__sticky" id="zoomout-sticky">
+      <!-- Background layer -->
+      <div class="zoomout__bg" id="zoomout-bg"></div>
+
+      <!-- Marquee text layer -->
+      <div class="zoomout__marquee-layer" id="zoomout-marquee">
+        <div class="zoomout__marquee-track">
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+        </div>
+      </div>
+
+      <!-- Portrait container: face morph canvas replaces static portrait -->
+      <div class="zoomout__portrait-container" id="zoomout-portrait-ctn">
+        <div class="zoomout__portrait-clip">
+          <img class="morph__metallic" id="morph-metallic" src="assets/images/metallic.png" alt="">
+          <canvas class="morph__canvas" id="morph-canvas"></canvas>
+          <img class="zoomout__portrait-static" id="zoomout-portrait-static" src="assets/images/portrait.png" alt="">
+        </div>
+        <svg class="zoomout__signature" id="zoomout-signature"
+             xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 295 278">
+          <style>
+            .pen { fill: none; stroke-linecap: round; stroke-linejoin: round; }
+            .n0 { stroke-opacity: 1; }
+            .n1 { stroke-opacity: 0.78; }
+            .n2 { stroke-opacity: 0.42; }
+          </style>
+          <defs>
+            <path id="tp" pathLength="1000" d="M 252,33
+               C 252,33 239.937,23.741 222,29
+               C 222,29 112.974,57.844 34,96
+               C 34,96 99.465,76.1 91,138
+               C 91,138 78.415,221.344 62,242
+               C 62,242 46.245,256.58 96,134
+               L 145,26
+               C 156.243,5.905 129,87 129,87" />
+            <path id="ap" pathLength="1000" d="M 97,239
+               C 97,239 178.325,64.977 185,65
+               L 154,220
+               C 154,220 150.052,233.522 162,210" />
+            <path id="xp" pathLength="1000" d="M 89,186
+               C 89,186 141.163,157.289 207,142" />
+          </defs>
+          <use href="#tp" class="pen t n2" stroke-width="1.8" transform="translate(-3.45, -3.45)" />
+          <use href="#tp" class="pen t n1" stroke-width="3.0" transform="translate(-1.74, -1.74)" />
+          <use href="#tp" class="pen t n0" stroke-width="3.9" />
+          <use href="#tp" class="pen t n1" stroke-width="3.0" transform="translate(1.74, 1.74)" />
+          <use href="#tp" class="pen t n2" stroke-width="1.8" transform="translate(3.45, 3.45)" />
+          <use href="#ap" class="pen a n2" stroke-width="1.8" transform="translate(-3.45, -3.45)" />
+          <use href="#ap" class="pen a n1" stroke-width="3.0" transform="translate(-1.74, -1.74)" />
+          <use href="#ap" class="pen a n0" stroke-width="3.9" />
+          <use href="#ap" class="pen a n1" stroke-width="3.0" transform="translate(1.74, 1.74)" />
+          <use href="#ap" class="pen a n2" stroke-width="1.8" transform="translate(3.45, 3.45)" />
+          <use href="#xp" class="pen xb n2" stroke-width="1.8" transform="translate(-3.45, -3.45)" />
+          <use href="#xp" class="pen xb n1" stroke-width="3.0" transform="translate(-1.74, -1.74)" />
+          <use href="#xp" class="pen xb n0" stroke-width="3.9" />
+          <use href="#xp" class="pen xb n1" stroke-width="3.0" transform="translate(1.74, 1.74)" />
+          <use href="#xp" class="pen xb n2" stroke-width="1.8" transform="translate(3.45, 3.45)" />
+        </svg>
+      </div>
+
+      <!-- Aura lines (from face morph, outside portrait so they don't scale) -->
+      <svg class="morph__aura" id="morph-aura" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+        <path id="morph-aura-0" stroke="rgba(180,175,168,0.35)" stroke-width="1.5" />
+        <path id="morph-aura-1" stroke="rgba(180,175,168,0.25)" stroke-width="1.2" />
+        <path id="morph-aura-2" stroke="rgba(180,175,168,0.4)" stroke-width="2" />
+        <path id="morph-aura-3" stroke="rgba(180,175,168,0.2)" stroke-width="1" />
+        <path id="morph-aura-4" stroke="rgba(180,175,168,0.3)" stroke-width="1.4" />
+        <path id="morph-aura-5" stroke="rgba(180,175,168,0.22)" stroke-width="1.2" />
+        <path id="morph-aura-6" stroke="rgba(180,175,168,0.35)" stroke-width="1.8" />
+      </svg>
+
+      <!-- UI Overlay (from face morph, outside portrait so it animates independently) -->
+      <div class="morph__overlay" id="morph-overlay">
+
+        <!-- Hero Intro — prominent hero text, bottom-left -->
+        <div class="morph__hero-intro" id="morph-hero-intro">
+          <div class="morph__hero-role">Award-Winning</div>
+          <h1 class="morph__hero-headline">Product<br>Designer</h1>
+          <div class="morph__hero-credits">Microsoft · Samsung · VoltSafe</div>
+          <a class="morph__hero-cta" href="#">View My Work
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+          </a>
+        </div>
+
+        <!-- Logo marquee — bottom center, over shirt/neck -->
+        <div class="morph__logo-marquee" id="morph-logo-marquee">
+          <div class="morph__logo-marquee-track">
+            <img src="assets/images/micosoft.png" alt="Microsoft">
+            <img src="assets/images/samsung.png" alt="Samsung">
+            <img src="assets/images/ces.png" alt="CES">
+            <img src="assets/images/bing.png" alt="Bing">
+            <img src="assets/images/cbc.png" alt="CBC">
+            <img src="assets/images/msn.png" alt="MSN">
+            <img src="assets/images/micosoft.png" alt="Microsoft">
+            <img src="assets/images/samsung.png" alt="Samsung">
+            <img src="assets/images/ces.png" alt="CES">
+            <img src="assets/images/bing.png" alt="Bing">
+            <img src="assets/images/cbc.png" alt="CBC">
+            <img src="assets/images/msn.png" alt="MSN">
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Custom cursor -->
+      <div class="morph__cursor" id="morph-cursor"></div>
+    </div>
+  </section>
+
+  <!-- ====== SECTION 3: HORIZONTAL SCROLL INTRO ====== -->
+  <section id="hscroll-intro" class="hscroll__intro">
+    <svg class="hscroll__aura" id="hscroll-aura" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+      <path id="hscroll-aura-0" stroke="rgba(255,180,120,0.50)" stroke-width="2.5" />
+      <path id="hscroll-aura-1" stroke="rgba(255,200,150,0.40)" stroke-width="2.0" />
+      <path id="hscroll-aura-2" stroke="rgba(255,160,100,0.55)" stroke-width="3.0" />
+      <path id="hscroll-aura-3" stroke="rgba(255,210,170,0.30)" stroke-width="1.8" />
+      <path id="hscroll-aura-4" stroke="rgba(255,180,120,0.45)" stroke-width="2.2" />
+      <path id="hscroll-aura-5" stroke="rgba(255,200,150,0.35)" stroke-width="2.0" />
+      <path id="hscroll-aura-6" stroke="rgba(255,160,100,0.50)" stroke-width="2.8" />
+    </svg>
+    <div class="hscroll__emblem">
+      <div class="hscroll__laurel-wrap">
+        <img class="hscroll__laurel-img" src="assets/images/laurel.png" alt="Laurel wreath">
+        <div class="hscroll__cursor-wrap">
+          <svg width="28" height="36" viewBox="0 0 28 36" fill="rgba(225,230,240,0.9)" stroke="none">
+            <path d="M2 1 L2 28 L8 22 L14 34 L18 32 L12 20 L20 20 Z" />
+          </svg>
+        </div>
+      </div>
+    </div>
+    <div class="hscroll__hero-text">
+      An <span class="accent">award-winning</span><br>
+      product designer,<br>
+      crafted through a<br>
+      <span class="accent">lifetime</span> of building<br>
+      &amp; shaping experiences<br>
+      at a <span class="accent">global scale</span>.
+    </div>
+  </section>
+
+  <!-- ====== SECTION 3.5: ABOUT ====== -->
+  <section id="about" class="about">
+    <div class="about__inner">
+
+      <!-- Left: Statement + metrics -->
+      <div class="about__left">
+        <span class="about__label">My Journey</span>
+        <h2 class="about__statement">
+          I design what makes<br>
+          complexity feel <em>inevitable.</em>
+        </h2>
+        <p class="about__philosophy">Part engineer's brain, part editorial eye. 8+ years across Samsung, Microsoft, and a multi-award-winning cleantech startup — from founding-team work to platforms touching tens of millions.</p>
+        <div class="about__metrics">
+          <div class="about__metric">
+            <span class="about__metric-num">8+</span>
+            <span class="about__metric-label">years</span>
+          </div>
+          <div class="about__metric">
+            <span class="about__metric-num">10M+</span>
+            <span class="about__metric-label">users impacted</span>
+          </div>
+          <div class="about__metric">
+            <span class="about__metric-num">5</span>
+            <span class="about__metric-label">awards</span>
+          </div>
+          <div class="about__metric">
+            <span class="about__metric-num">2.5</span>
+            <span class="about__metric-label">days to ship</span>
+          </div>
+        </div>
+        <div class="about__rule"></div>
+      </div>
+
+      <!-- Right: Timeline -->
+      <div class="about__right">
+        <div class="about__timeline">
+          <div class="about__tl-item">
+            <span class="about__tl-year">2026</span>
+            <div class="about__tl-body">
+              <span class="about__tl-role">AI-Native Builder</span>
+              <span class="about__tl-note">Full SaaS in 2.5 days · 6,000+ Figma plugin users</span>
+            </div>
+          </div>
+          <div class="about__tl-item">
+            <span class="about__tl-year">2025</span>
+            <div class="about__tl-body">
+              <span class="about__tl-role">Product Designer — Samsung</span>
+              <span class="about__tl-note">Knox Design System · 100K+ device dashboards</span>
+            </div>
+          </div>
+          <div class="about__tl-item">
+            <span class="about__tl-year">2024</span>
+            <div class="about__tl-body">
+              <span class="about__tl-role">Product Designer II — Microsoft AI</span>
+              <span class="about__tl-note">Edge 4.0 · AI transparency patterns · 3.3× engagement</span>
+            </div>
+          </div>
+          <div class="about__tl-item">
+            <span class="about__tl-year">2023</span>
+            <div class="about__tl-body">
+              <span class="about__tl-role">2× CES Honoree · IBEX Award</span>
+              <span class="about__tl-note">Among 3,200+ competing products</span>
+            </div>
+          </div>
+          <div class="about__tl-item">
+            <span class="about__tl-year">2019</span>
+            <div class="about__tl-body">
+              <span class="about__tl-role">Founding Designer — VoltSafe</span>
+              <span class="about__tl-note">5 yrs · IoT · CBC Dragons' Den · BC Cleantech Award</span>
+            </div>
+          </div>
+          <div class="about__tl-item">
+            <span class="about__tl-year">2016</span>
+            <div class="about__tl-body">
+              <span class="about__tl-role">BSc EECE — University of British Columbia</span>
+              <span class="about__tl-note">Engineering foundation — rare for a product designer</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Logo marquee — full width, below metrics + timeline -->
+    <div class="about__logo-marquee">
+      <div class="about__logo-marquee-track">
+        <img src="assets/images/micosoft.png" alt="Microsoft">
+        <img src="assets/images/samsung.png" alt="Samsung">
+        <img src="assets/images/ces.png" alt="CES">
+        <img src="assets/images/bing.png" alt="Bing">
+        <img src="assets/images/cbc.png" alt="CBC">
+        <img src="assets/images/msn.png" alt="MSN">
+        <img src="assets/images/micosoft.png" alt="Microsoft">
+        <img src="assets/images/samsung.png" alt="Samsung">
+        <img src="assets/images/ces.png" alt="CES">
+        <img src="assets/images/bing.png" alt="Bing">
+        <img src="assets/images/cbc.png" alt="CBC">
+        <img src="assets/images/msn.png" alt="MSN">
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== SECTION 4: HORIZONTAL SCROLL GALLERY ====== -->
+  <section id="hscroll-gallery" class="hscroll__section">
+    <div class="hscroll__track" id="hscroll-track">
+      <canvas class="hscroll__mesh-canvas" id="hscroll-mesh"></canvas>
+
+      <!-- 1. UBC Capstone -->
+      <div class="hscroll__item hscroll__size-md" style="--x: 3vw; --y: 8vh;">
+        <video src="assets/video/1-iaconic.mp4?v=2" muted autoplay loop playsinline preload="metadata"></video>
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Presenting my final designs for my UBC Capstone project</span></p>
+      </div>
+
+      <!-- 2. VoltSafe Founding Team -->
+      <div class="hscroll__item hscroll__size-sm hscroll__mobile-hide" style="--x: 14vw; --y: 52vh;">
+        <img src="assets/images/2 (The VoltSafe Founding Team).png" alt="The VoltSafe Founding Team" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Joined the VoltSafe founding team of four</span></p>
+      </div>
+
+      <!-- 3. Dragon's Den -->
+      <div class="hscroll__item hscroll__size-md" style="--x: 42vw; --y: 6vh;">
+        <video src="assets/video/3 dragonden.mp4" muted autoplay loop playsinline preload="metadata"></video>
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Product I designed appearing on Dragon's Den</span></p>
+      </div>
+
+      <!-- 4. Smart Home Mobile App -->
+      <div class="hscroll__item hscroll__size-featured hscroll__mobile-hide" style="--x: 65vw; --y: 46vh;">
+        <video src="assets/video/4. smarthome.mp4" muted autoplay loop playsinline preload="metadata"></video>
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Smart Home Mobile App I designed end to end</span></p>
+      </div>
+
+      <!-- 5. Winning 2 awards at CES -->
+      <div class="hscroll__item hscroll__size-featured" style="--x: 90vw; --y: 6vh;">
+        <img src="assets/images/5 (Winning 2 awards at CES).png" alt="Winning 2 awards at CES" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Winning 2 awards at CES</span></p>
+      </div>
+
+      <!-- 6. Marine ecosystem -->
+      <div class="hscroll__item hscroll__size-lg hscroll__mobile-hide" style="--x: 115vw; --y: 46vh;">
+        <img src="assets/images/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Marine ecosystem I designed end to end</span></p>
+      </div>
+
+      <!-- 7. IBEX Award -->
+      <div class="hscroll__item hscroll__size-md hscroll__mobile-hide" style="--x: 140vw; --y: 6vh;">
+        <img src="assets/images/7. (IBEX Award for Marine Enterprise Dashboard).jpg" alt="IBEX Award for Marine Enterprise Dashboard" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">IBEX Award for Marine Enterprise Dashboard</span></p>
+      </div>
+
+      <!-- 8. YES! -->
+      <div class="hscroll__item hscroll__size-featured" style="--x: 162vw; --y: 46vh;">
+        <img src="assets/images/8.(%22YES!%22).png" alt="YES!" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">"YES!"</span></p>
+      </div>
+
+      <!-- 9. Brain Station -->
+      <div class="hscroll__item hscroll__size-sm hscroll__mobile-hide" style="--x: 185vw; --y: 6vh;">
+        <img src="assets/images/9. (%22industry expert%22 panel at Brain Station).png" alt="Industry expert panel at Brain Station" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">"Industry expert" panel at Brain Station</span></p>
+      </div>
+
+      <!-- 10. Cardistry Collaboration -->
+      <div class="hscroll__item hscroll__size-md" style="--x: 205vw; --y: 46vh;">
+        <video src="assets/video/Cardistry clip.mp4" muted autoplay loop playsinline preload="metadata"></video>
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Representing Canada for an international cardistry collaboration</span></p>
+      </div>
+
+      <!-- 11. Microsoft AI -->
+      <div class="hscroll__item hscroll__size-featured" style="--x: 228vw; --y: 6vh;">
+        <img src="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .jpeg" alt="Recruited onto the MSAN team at Microsoft AI" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Recruited onto the MSAN team at Microsoft AI</span></p>
+      </div>
+
+      <!-- 12. Dan and Dave -->
+      <div class="hscroll__item hscroll__size-portrait hscroll__mobile-hide" style="--x: 252vw; --y: 46vh;">
+        <img src="assets/images/11. (Meeting my design heros Dan and Dave).jpeg" alt="Meeting my design heroes Dan and Dave" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Meeting my design heroes Dan and Dave</span></p>
+      </div>
+
+      <!-- 13. First DJ performance -->
+      <div class="hscroll__item hscroll__size-sm hscroll__mobile-hide" style="--x: 270vw; --y: 6vh;">
+        <img src="assets/images/12. (First DJ performance).png" alt="First DJ performance" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">First DJ performance</span></p>
+      </div>
+
+      <!-- 14. Samsung -->
+      <div class="hscroll__item hscroll__size-featured" style="--x: 288vw; --y: 46vh;">
+        <img src="assets/images/13. (Joing the Samsung Research Canada Team).png" alt="Joining the Samsung Research Canada Team" loading="lazy">
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Joining the Samsung Research Canada Team</span></p>
+      </div>
+
+      <!-- 15. And here we are -->
+      <div class="hscroll__item hscroll__size-featured hscroll__square" id="hscroll-last-item" style="--x: 318vw; --y: 6vh;">
+        <video src="assets/video/Hero%20Video%20Final%20(kling).mp4" muted playsinline preload="metadata"></video>
+        <p class="hscroll__caption"><span class="hscroll__typewriter-text">And here we are</span></p>
+      </div>
+    </div>
+
+    <!-- Progress indicator -->
+    <div class="hscroll__progress" id="hscroll-progress">
+      <div class="hscroll__progress-track">
+        <div class="hscroll__progress-fill" id="hscroll-progress-fill"></div>
+        <div class="hscroll__progress-notches" id="hscroll-progress-notches"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== VIDEO EXPANSION (scroll-driven) ====== -->
+  <section id="video-expand" class="video-expand" aria-hidden="true"></section>
+
+  <!-- ====== FULLSCREEN VIDEO QUOTES OVERLAY ====== -->
+  <div class="video-quotes" id="video-quotes">
+    <div class="video-quotes__item">
+      <blockquote>
+        <p>&ldquo;From the very first moment he joined our team, he brought a <strong>warm, vibrant energy</strong> that was both inspiring and uplifting. His <strong>collaborative spirit and genuine kindness</strong> made an immediate impact.&rdquo;</p>
+        <cite>
+          Alice Lee
+          <span>Product Designer, Amazon Prime</span>
+        </cite>
+      </blockquote>
+    </div>
+    <div class="video-quotes__item">
+      <blockquote>
+        <p>&ldquo;From video production to website design and asset creation, Tashfiq <strong>consistently delivered high-quality work</strong> that exceeded expectations. What set Tashfiq apart is his <strong>innovative approach and dedication to his craft.</strong>&rdquo;</p>
+        <cite>
+          Maz Haque
+          <span>Project Management Professional</span>
+        </cite>
+      </blockquote>
+    </div>
+    <div class="video-quotes__item">
+      <blockquote>
+        <p>&ldquo;He strikes a <strong>strong balance between creativity and practicality,</strong> ensuring his designs are not only visually compelling but also <strong>user-centered and technically sound.</strong>&rdquo;</p>
+        <cite>
+          So Eun Ahn
+          <span>Product Designer, Microsoft</span>
+        </cite>
+      </blockquote>
+    </div>
+    <div class="video-quotes__item">
+      <blockquote>
+        <p>&ldquo;Tashfiq has an <strong>extraordinary ability to bridge engineering and design,</strong> delivering solutions that are both technically robust and beautifully crafted. He <strong>elevates every project</strong> he touches.&rdquo;</p>
+        <cite>
+          Sanad Arida
+          <span>CTO, VoltSafe Inc.</span>
+        </cite>
+      </blockquote>
+    </div>
+    <div class="video-quotes__item">
+      <blockquote>
+        <p>&ldquo;Few know product. Few know people. Few have engineering mindsets. Tash is <strong>the rare person who knows all of the above</strong> and is an <strong>absolute joy to work with.&rdquo;</strong></p>
+        <cite>
+          Ashaya Sharma
+          <span>CTO, Honeycomb AI</span>
+        </cite>
+      </blockquote>
+    </div>
+    <div class="video-quotes__cta-row">
+      <a href="#" class="video-quotes__cta" id="view-case-studies-cta">
+        View Case Studies
+        <svg class="video-quotes__cta-arrow" viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+    </div>
+  </div>
+
+  <!-- ====== PERSISTENT MUSIC PLAYER ====== -->
+  <div class="morph__player" id="morph-player">
+    <div class="morph__player-body">
+
+      <!-- Animated grid background (case study selection screen) -->
+      <canvas class="cs-grid-canvas" id="cs-grid-canvas"></canvas>
+
+      <!-- Transition flash -->
+      <div class="morph__expand-flash" id="morph-expand-flash"></div>
+
+      <!-- Material layers -->
+      <div class="morph__env-reflection"></div>
+      <div class="morph__amber-rim"></div>
+      <div class="morph__amber-bleed"></div>
+      <div class="morph__metal-noise"></div>
+      <div class="morph__specular-streak"></div>
+      <div class="morph__specular-streak-bottom"></div>
+      <div class="morph__flare morph__flare-1"></div>
+      <div class="morph__flare morph__flare-2"></div>
+      <div class="morph__flare morph__flare-3"></div>
+      <div class="morph__flare morph__flare-4"></div>
+
+      <div class="morph__inner-panel">
+
+        <!-- Close button (expanded view only) -->
+        <div class="morph__expand-close-ring">
+          <button class="morph__expand-close-btn" id="morph-expand-close" aria-label="Collapse">
+            <svg viewBox="0 0 24 24"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+          </button>
+        </div>
+
+        <!-- 1. LCD Screen -->
+        <div class="morph__lcd-screen">
+          <div class="morph__lcd-text-container">
+            <span class="morph__lcd-text" id="morph-lcd-text">Claro Intelecto &mdash; When The Time Is Right</span>
+          </div>
+          <div class="morph__lcd-status" id="morph-lcd-status"><span class="morph__status-dot"></span>READY</div>
+          <div class="morph__lcd-scanlines"></div>
+          <div class="morph__lcd-pixels"></div>
+          <canvas class="morph__lcd-visualizer" id="morph-viz-canvas"></canvas>
+
+          <!-- Case studies portfolio (visible in expanded mode) -->
+          <div class="morph__case-studies">
+            <div class="morph__cs-heading">Case Studies</div>
+            <div class="morph__cs-grid">
+              <a class="morph__cs-card" href="#" data-cs="propkeep">
+                <div class="morph__cs-thumb">
+                  <img src="assets/images/case-studies/propkeep/thumbnail.png" alt="PropKeep thumbnail" class="morph__cs-thumb-img">
+                </div>
+                <div class="morph__cs-info">
+                  <div class="morph__cs-client">PropKeep</div>
+                  <div class="morph__cs-title">From WhatsApp Chaos to One-Click Repairs</div>
+                  <div class="morph__cs-tags">
+                    <span>Product Design</span>
+                    <span>UX Research</span>
+                    <span>Proof of Concept</span>
+                  </div>
+                </div>
+              </a>
+              <div class="morph__cs-card morph__cs-card--ghost">
+                <div class="morph__cs-thumb">
+                  <div class="morph__cs-thumb-placeholder"></div>
+                </div>
+                <div class="morph__cs-info">
+                  <div class="morph__cs-client">&nbsp;</div>
+                  <div class="morph__cs-title">Coming Soon</div>
+                  <div class="morph__cs-tags"><span>More case studies in progress</span></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Case study detail view (scrollable within player) -->
+            <div class="morph__cs-detail" id="cs-detail">
+              <div class="morph__cs-detail-scroll" id="cs-detail-scroll">
+                <button class="morph__cs-detail-back" id="cs-detail-back">
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+                  Back
+                </button>
+
+                <!-- PropKeep -->
+                <div class="morph__cs-detail-content" data-cs="propkeep">
+                  <h1>PropKeep gives independent landlords a single place to run their properties.</h1>
+                  <div class="morph__cs-detail-tags"><span>Product Design</span><span>UX Research</span><span>Proof of Concept</span></div>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/propkeep hero.png" alt="PropKeep hero" />
+                  </div>
+
+                  <h2>Most independent landlords are running their operations inside their heads</h2>
+                  <p>My dad manages several rental properties and Airbnb listings. His tenants messaged him on WhatsApp at all hours &mdash; trivial questions mixed in with urgent repair requests, no system separating them. He&rsquo;d keep a mental log, try to diagnose problems over text, then scramble to find someone to fix them. He was constantly flustered, constantly reactive, constantly tied to his phone.</p>
+                  <p>That was the starting point for PropKeep.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/before state.png" alt="Before state — landlord juggling messages" />
+                  </div>
+
+                  <h2>Landlords aren&rsquo;t disorganised &mdash; they&rsquo;re using the wrong tools for an operational problem</h2>
+                  <p>The real issue isn&rsquo;t that landlords are careless. It&rsquo;s that they&rsquo;re running an operational system using communication tools. WhatsApp and texts are designed for conversations, not for tracking work states or scheduling repairs. Every task lives in their head or in a thread they&rsquo;ll never find again. PropKeep&rsquo;s job was to turn that incoming chaos into structured, trackable workflows.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/problem framing.png" alt="Problem framing diagram" />
+                  </div>
+
+                  <h2>The risk was building something that added to the problem instead of solving it</h2>
+                  <p>Landlords already had enough to manage. The danger with any new tool was creating yet another thing to monitor and maintain. If PropKeep required significant setup, data entry, or daily habit changes, it would fail the people it was designed for. The product had to reduce friction from the first interaction &mdash; not introduce new kinds of it.</p>
+                  <div class="morph__cs-detail-pullquote">&ldquo;Automate capture and dispatch, but preserve agency.&rdquo;</div>
+
+                  <h2>I scoped the product tightly around the maintenance workflow</h2>
+                  <p>Early on I mapped out everything PropKeep <em>could</em> be &mdash; rent tracking, cash flow reporting, tenant management, financial dashboards. I ruled all of it out. Adding financial tracking would have split the product&rsquo;s identity and diluted the core promise. The app needed to do one thing well: make sure no repair ever slipped through the cracks.</p>
+                  <h3>What I left out deliberately</h3>
+                  <ul>
+                    <li>Rent income and net cash flow tracking</li>
+                    <li>ROI and investment reporting</li>
+                    <li>Excel-style property management views</li>
+                    <li>Tenant profiles and lease management</li>
+                  </ul>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/scope map.png" alt="Scope map — what was included and excluded" />
+                  </div>
+
+                  <h2>The &ldquo;Book-a-Pro&rdquo; feature was the most complex design problem in the product</h2>
+                  <p>Connecting landlords to vetted service providers sounds simple but involves location matching, availability windows, trust signals, pricing transparency, and liability questions. I designed a booking flow that surfaced relevant pros quickly and gave landlords enough information to make a confident decision without needing to leave the app or make a phone call.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/book a pro flow.png" alt="Book-a-Pro flow — step 1" />
+                  </div>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/book a pro flow 2.png" alt="Book-a-Pro flow — step 2" />
+                  </div>
+
+                  <h2>The dashboard needed to communicate urgency without creating anxiety</h2>
+                  <p>A landlord opening PropKeep first thing in the morning should immediately see what needs attention today &mdash; not a wall of equal-weight information. I designed the hierarchy around time-sensitivity, surfacing overdue tasks and pending tenant requests above general maintenance logs and completed work.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/Dashboard Hierarchy.png" alt="Dashboard hierarchy — primary view" />
+                  </div>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/dashboard hierarchy (2).png" alt="Dashboard hierarchy — secondary view" />
+                  </div>
+
+                  <h2>The strongest signal of success would be landlords stopping their mental notes</h2>
+                  <p>PropKeep is a proof of concept, so there are no live usage metrics yet. But I defined a clear behavioural signal for success &mdash; landlords stop relying on memory and external notes. If a user says &ldquo;I don&rsquo;t have to remember this stuff anymore,&rdquo; the product has done its job.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="assets/images/case-studies/propkeep/key metric success signal.png" alt="Key metric and success signal" />
+                  </div>
+
+                  <h2>Final product</h2>
+                  <div class="morph__cs-detail-asset morph__cs-detail-asset--video">
+                    <iframe src="https://www.youtube.com/embed/s2BtzJ-TU68?enablejsapi=1" title="PropKeep final product showcase" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                  </div>
+
+                  <h2>What I learned and what comes next</h2>
+                  <p>Building PropKeep sharpened how I think about tools designed for people who don&rsquo;t think of themselves as &ldquo;software users.&rdquo;</p>
+                  <ul>
+                    <li>Cognitive load reduction is a design goal, not a side effect</li>
+                    <li>Scoping ruthlessly early is harder than it sounds when the problem space is genuinely broad</li>
+                    <li>The most complex UX challenge wasn&rsquo;t the main workflow &mdash; it was the marketplace layer sitting inside a task tool</li>
+                    <li>Proof-of-concept work still needs defined success signals or there&rsquo;s nothing to design toward</li>
+                  </ul>
+                  <p>The next version would start with user testing the tenant-facing request flow &mdash; that&rsquo;s the entry point for every task in the system, and getting it right is what makes everything downstream work.</p>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- 2. Progress bar -->
+        <div class="morph__progress-section">
+          <div class="morph__progress-groove">
+            <div class="morph__progress-rail">
+              <div class="morph__progress-fill" id="morph-progress-fill"></div>
+              <div class="morph__progress-knob" id="morph-progress-knob"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Bottom controls -->
+        <div class="morph__bottom-controls">
+          <div class="morph__time-display" id="morph-time-display">00:00 / 00:00</div>
+          <div class="morph__play-btn-ring" id="morph-play-ring">
+            <button class="morph__play-btn" id="morph-play-btn">
+              <svg class="morph__play-icon visible" id="morph-play-icon" viewBox="0 0 24 24"><polygon points="6,3 20,12 6,21" /></svg>
+              <svg class="morph__pause-icon" id="morph-pause-icon" viewBox="0 0 24 24"><rect x="5" y="3" width="4" height="18"/><rect x="15" y="3" width="4" height="18"/></svg>
+            </button>
+          </div>
+          <div class="morph__volume-row">
+            <svg class="morph__volume-icon" viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3z"/><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02z"/></svg>
+            <div class="morph__volume-slider-track" id="morph-volume-track">
+              <div class="morph__volume-track-bg"></div>
+              <div class="morph__volume-fill" id="morph-volume-fill"></div>
+              <div class="morph__volume-ticks"></div>
+              <div class="morph__volume-knob" id="morph-volume-knob"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ====== NAVIGATION OVERLAY ====== -->
+  <div class="nav-overlay" id="nav-overlay">
+    <nav class="nav-overlay__content">
+      <a href="#" class="nav-overlay__link" data-nav="home">Home</a>
+      <a href="#" class="nav-overlay__link" data-nav="my-journey">My Journey</a>
+      <a href="#" class="nav-overlay__link" data-nav="case-studies">Case Studies</a>
+    </nav>
+    <div class="nav-overlay__footer">
+      <div class="nav-overlay__contact">
+        <a href="#" class="nav-overlay__contact-link" id="copy-email-btn" data-email="tashfiqalam1@gmail.com">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+          tashfiqalam1@gmail.com
+          <span class="nav-overlay__tooltip" id="copy-email-tooltip">Email copied to clipboard</span>
+        </a>
+        <a href="https://linkedin.com/in/tashfiqalam" target="_blank" rel="noopener" class="nav-overlay__contact-link"><svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg> LinkedIn</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+  <!-- About section: timeline animation + logo swap -->
+  <script>
+  (function() {
+    var about = document.getElementById('about');
+    if (!about) return;
+
+    var timelineRun = false;
+    var items = Array.from(about.querySelectorAll('.about__tl-item'));
+    var itemsReversed = items.slice().reverse();
+
+    itemsReversed.forEach(function(item) { gsap.set(item, { opacity: 0, y: 10 }); });
+
+    function runTimeline() {
+      if (timelineRun) return;
+      timelineRun = true;
+      about.classList.add('is-visible');
+
+      var STEP = 0.14, ACCENT_HOLD = 0.3, FADE_OUT = 0.45;
+
+      itemsReversed.forEach(function(item, i) {
+        var delay = i * STEP;
+        var year = item.querySelector('.about__tl-year');
+        var role = item.querySelector('.about__tl-role');
+
+        if (year) gsap.set(year, { color: '#FF6B35' });
+        if (role) gsap.set(role, { color: '#FF6B35' });
+
+        gsap.to(item, { opacity: 1, y: 0, duration: 0.28, delay: delay, ease: 'power2.out' });
+
+        var fadeDelay = delay + 0.28 + ACCENT_HOLD;
+        if (year) gsap.to(year, { color: 'rgba(26,26,26,0.35)', duration: FADE_OUT, delay: fadeDelay, ease: 'power1.inOut' });
+        if (role) gsap.to(role, { color: 'rgba(26,26,26,0.88)', duration: FADE_OUT, delay: fadeDelay, ease: 'power1.inOut' });
+      });
+    }
+
+    function checkVisible() {
+      var rect = about.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        runTimeline();
+        window.removeEventListener('scroll', checkVisible);
+      }
+    }
+
+    if ('IntersectionObserver' in window) {
+      var io = new IntersectionObserver(function(entries) {
+        if (entries[0].isIntersecting) { runTimeline(); io.disconnect(); }
+      }, { threshold: 0 });
+      io.observe(about);
+    }
+
+    window.addEventListener('scroll', checkVisible, { passive: true });
+    function rafCheck() {
+      if (timelineRun) return;
+      checkVisible();
+      requestAnimationFrame(rafCheck);
+    }
+    requestAnimationFrame(rafCheck);
+
+    // Logo dark/light swap
+    var siteLogo = document.getElementById('site-logo');
+    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
+    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
+    var logoGlass = document.getElementById('site-logo-glass');
+    var menuBtn = document.getElementById('menu-btn');
+    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
+    var isDark = false;
+
+    function setDark() {
+      if (isDark) return; isDark = true;
+      if (logoGlass) logoGlass.classList.add('visible');
+      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      if (menuBtn) {
+        gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 });
+        menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 }); });
+      }
+    }
+    function setLight() {
+      if (!isDark) return; isDark = false;
+      if (logoGlass) logoGlass.classList.remove('visible');
+      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      if (menuBtn) {
+        gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.3 });
+        menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.3 }); });
+      }
+    }
+
+    var intro = document.getElementById('hscroll-intro');
+    window.addEventListener('scroll', function() {
+      var trigger = intro || about;
+      var rect = trigger.getBoundingClientRect();
+      if (rect.bottom < 80) { setDark(); } else { setLight(); }
+    }, { passive: true });
+  })();
+  </script>
+
+  <script src="js/main.js"></script>
+  <!-- Asset lightbox modal -->
+  <div class="cs-lightbox" id="cs-lightbox">
+    <button class="cs-lightbox__close" id="cs-lightbox-close">&times;</button>
+    <img class="cs-lightbox__img" id="cs-lightbox-img" src="" alt="" />
+  </div>
+
+  <script src="js/face-morph.js"></script>
+  <script src="js/zoom-out.js"></script>
+  <script src="js/horizontal.js"></script>
+  <script src="js/video-expand.js"></script>
+</body>
+</html>

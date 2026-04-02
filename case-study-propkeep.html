@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PropKeep — Case Study | Tash Alam</title>
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@300;400;500;600;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/tokens.css">
+  <link rel="stylesheet" href="css/global.css">
+  <link rel="stylesheet" href="css/case-study.css">
+</head>
+<body>
+
+  <!-- Back nav -->
+  <a href="javascript:void(0)" class="cs-page__back" id="cs-back-btn" aria-label="Back to case studies">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+    Back
+  </a>
+  <script>
+    document.getElementById('cs-back-btn').addEventListener('click', function() {
+      window.history.back();
+    });
+  </script>
+
+  <article class="cs-page">
+
+    <!-- Hero -->
+    <header class="cs-page__hero">
+      <h1 class="cs-page__title">PropKeep gives independent landlords a single place to run their properties.</h1>
+      <div class="cs-page__meta">
+        <span class="cs-page__tag">Product Design</span>
+        <span class="cs-page__tag">UX Research</span>
+        <span class="cs-page__tag">Proof of Concept</span>
+      </div>
+    </header>
+
+    <!-- Hero asset placeholder -->
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Dashboard Overview</div>
+    </div>
+
+    <!-- Section 1 -->
+    <section class="cs-page__section">
+      <h2>Most independent landlords are running their operations inside their heads</h2>
+      <p>My dad manages several rental properties and Airbnb listings. His tenants messaged him on WhatsApp at all hours &mdash; trivial questions mixed in with urgent repair requests, no system separating them. He&rsquo;d keep a mental log, try to diagnose problems over text, then scramble to find someone to fix them. He was constantly flustered, constantly reactive, constantly tied to his phone.</p>
+      <p>That was the starting point for PropKeep.</p>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Before State Illustration</div>
+    </div>
+
+    <!-- Section 2 -->
+    <section class="cs-page__section">
+      <h2>Landlords aren&rsquo;t disorganised &mdash; they&rsquo;re using the wrong tools for an operational problem</h2>
+      <p>The real issue isn&rsquo;t that landlords are careless. It&rsquo;s that they&rsquo;re running an operational system using communication tools. WhatsApp and texts are designed for conversations, not for tracking work states or scheduling repairs. Every task lives in their head or in a thread they&rsquo;ll never find again. PropKeep&rsquo;s job was to turn that incoming chaos into structured, trackable workflows.</p>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Problem Framing Diagram</div>
+    </div>
+
+    <!-- Section 3 -->
+    <section class="cs-page__section">
+      <h2>The risk was building something that added to the problem instead of solving it</h2>
+      <p>Landlords already had enough to manage. The danger with any new tool was creating yet another thing to monitor and maintain. If PropKeep required significant setup, data entry, or daily habit changes, it would fail the people it was designed for. The product had to reduce friction from the first interaction &mdash; not introduce new kinds of it.</p>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__pullquote">&ldquo;Automate capture and dispatch, but preserve agency.&rdquo;</div>
+    </div>
+
+    <!-- Section 4 -->
+    <section class="cs-page__section">
+      <h2>I scoped the product tightly around the maintenance workflow</h2>
+      <p>Early on I mapped out everything PropKeep <em>could</em> be &mdash; rent tracking, cash flow reporting, tenant management, financial dashboards. I ruled all of it out. Adding financial tracking would have split the product&rsquo;s identity and diluted the core promise. The app needed to do one thing well: make sure no repair ever slipped through the cracks.</p>
+      <h3>What I left out deliberately</h3>
+      <ul>
+        <li>Rent income and net cash flow tracking</li>
+        <li>ROI and investment reporting</li>
+        <li>Excel-style property management views</li>
+        <li>Tenant profiles and lease management</li>
+      </ul>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Scope Map</div>
+    </div>
+
+    <!-- Section 5 -->
+    <section class="cs-page__section">
+      <h2>The &ldquo;Book-a-Pro&rdquo; feature was the most complex design problem in the product</h2>
+      <p>Connecting landlords to vetted service providers sounds simple but involves location matching, availability windows, trust signals, pricing transparency, and liability questions. I designed a booking flow that surfaced relevant pros quickly and gave landlords enough information to make a confident decision without needing to leave the app or make a phone call.</p>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Book-a-Pro Flow</div>
+    </div>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Service Provider Card</div>
+    </div>
+
+    <!-- Section 6 -->
+    <section class="cs-page__section">
+      <h2>The dashboard needed to communicate urgency without creating anxiety</h2>
+      <p>A landlord opening PropKeep first thing in the morning should immediately see what needs attention today &mdash; not a wall of equal-weight information. I designed the hierarchy around time-sensitivity, surfacing overdue tasks and pending tenant requests above general maintenance logs and completed work.</p>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Dashboard Hierarchy Annotation</div>
+    </div>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Mobile View</div>
+    </div>
+
+    <!-- Section 7 -->
+    <section class="cs-page__section">
+      <h2>The strongest signal of success would be landlords stopping their mental notes</h2>
+      <p>PropKeep is a proof of concept, so there are no live usage metrics yet. But I defined a clear behavioural signal for success &mdash; landlords stop relying on memory and external notes. If a user says &ldquo;I don&rsquo;t have to remember this stuff anymore,&rdquo; the product has done its job. That&rsquo;s the shift from reactive management to something closer to operational calm.</p>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Final Product Showcase</div>
+    </div>
+
+    <!-- Section 8 -->
+    <section class="cs-page__section">
+      <h2>What I learned and what comes next</h2>
+      <p>Building PropKeep sharpened how I think about tools designed for people who don&rsquo;t think of themselves as &ldquo;software users.&rdquo;</p>
+      <ul>
+        <li>Cognitive load reduction is a design goal, not a side effect &mdash; every decision needs to be tested against it</li>
+        <li>Scoping ruthlessly early is harder than it sounds when the problem space is genuinely broad</li>
+        <li>The most complex UX challenge wasn&rsquo;t the main workflow &mdash; it was the marketplace layer (Book-a-Pro) sitting inside a task tool</li>
+        <li>Proof-of-concept work still needs defined success signals or there&rsquo;s nothing to design toward</li>
+        <li>If I were to take this further, the first real test would be putting it in front of 5 landlords and watching where they hesitate</li>
+      </ul>
+      <p>The next version would start with user testing the tenant-facing request flow &mdash; that&rsquo;s the entry point for every task in the system, and getting it right is what makes everything downstream work.</p>
+    </section>
+
+    <div class="cs-page__asset">
+      <div class="cs-page__placeholder">Next Steps Sketch</div>
+    </div>
+
+  </article>
+
+  <!-- Footer -->
+  <footer class="cs-page__footer">
+    <a href="javascript:void(0)" class="cs-page__footer-link" onclick="window.history.back()">Back to Case Studies</a>
+  </footer>
+
+</body>
+</html>
