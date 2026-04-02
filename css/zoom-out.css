@@ -119,11 +119,15 @@
 }
 
 @media (max-width: 768px) {
-  /* Tight scroll distance on mobile — 110vh gives just enough room for the animation */
+  /* Minimal scroll distance — just enough for the animation to complete */
   .zoomout {
     overflow: hidden;
-    height: 110vh;
+    height: 160vh;
   }
+
+  /* The sticky ends at 100vh, but the zoomout section is taller (160vh).
+     The extra 60vh is cobalt background. Hide it by making the about section
+     overlap upward with negative margin so there's no visible gap. */
 
   /* Fade the portrait's bottom edge via CSS mask so the hard crop disappears */
   .zoomout__portrait-clip {
