@@ -119,9 +119,10 @@
 }
 
 @media (max-width: 768px) {
-  /* Clip elastic bounce from revealing cobalt above/below sticky */
+  /* Reduce scroll distance — desktop needs 220vh but mobile feels too far */
   .zoomout {
     overflow: hidden;
+    height: 140vh;
   }
 
   /* Bottom gradient fades portrait into cobalt — must sit above morph overlay (z:100) */

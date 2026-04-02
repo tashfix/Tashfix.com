@@ -198,7 +198,7 @@
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   #about {
-    padding: 8vh 7vw 10vh;
+    padding: 4vh 7vw 10vh;
   }
 
   .about__inner {
