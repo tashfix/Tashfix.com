@@ -17,6 +17,15 @@ body {
   cursor: default;
 }
 
+/* Restore pointer cursor on interactive elements */
+a,
+button,
+[role="button"],
+input[type="submit"],
+input[type="button"] {
+  cursor: pointer;
+}
+
 /* Allow text selection cursor only in case study detail view */
 .morph__cs-detail-scroll,
 .morph__cs-detail-scroll * {
