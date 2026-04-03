@@ -14,4 +14,11 @@ body {
   overflow-x: hidden;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  cursor: default;
+}
+
+/* Allow text selection cursor only in case study detail view */
+.morph__cs-detail-scroll,
+.morph__cs-detail-scroll * {
+  cursor: auto;
 }
