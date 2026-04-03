@@ -23,7 +23,7 @@
 
   var MOUSE_BRUSH_RADIUS = 90;
   var IDLE_BRUSH_RADIUS = 75;
-  var FADE_BACK_ALPHA = 0.045;
+  var FADE_BACK_ALPHA = 0.008;
 
   var strokes = [];
   var MAX_STROKES = 2;
