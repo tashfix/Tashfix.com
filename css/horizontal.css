@@ -753,6 +753,7 @@
   position: absolute;
   bottom: 0;
   left: 0;
+  pointer-events: none;
   right: 0;
   height: auto;
   display: flex;
@@ -766,6 +767,9 @@
     rgba(0, 0, 0, 0.92) 60%,
     #000000 85%);
   text-align: center;
+}
+
+.video-quotes.visible .video-quotes__footer {
   pointer-events: auto;
 }
 
