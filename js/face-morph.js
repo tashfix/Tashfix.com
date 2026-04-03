@@ -730,6 +730,8 @@
             var logoDark = logoEl ? logoEl.querySelector('.site-logo__dark') : null;
             var logoLight = logoEl ? logoEl.querySelector('.site-logo__light') : null;
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
+            // Remove player-expanded FIRST so CSS !important rules stop overriding
+            document.body.classList.remove('player-expanded');
             if (logoEl) {
               gsap.set(logoEl, { clearProps: 'top,left,scale' });
               if (logoDark) gsap.set(logoDark, { opacity: 1 });
@@ -739,7 +741,6 @@
               gsap.set(menuBtnEl, { clearProps: 'top,right,scale,borderColor' });
               menuLines.forEach(function(l) { gsap.set(l, { clearProps: 'backgroundColor' }); });
             }
-            document.body.classList.remove('player-expanded');
             // Stop any playing YouTube videos
             if (window.TashBrand.stopCaseStudyVideos) window.TashBrand.stopCaseStudyVideos();
             // Reset case study detail view back to grid
