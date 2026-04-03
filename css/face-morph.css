@@ -1279,7 +1279,7 @@ body.player-expanded .morph__exit-btn {
    ═══════════════════════════════════════════════════════════ */
 .morph__case-studies {
   position: absolute; top: 20px; left: 24px; right: 40px; bottom: 170px;
-  display: flex; flex-direction: column; align-items: flex-start; justify-content: flex-start;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
   z-index: 7; opacity: 0; pointer-events: none;
   overflow-y: auto;
   overflow-x: hidden;
@@ -1332,7 +1332,7 @@ body.player-expanded .morph__exit-btn {
   margin-bottom: 28px;
 }
 
-.morph__cs-grid { display: flex; gap: 24px; justify-content: flex-start; flex-wrap: wrap; }
+.morph__cs-grid { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
 
 .morph__cs-card {
   width: 320px;
