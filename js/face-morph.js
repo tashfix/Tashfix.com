@@ -792,6 +792,15 @@
     window.TashBrand = window.TashBrand || {};
     window.TashBrand.togglePlayerExpanded = toggleExpanded;
     window.TashBrand.isPlayerExpanded = function() { return isExpanded; };
+
+    // Wire hero CTA directly — guarantees binding regardless of load order
+    var heroCta = document.querySelector('.morph__hero-cta');
+    if (heroCta) {
+      heroCta.addEventListener('click', function(e) {
+        e.preventDefault();
+        toggleExpanded();
+      });
+    }
   })();
 
   // ═══════════════════════════════════════════════════════════
