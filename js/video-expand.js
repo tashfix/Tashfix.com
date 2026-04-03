@@ -12,8 +12,11 @@
   function unlockSafariVideos() {
     if (safariVideosUnlocked) return;
     safariVideosUnlocked = true;
+    var lastItemEl = document.getElementById('hscroll-last-item');
     var galleryVideos = document.querySelectorAll('.hscroll__item video');
     galleryVideos.forEach(function(v) {
+      // Skip item 14's hero video — it plays on expand, not in the gallery
+      if (lastItemEl && lastItemEl.contains(v)) return;
       var p = v.play();
       if (p && p.catch) p.catch(function() {});
     });
@@ -218,8 +221,9 @@
           lastItem.style.height = curHeight + 'px';
           lastMedia.style.borderRadius = (6 * (1 - ep)) + 'px';
 
-          // Start video once nearly fully expanded
+          // Start video from beginning once nearly fully expanded
           if (heroVideo && !videoStarted && ep > 0.95) {
+            heroVideo.currentTime = 0;
             heroVideo.play();
             videoStarted = true;
           }
