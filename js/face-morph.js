@@ -23,7 +23,7 @@
 
   var MOUSE_BRUSH_RADIUS = 90;
   var IDLE_BRUSH_RADIUS = 75;
-  var FADE_BACK_ALPHA = 0.030;
+  var FADE_BACK_ALPHA = 0.018;
 
   var strokes = [];
   var MAX_STROKES = 2;
@@ -131,11 +131,13 @@
     var dt = timestamp - lastTime;
     lastTime = timestamp;
 
-    // Fade-back
-    ctx.globalCompositeOperation = 'source-over';
-    ctx.globalAlpha = FADE_BACK_ALPHA;
-    ctx.drawImage(portraitImg, 0, 0, canvasW, canvasH);
-    ctx.globalAlpha = 1;
+    // Fade-back — only when NOT actively erasing
+    if (!mouse.active) {
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = FADE_BACK_ALPHA;
+      ctx.drawImage(portraitImg, 0, 0, canvasW, canvasH);
+      ctx.globalAlpha = 1;
+    }
 
     // Mouse brush
     if (mouse.active) {
