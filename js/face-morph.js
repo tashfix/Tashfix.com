@@ -648,6 +648,8 @@
             isTransitioning = false;
             // Start grid after expand transition so canvas has correct dimensions
             if (window.TashBrand.csGridStart) window.TashBrand.csGridStart();
+            // Let scroll-fade logic check initial state
+            window.dispatchEvent(new Event('player-expanded'));
           }, 620);
         }, 350);
 
@@ -802,6 +804,27 @@
         e.preventDefault();
         toggleExpanded();
       });
+    }
+
+    // Exit button (top-left, expanded only)
+    var exitBtn = document.getElementById('player-exit-btn');
+    if (exitBtn) {
+      exitBtn.addEventListener('click', function(e) {
+        e.stopPropagation();
+        toggleExpanded();
+      });
+    }
+
+    // Case studies scroll — toggle at-bottom class to remove bottom fade
+    var csContainer = document.querySelector('.morph__case-studies');
+    if (csContainer) {
+      function updateScrollFade() {
+        var atBottom = csContainer.scrollHeight - csContainer.scrollTop <= csContainer.clientHeight + 16;
+        csContainer.classList.toggle('at-bottom', atBottom);
+      }
+      csContainer.addEventListener('scroll', updateScrollFade, { passive: true });
+      // Also check on expand in case content already fits
+      window.addEventListener('player-expanded', updateScrollFade);
     }
   })();
 
