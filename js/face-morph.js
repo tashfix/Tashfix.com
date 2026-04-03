@@ -732,8 +732,8 @@
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
             if (logoEl) {
               gsap.set(logoEl, { clearProps: 'top,left,scale' });
-              if (logoDark) gsap.set(logoDark, { clearProps: 'opacity' });
-              if (logoLight) gsap.set(logoLight, { clearProps: 'opacity' });
+              if (logoDark) gsap.set(logoDark, { opacity: 1 });
+              if (logoLight) gsap.set(logoLight, { opacity: 0 });
             }
             if (menuBtnEl) {
               gsap.set(menuBtnEl, { clearProps: 'top,right,scale,borderColor' });
