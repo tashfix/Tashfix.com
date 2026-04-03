@@ -131,16 +131,9 @@ window.TashBrand = {
       dismissConsent();
     }
 
-    // On mobile, skip consent entirely — no audio autoplay anyway
-    if (window.innerWidth <= 768) {
-      dismissConsent();
-      return;
-    }
-
-    setTimeout(function() {
-      consent.classList.add('visible');
-      window.addEventListener('scroll', onScrollDismiss, { once: true });
-    }, 600);
+    // Skip consent on all devices — dismiss immediately and reveal interface
+    dismissConsent();
+    return;
 
     enableBtn.addEventListener('click', function() {
       if (window.TashBrand && window.TashBrand.onLoaderDone) {
