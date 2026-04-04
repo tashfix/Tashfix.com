@@ -6,7 +6,7 @@
   position: fixed;
   inset: 0;
   z-index: 9999;
-  background: #ffffff;
+  background: #0E0D0C;
   transition: opacity 0.3s ease;
 }
 
@@ -163,7 +163,7 @@
 }
 
 .audio-consent__btn--primary:hover {
-  background: var(--color-cobalt, #0A1A4A);
+  background: #C8860A;
 }
 
 .audio-consent__btn--secondary {

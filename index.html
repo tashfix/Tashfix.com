@@ -152,12 +152,26 @@
         <path id="morph-aura-6" stroke="rgba(180,175,168,0.35)" stroke-width="1.8" />
       </svg>
 
+      <!-- Circuit trace overlay — brand v1 right-side motif -->
+      <svg class="hero-circuit" aria-hidden="true"
+           viewBox="0 0 700 900" preserveAspectRatio="xMaxYMid slice"
+           xmlns="http://www.w3.org/2000/svg">
+        <path d="M 620,120 H 520 V 280" stroke="rgba(26,24,20,0.1)" stroke-width="1" fill="none"/>
+        <circle cx="520" cy="280" r="2" fill="rgba(200,134,10,0.25)"/>
+        <path d="M 680,340 H 580 V 180 H 490" stroke="rgba(26,24,20,0.1)" stroke-width="1" fill="none"/>
+        <circle cx="490" cy="180" r="2" fill="rgba(200,134,10,0.25)"/>
+        <path d="M 700,520 H 600 V 420 H 540 V 560" stroke="rgba(26,24,20,0.1)" stroke-width="1" fill="none"/>
+        <circle cx="540" cy="560" r="2" fill="rgba(200,134,10,0.25)"/>
+        <path d="M 650,700 H 560 V 640" stroke="rgba(26,24,20,0.1)" stroke-width="1" fill="none"/>
+        <circle cx="560" cy="640" r="2" fill="rgba(200,134,10,0.25)"/>
+      </svg>
+
       <!-- UI Overlay (from face morph, outside portrait so it animates independently) -->
       <div class="morph__overlay" id="morph-overlay">
 
         <!-- Hero Intro — prominent hero text, bottom-left -->
         <div class="morph__hero-intro" id="morph-hero-intro">
-          <div class="morph__hero-role">Award-Winning</div>
+          <div class="morph__hero-role">// Award-Winning</div>
           <h1 class="morph__hero-headline">Product<br>Designer</h1>
           <div class="morph__hero-credits">Microsoft · Samsung · VoltSafe</div>
           <a class="morph__hero-cta" href="#">View My Work
@@ -190,6 +204,21 @@
     </div>
   </section>
 
+  <!-- ====== BRAND V1: Thin ticker bar ====== -->
+  <div class="ticker-bar" aria-hidden="true">
+    <div class="ticker-bar__track">
+      <span>CRAFTED. NOT GENERATED. ●</span>
+      <span>CRAFTED. NOT GENERATED. ●</span>
+      <span>CRAFTED. NOT GENERATED. ●</span>
+      <span>CRAFTED. NOT GENERATED. ●</span>
+      <span>CRAFTED. NOT GENERATED. ●</span>
+      <span>CRAFTED. NOT GENERATED. ●</span>
+    </div>
+  </div>
+
+  <!-- ====== BRAND V1: Chrome seam — hero → scroll intro ====== -->
+  <div class="chrome-seam"></div>
+
   <!-- ====== SECTION 3: HORIZONTAL SCROLL INTRO ====== -->
   <section id="hscroll-intro" class="hscroll__intro">
     <svg class="hscroll__aura" id="hscroll-aura" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
@@ -220,6 +249,9 @@
       at a <span class="accent">global scale</span>.
     </div>
   </section>
+
+  <!-- ====== BRAND V1: Chrome seam — scroll intro → about ====== -->
+  <div class="chrome-seam"></div>
 
   <!-- ====== SECTION 3.5: ABOUT ====== -->
   <section id="about" class="about">

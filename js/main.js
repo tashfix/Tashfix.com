@@ -192,6 +192,10 @@ window.TashBrand = {
     ctx.clearRect(0, 0, W, H);
     time += 0.02;
 
+    // Dark background fill
+    ctx.fillStyle = '#0E0D0C';
+    ctx.fillRect(0, 0, W, H);
+
     var gridW = W * 1.8;
     var gridH = H * 1.6;
     var offsetX = (W - gridW) / 2;
@@ -219,14 +223,12 @@ window.TashBrand = {
     var breath = 0.2 + 0.08 * Math.sin(time * 0.8);
     ctx.lineWidth = 0.8;
 
-    // Horizontal lines
+    // Horizontal lines — chrome-gold
     for (var r = 0; r <= ROWS; r++) {
       for (var c = 0; c < COLS; c++) {
         var a = Math.min(alphaGrid[r][c], alphaGrid[r][c + 1]);
         if (a < 0.01) continue;
-        var hN = (heights[r][c] + heights[r][c + 1]) / 2;
-        var col = coolColor(hN);
-        ctx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath) + ')';
+        ctx.strokeStyle = 'rgba(200, 134, 10, ' + (a * breath * 0.18) + ')';
         ctx.beginPath();
         ctx.moveTo(points[r][c].x, points[r][c].y);
         ctx.lineTo(points[r][c + 1].x, points[r][c + 1].y);
@@ -234,14 +236,12 @@ window.TashBrand = {
       }
     }
 
-    // Vertical lines
+    // Vertical lines — chrome-gold
     for (var c = 0; c <= COLS; c++) {
       for (var r = 0; r < ROWS; r++) {
         var a = Math.min(alphaGrid[r][c], alphaGrid[r + 1][c]);
         if (a < 0.01) continue;
-        var hN = (heights[r][c] + heights[r + 1][c]) / 2;
-        var col = coolColor(hN);
-        ctx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath) + ')';
+        ctx.strokeStyle = 'rgba(200, 134, 10, ' + (a * breath * 0.18) + ')';
         ctx.beginPath();
         ctx.moveTo(points[r][c].x, points[r][c].y);
         ctx.lineTo(points[r + 1][c].x, points[r + 1][c].y);
@@ -253,7 +253,7 @@ window.TashBrand = {
     var p = Math.max(1, progress);
     var counterText = (p < 10 ? '0' + p : String(p)) + '%';
     var fontSize = Math.max(32, Math.min(W * 0.05, 56));
-    ctx.font = '700 ' + fontSize + 'px Rajdhani, sans-serif';
+    ctx.font = '300 ' + fontSize + 'px "Courier New", monospace';
     ctx.textAlign = 'center';
     ctx.textBaseline = 'middle';
 
@@ -261,16 +261,16 @@ window.TashBrand = {
     var centerY = H / 2;
 
     // Ghost segments
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.04)';
+    ctx.fillStyle = 'rgba(196, 192, 188, 0.06)';
     ctx.fillText('88%', centerX, centerY);
 
     // Flicker
     var flicker = 0.93 + Math.random() * 0.07;
     ctx.save();
     ctx.globalAlpha = flicker;
-    ctx.shadowColor = 'rgba(0, 0, 0, 0.1)';
+    ctx.shadowColor = 'rgba(200, 134, 10, 0.3)';
     ctx.shadowBlur = 8;
-    ctx.fillStyle = '#1a1a1a';
+    ctx.fillStyle = '#C4C0BC';
     ctx.fillText(counterText, centerX, centerY);
     ctx.restore();
 
@@ -278,18 +278,30 @@ window.TashBrand = {
     var textW = ctx.measureText('888%').width;
     var slTop = centerY - fontSize * 0.6;
     var slBottom = centerY + fontSize * 0.6;
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.05)';
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.3)';
     for (var sy = slTop; sy < slBottom; sy += 4) {
       ctx.fillRect(centerX - textW / 2 - 6, sy, textW + 12, 1.5);
     }
 
-    // "INITIALIZING" label
+    // "// INITIALIZING" label
     var subSize = Math.max(12, fontSize * 0.24);
-    ctx.font = '400 ' + subSize + 'px Inter, sans-serif';
-    ctx.fillStyle = '#888888';
+    ctx.font = '400 ' + subSize + 'px "Courier New", monospace';
+    ctx.fillStyle = 'rgba(200, 134, 10, 0.7)';
     ctx.globalAlpha = 1;
     ctx.shadowBlur = 0;
-    ctx.fillText('I N I T I A L I Z I N G', centerX, centerY + fontSize * 0.55 + 10);
+    ctx.fillText('// I N I T I A L I Z I N G', centerX, centerY + fontSize * 0.55 + 10);
+
+    // Progress bar
+    var barW = 200, barH = 2;
+    var barX = centerX - barW / 2;
+    var barY = centerY + fontSize * 0.55 + 10 + subSize + 14;
+    ctx.fillStyle = '#1A1814';
+    ctx.fillRect(barX, barY, barW, barH);
+    var fillW = (progress / 100) * barW;
+    ctx.fillStyle = 'rgba(200, 134, 10, 0.4)';
+    ctx.fillRect(barX, barY, fillW, barH);
+    ctx.fillStyle = '#C8860A';
+    ctx.fillRect(barX + Math.max(0, fillW - 1), barY, 2, barH);
 
     loaderAnimId = requestAnimationFrame(draw);
   }

@@ -12,18 +12,18 @@
   padding-bottom: 12vh;
   overflow: visible;
   background: linear-gradient(to bottom,
-    var(--color-cobalt) 0%,
-    var(--color-cobalt) 60%,
-    #0d1f4a 70%,
-    #132a58 76%,
-    #1e3a6a 80%,
-    #2e4f7d 84%,
-    #4a6d94 87%,
-    #6d8caa 90%,
-    #92aabf 93%,
-    #b5c5d4 95%,
-    #d1dbe4 97%,
-    #e8ecf0 99%,
+    #0E0D0C 0%,
+    #0E0D0C 60%,
+    #141210 70%,
+    #1a1814 76%,
+    #242018 80%,
+    #2e2a20 84%,
+    #403a2c 87%,
+    #5a5040 90%,
+    #7a7060 93%,
+    #a09080 95%,
+    #c4b8a8 97%,
+    #ddd4c4 99%,
     var(--color-offwhite) 100%);
   color: rgba(255, 255, 255, 0.5);
   position: relative;
@@ -867,7 +867,7 @@
     gap: 0;
     padding: 3rem 0 2rem;
     overflow: visible;
-    background: var(--color-cobalt);
+    background: #0E0D0C;
     /* Always visible — no .visible class needed on mobile */
     opacity: 1;
     pointer-events: auto;
@@ -950,3 +950,32 @@
 
 
 /* Positioning styles moved to css/about.css */
+
+/* ── Brand v1: thin ticker bar ── */
+.ticker-bar {
+  background: #1A1814;
+  padding: 8px 0;
+  overflow: hidden;
+  width: 100%;
+  position: relative;
+  z-index: 10;
+}
+.ticker-bar__track {
+  display: flex;
+  white-space: nowrap;
+  animation: ticker-scroll 40s linear infinite;
+  width: max-content;
+}
+.ticker-bar__track span {
+  font-family: 'Courier New', monospace;
+  font-size: 9px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: #C8860A;
+  padding-right: 2em;
+  flex-shrink: 0;
+}
+@keyframes ticker-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}

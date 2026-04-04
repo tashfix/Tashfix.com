@@ -52,7 +52,7 @@
   font-family: var(--font-cormorant);
   font-style: italic;
   font-weight: 600;
-  color: var(--color-cobalt);
+  color: #C8860A;
 }
 
 .about__philosophy {
@@ -151,19 +151,25 @@
   width: 7px;
   height: 7px;
   border-radius: 50%;
-  background: var(--color-offwhite);
-  border: 1.5px solid rgba(26, 26, 26, 0.28);
+  background: rgba(200, 134, 10, 0.3);
+  border: 1.5px solid rgba(200, 134, 10, 0.3);
   z-index: 1;
 }
 
+/* Most recent item (2026) — fully lit dot */
+.about__tl-item:first-child::after {
+  background: #C8860A;
+  border-color: #C8860A;
+}
+
 .about__tl-year {
-  font-family: var(--font-rajdhani);
-  font-weight: 700;
-  font-size: clamp(0.72rem, 0.8vw, 0.82rem);
-  color: rgba(26, 26, 26, 0.35);
+  font-family: 'Courier New', monospace;
+  font-weight: 400;
+  font-size: 10px;
+  color: #C8860A;
   padding-top: 0.38rem;
   text-align: right;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.1em;
   line-height: 1;
   grid-column: 1;
 }

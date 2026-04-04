@@ -149,9 +149,9 @@
     /* Mobile: previous section is cobalt */
     padding: clamp(6rem, 12vh, 10rem) 0 clamp(2rem, 4vh, 3rem);
     background: linear-gradient(to bottom,
-      var(--color-cobalt) 0%,
-      #06112e 18%,
-      #030a1a 32%,
+      #0E0D0C 0%,
+      #0a0908 18%,
+      #060504 32%,
       #000000 48%);
     margin-top: 0;
   }

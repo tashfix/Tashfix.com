@@ -2134,3 +2134,124 @@ body.player-expanded .morph__menu-btn {
 .morph__cursor.visible {
   opacity: 1;
 }
+
+
+/* ═══════════════════════════════════════════════════════════
+   BRAND DIRECTION V1 — chrome/industrial design system
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Chrome seam divider (off-white ↔ dark section transitions) ── */
+.chrome-seam {
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: linear-gradient(
+    to right,
+    #0E0D0C 0%,
+    rgba(196,192,188,0.4) 15%,
+    rgba(232,228,220,0.9) 35%,
+    #C8860A 50%,
+    rgba(232,228,220,0.9) 65%,
+    rgba(196,192,188,0.4) 85%,
+    #0E0D0C 100%
+  );
+}
+.chrome-seam::after {
+  content: '';
+  display: block;
+  height: 0.5px;
+  background: rgba(200, 134, 10, 0.15);
+  margin-top: 1px;
+}
+
+/* ── Hero eyebrow role label ── */
+.morph__hero-role {
+  font-family: 'Courier New', monospace !important;
+  font-size: 11px !important;
+  letter-spacing: 0.18em !important;
+  color: #C8860A !important;
+  text-transform: uppercase;
+}
+
+/* ── Case study count badge ── */
+.morph__cs-count {
+  font-family: 'Courier New', monospace !important;
+  color: rgba(200, 134, 10, 0.4) !important;
+}
+.morph__cs-count::before { content: '// '; }
+
+/* ── Case study cards ── */
+.morph__cs-card {
+  border: 1px solid rgba(200, 134, 10, 0.28) !important;
+  border-top-color: rgba(200, 134, 10, 0.5) !important;
+}
+.morph__cs-card:hover {
+  border-color: rgba(200, 134, 10, 0.6) !important;
+}
+.morph__cs-client {
+  font-family: 'Courier New', monospace !important;
+  color: #C8860A !important;
+  text-shadow: none !important;
+}
+.morph__cs-tags span {
+  background: transparent !important;
+  border: 0.5px solid rgba(200, 134, 10, 0.3) !important;
+  color: rgba(200, 134, 10, 0.7) !important;
+}
+
+/* ── Case study TOC sidebar ── */
+.morph__cs-toc-label {
+  font-family: 'Courier New', monospace !important;
+  font-size: 8px !important;
+  letter-spacing: 0.18em !important;
+  color: #C8860A !important;
+}
+.morph__cs-toc-label::before {
+  content: '● ';
+  color: #C8860A;
+}
+.morph__cs-toc-item--active {
+  border-left-color: #C8860A !important;
+}
+.morph__cs-toc-item--active .morph__cs-toc-link {
+  font-family: 'Courier New', monospace !important;
+  color: rgba(200, 134, 10, 0.8) !important;
+}
+.morph__cs-toc-item--active .morph__cs-toc-link::before {
+  content: '// ';
+  color: rgba(200, 134, 10, 0.8);
+}
+
+/* ── Player: left chrome strip + DRAG label + gold scrubber ── */
+.morph__player::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 10%;
+  height: 80%;
+  width: 2px;
+  border-radius: 1px;
+  background: linear-gradient(to bottom, #E8E4DC, #C8860A, #E8E4DC);
+  z-index: 10;
+  pointer-events: none;
+}
+.morph__player::before {
+  content: 'DRAG';
+  position: absolute;
+  bottom: -18px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-family: 'Courier New', monospace;
+  font-size: 7px;
+  letter-spacing: 0.15em;
+  color: rgba(200, 134, 10, 0.3);
+  pointer-events: none;
+  white-space: nowrap;
+  z-index: 1;
+}
+.morph__progress-fill {
+  background: linear-gradient(180deg, #a08010 0%, #C8860A 50%, #a08010 100%) !important;
+}
+.morph__progress-knob {
+  background: radial-gradient(circle at 36% 28%, #e8d090 0%, #C8860A 55%, #7a5008 95%) !important;
+}

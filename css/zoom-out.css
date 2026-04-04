@@ -5,7 +5,7 @@
 .zoomout {
   position: relative;
   height: 220vh;
-  background: var(--color-cobalt);
+  background: #0E0D0C;
 }
 
 .zoomout__sticky {
@@ -20,6 +20,9 @@
   position: absolute;
   inset: 0;
   background: var(--color-beige);
+  background-image:
+    repeating-linear-gradient(0deg, transparent, transparent 23px, rgba(26,24,20,0.06) 24px),
+    repeating-linear-gradient(90deg, transparent, transparent 23px, rgba(26,24,20,0.06) 24px);
   z-index: 1;
   cursor: none;
 }
@@ -49,7 +52,7 @@
   font-size: clamp(6rem, 15vw, 14rem);
   font-weight: 900;
   text-transform: uppercase;
-  color: var(--color-cobalt);
+  color: #0E0D0C;
   -webkit-text-stroke: 4px var(--color-tangerine);
   paint-order: stroke fill;
   letter-spacing: 0.02em;
@@ -153,7 +156,20 @@
     left: 0;
     right: 0;
     height: 55%;
-    background: linear-gradient(to bottom, transparent, var(--color-cobalt));
+    background: linear-gradient(to bottom, transparent, #0E0D0C);
     pointer-events: none;
   }
+}
+
+/* ── Brand v1: hide aura waves; circuit SVG overlay ── */
+.morph__aura { opacity: 0 !important; }
+
+.hero-circuit {
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 50%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 2;
 }
