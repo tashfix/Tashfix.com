@@ -2110,8 +2110,7 @@ body.player-expanded .morph__menu-btn {
   pointer-events: none;
   opacity: 0;
   transition: opacity 1.2s ease;
-  -webkit-mask-image: radial-gradient(ellipse 35% 50% at 50% 45%, transparent 0%, transparent 45%, rgba(0,0,0,0.3) 65%, black 100%);
-  mask-image: radial-gradient(ellipse 35% 50% at 50% 45%, transparent 0%, transparent 45%, rgba(0,0,0,0.3) 65%, black 100%);
+  /* mask removed — circuit traces span the full right zone */
 }
 
 .morph__aura.revealed { opacity: 1; }
