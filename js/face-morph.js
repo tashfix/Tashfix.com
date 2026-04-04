@@ -845,6 +845,12 @@
     csCards.forEach(function(card) {
       card.addEventListener('click', function(e) {
         e.preventDefault();
+        var csKey = card.getAttribute('data-cs');
+        // Show only the matching detail content block
+        var allContent = document.querySelectorAll('.morph__cs-detail-content');
+        allContent.forEach(function(el) {
+          el.style.display = el.getAttribute('data-cs') === csKey ? '' : 'none';
+        });
         // Hide grid + equalizer, show detail
         csGrid.style.display = 'none';
         if (csHeading) csHeading.style.display = 'none';
