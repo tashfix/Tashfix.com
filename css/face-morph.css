@@ -1054,6 +1054,12 @@ body.player-expanded .morph__menu-btn {
 body.player-expanded #site-logo {
   opacity: 0;
   pointer-events: none;
+  transition: none; /* don't transition while hidden — only fade in after collapse */
+}
+
+/* Delay logo reappearance until after player has slid away from top-left */
+body.player-collapsing #site-logo.revealed {
+  transition-delay: 0.6s;
 }
 
 /* ── Player exit button (top-left, expanded only) ── */
@@ -1106,6 +1112,7 @@ body.player-expanded .morph__exit-btn {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);
+  transition: opacity 0s, transform 0s; /* disappear instantly when player-expanded is removed */
 }
 
 .morph__player.expanded .morph__player-body {

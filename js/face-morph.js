@@ -727,7 +727,10 @@
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
             // Remove player-expanded FIRST so CSS !important rules stop overriding
             // (CSS handles logo visibility — no GSAP manipulation needed)
+            // player-collapsing delays logo fade-in until after exit btn is gone
+            document.body.classList.add('player-collapsing');
             document.body.classList.remove('player-expanded');
+            setTimeout(function() { document.body.classList.remove('player-collapsing'); }, 1400);
             // URL: clear hash when player collapses to landing
             if (!isRestoringFromHash) history.pushState({ view: 'landing' }, '', location.pathname);
             // Restore hamburger lines to dark (page background is light after collapse)
