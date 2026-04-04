@@ -1654,6 +1654,15 @@ body.player-expanded .morph__exit-btn {
   background: #000;
 }
 
+/* Small asset — for images that look better at reduced size */
+.morph__cs-detail-asset--small {
+  display: flex;
+  justify-content: center;
+}
+.morph__cs-detail-asset--small img {
+  width: 33%;
+}
+
 /* Asset placeholder — used before real images are available */
 .morph__cs-detail-asset--placeholder {
   margin: 28px 0 36px;
