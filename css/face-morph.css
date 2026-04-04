@@ -852,6 +852,7 @@
 .morph__lcd-track {
   display: flex;
   width: max-content;
+  will-change: transform;
   animation: morph-lcd-scroll 14s linear infinite;
 }
 
@@ -860,13 +861,13 @@
   font-family: var(--font-mono);
   font-size: 16px; font-weight: 400; letter-spacing: 2.5px; color: #ff8c00;
   text-shadow: 0 0 2px rgba(255,140,0,1), 0 0 5px rgba(255,140,0,0.9), 0 0 10px rgba(255,120,0,0.65), 0 0 20px rgba(255,100,0,0.4), 0 0 35px rgba(255,80,0,0.2), 0 0 60px rgba(255,60,0,0.08);
-  padding-right: 80px; /* gap between the two copies */
+  padding-right: 260px; /* gap ≈ visible LCD window width so copy appears right as previous exits left */
   flex-shrink: 0;
 }
 
 @keyframes morph-lcd-scroll {
-  0%   { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 .morph__lcd-scanlines {
