@@ -593,6 +593,7 @@
 
       if (!isExpanded) {
         isTransitioning = true;
+        document.body.classList.remove('player-collapsing'); // clear if re-opening mid-collapse
         document.body.classList.add('player-expanded');
         // Add transitioning early so player becomes visible on mobile
         player.classList.add('transitioning');
@@ -676,7 +677,9 @@
           player.style.transformOrigin = '';
           player.style.width = '';
           player.style.height = '';
+          document.body.classList.add('player-collapsing');
           document.body.classList.remove('player-expanded');
+          setTimeout(function() { document.body.classList.remove('player-collapsing'); }, 1400);
           isExpanded = false;
           isTransitioning = false;
           if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();

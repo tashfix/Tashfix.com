@@ -1058,7 +1058,10 @@ body.player-expanded #site-logo {
 }
 
 /* Delay logo reappearance until after player has slid away from top-left */
-body.player-collapsing #site-logo.revealed {
+body.player-collapsing #site-logo {
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.5s ease, transform 0.5s ease;
   transition-delay: 0.6s;
 }
 
