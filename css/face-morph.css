@@ -1061,7 +1061,7 @@ body.player-expanded #site-logo {
   position: fixed;
   top: 20px;
   left: 24px;
-  z-index: 9002;
+  z-index: 99998;
   width: 60px;
   height: 60px;
   border: none;
@@ -1508,7 +1508,7 @@ body.player-expanded .morph__exit-btn {
   position: fixed;
   top: 20px;
   left: 92px; /* 24px (exit left) + 60px (exit width) + 8px gap */
-  z-index: 9002;
+  z-index: 99998;
   height: 60px;
   padding: 0 22px 0 18px;
   display: inline-flex;
@@ -1616,6 +1616,9 @@ body.player-expanded .morph__exit-btn {
   text-decoration: none;
   transition: color 0.25s ease, font-weight 0.25s ease;
   display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 .morph__cs-toc-item--active .morph__cs-toc-link {
   color: rgba(255, 255, 255, 0.85);
