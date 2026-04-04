@@ -593,7 +593,9 @@
 
       if (!isExpanded) {
         isTransitioning = true;
-        document.body.classList.remove('player-collapsing'); // clear if re-opening mid-collapse
+        // Clear any inline logo styles from a previous collapse
+        var logoEl2 = document.getElementById('site-logo');
+        if (logoEl2) { logoEl2.style.opacity = ''; logoEl2.style.transition = ''; }
         document.body.classList.add('player-expanded');
         // Add transitioning early so player becomes visible on mobile
         player.classList.add('transitioning');
@@ -677,9 +679,16 @@
           player.style.transformOrigin = '';
           player.style.width = '';
           player.style.height = '';
-          document.body.classList.add('player-collapsing');
+          var logoEl2 = document.getElementById('site-logo');
+          if (logoEl2) {
+            logoEl2.style.opacity = '0';
+            logoEl2.style.transition = 'none';
+            setTimeout(function() {
+              logoEl2.style.transition = '';
+              logoEl2.style.opacity = '';
+            }, 400);
+          }
           document.body.classList.remove('player-expanded');
-          setTimeout(function() { document.body.classList.remove('player-collapsing'); }, 1400);
           isExpanded = false;
           isTransitioning = false;
           if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
@@ -728,12 +737,18 @@
             player.style.height = '';
             var menuBtnEl = document.getElementById('menu-btn');
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
-            // Remove player-expanded FIRST so CSS !important rules stop overriding
-            // (CSS handles logo visibility — no GSAP manipulation needed)
-            // player-collapsing delays logo fade-in until after exit btn is gone
-            document.body.classList.add('player-collapsing');
+            // Snap logo to hidden instantly, then fade back in after player has moved away
+            var logoEl2 = document.getElementById('site-logo');
+            if (logoEl2) {
+              logoEl2.style.opacity = '0';
+              logoEl2.style.transition = 'none';
+              setTimeout(function() {
+                logoEl2.style.transition = '';
+                logoEl2.style.opacity = '';
+              }, 700);
+            }
+            // Remove player-expanded so CSS rules restore
             document.body.classList.remove('player-expanded');
-            setTimeout(function() { document.body.classList.remove('player-collapsing'); }, 1400);
             // URL: clear hash when player collapses to landing
             if (!isRestoringFromHash) history.pushState({ view: 'landing' }, '', location.pathname);
             // Restore hamburger lines to dark (page background is light after collapse)
