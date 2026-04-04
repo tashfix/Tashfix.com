@@ -842,6 +842,86 @@
     var csCards = document.querySelectorAll('.morph__cs-card[data-cs]');
     var vizCanvas = document.getElementById('morph-viz-canvas');
 
+    // ── Section TOC ──
+    var csToc = document.getElementById('cs-toc');
+    var tocScrollHandler = null;
+
+    function buildTOC(csKey) {
+      if (!csToc) return;
+      var content = document.querySelector('.morph__cs-detail-content[data-cs="' + csKey + '"]');
+      if (!content) { csToc.innerHTML = ''; return; }
+      var headings = Array.from(content.querySelectorAll('h2'));
+      if (headings.length === 0) { csToc.innerHTML = ''; return; }
+
+      // Assign stable IDs to each heading
+      headings.forEach(function(h, i) {
+        if (!h.id) h.id = 'cs-section-' + csKey + '-' + i;
+      });
+
+      // Build markup
+      var label = document.createElement('p');
+      label.className = 'morph__cs-toc-label';
+      label.setAttribute('aria-hidden', 'true');
+      label.textContent = 'In this study';
+
+      var list = document.createElement('ul');
+      list.className = 'morph__cs-toc-list';
+      list.setAttribute('role', 'list');
+
+      headings.forEach(function(h) {
+        var li = document.createElement('li');
+        li.className = 'morph__cs-toc-item';
+        var a = document.createElement('a');
+        a.className = 'morph__cs-toc-link';
+        a.href = '#' + h.id;
+        a.setAttribute('data-target', h.id);
+        a.textContent = h.textContent;
+        // Smooth scroll within the detail panel on click
+        a.addEventListener('click', function(e) {
+          e.preventDefault();
+          var target = document.getElementById(h.id);
+          if (target) {
+            csDetail.scrollTo({ top: target.offsetTop - 90, behavior: 'smooth' });
+          }
+        });
+        li.appendChild(a);
+        list.appendChild(li);
+      });
+
+      csToc.innerHTML = '';
+      csToc.appendChild(label);
+      csToc.appendChild(list);
+
+      // Scroll-based active tracking
+      var tocLinks = Array.from(list.querySelectorAll('[data-target]'));
+      var sectionEls = tocLinks.map(function(a) {
+        return document.getElementById(a.getAttribute('data-target'));
+      }).filter(Boolean);
+
+      if (tocScrollHandler) csDetail.removeEventListener('scroll', tocScrollHandler);
+      tocScrollHandler = function() {
+        var scrollTop = csDetail.scrollTop;
+        var activeIdx = 0;
+        sectionEls.forEach(function(sec, i) {
+          if (sec.offsetTop - 110 <= scrollTop) activeIdx = i;
+        });
+        tocLinks.forEach(function(a, i) {
+          a.parentElement.classList.toggle('morph__cs-toc-item--active', i === activeIdx);
+        });
+      };
+      csDetail.addEventListener('scroll', tocScrollHandler, { passive: true });
+      // Set initial active state
+      tocScrollHandler();
+    }
+
+    function teardownTOC() {
+      if (tocScrollHandler) {
+        csDetail.removeEventListener('scroll', tocScrollHandler);
+        tocScrollHandler = null;
+      }
+      if (csToc) csToc.innerHTML = '';
+    }
+
     csCards.forEach(function(card) {
       card.addEventListener('click', function(e) {
         e.preventDefault();
@@ -860,11 +940,14 @@
         if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
         // Reset scroll position on the detail panel itself
         csDetail.scrollTop = 0;
+        // Build section TOC for this case study
+        buildTOC(csKey);
       });
     });
 
     csDetailBack.addEventListener('click', function() {
       stopCaseStudyVideos();
+      teardownTOC();
       csDetail.classList.remove('active');
       csGrid.style.display = '';
       if (csHeading) csHeading.style.display = '';

@@ -1556,6 +1556,75 @@ body.player-expanded .morph__exit-btn {
   stroke: #ffffff;
 }
 
+/* ── Section progress / TOC ── */
+.morph__cs-toc {
+  position: fixed;
+  /* Sits left of the 780px centered content column with a 36px gap */
+  left: max(20px, calc(50% - 390px - 36px - 150px));
+  top: 100px;
+  width: 150px;
+  z-index: 9001;
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-10px);
+  transition: opacity 0.4s ease 0.15s, transform 0.4s ease 0.15s;
+}
+/* Only reveal when detail is active AND viewport is wide enough */
+@media (min-width: 1220px) {
+  .morph__cs-detail.active .morph__cs-toc {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+  }
+}
+.morph__cs-toc-label {
+  font-family: 'Share Tech Mono', 'Consolas', monospace;
+  font-size: 10px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.3);
+  margin: 0 0 14px 0;
+}
+.morph__cs-toc-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.morph__cs-toc-list::-webkit-scrollbar { display: none; }
+.morph__cs-toc-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+  padding-left: 12px;
+  border-left: 2px solid rgba(255, 255, 255, 0.1);
+  transition: border-color 0.25s ease;
+}
+.morph__cs-toc-item--active {
+  border-left-color: rgba(255, 140, 0, 0.8);
+}
+.morph__cs-toc-link {
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: 11px;
+  font-weight: 400;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.35);
+  text-decoration: none;
+  transition: color 0.25s ease, font-weight 0.25s ease;
+  display: block;
+}
+.morph__cs-toc-item--active .morph__cs-toc-link {
+  color: rgba(255, 255, 255, 0.85);
+  font-weight: 500;
+}
+.morph__cs-toc-link:hover {
+  color: rgba(255, 255, 255, 0.65);
+}
+
 /* Content wrapper — centered column within the full-width scrollable detail */
 .morph__cs-detail-scroll {
   max-width: 780px;
