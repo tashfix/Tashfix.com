@@ -45,7 +45,7 @@
   position: fixed;
   top: 20px;
   left: 24px;
-  z-index: 9001;
+  z-index: 8998; /* sits below player (9000) so expanded player covers it naturally */
   user-select: none;
   pointer-events: auto;
   cursor: pointer;
@@ -1026,35 +1026,10 @@ body.player-expanded {
   overflow: hidden !important;
 }
 
-/* Logo + hamburger orange mode during fullscreen */
-body.player-expanded .site-logo {
-  pointer-events: auto;
-  cursor: pointer;
-}
-
-body.player-expanded .site-logo .site-logo__dark {
-  opacity: 0 !important;
-}
-body.player-expanded .site-logo .site-logo__light {
-  opacity: 1 !important;
-  filter: drop-shadow(0 0 8px rgba(220, 130, 20, 0.55)) drop-shadow(0 0 20px rgba(200, 100, 0, 0.25)) !important;
-}
-body.player-expanded .site-logo .site-logo__light .site-logo__path {
-  fill: rgba(200, 110, 10, 0.22) !important;
-  stroke: rgba(230, 148, 40, 0.88) !important;
-  stroke-width: 0.7 !important;
-}
-
+/* Hide hamburger when player is expanded */
 body.player-expanded .morph__menu-btn {
   opacity: 0 !important;
   pointer-events: none !important;
-}
-
-/* Hide site logo in expanded player — JS handles snap/delay on collapse */
-body.player-expanded #site-logo {
-  opacity: 0 !important;
-  pointer-events: none;
-  transition: none !important;
 }
 
 /* ── Player exit button (top-left, expanded only) ── */
@@ -1103,7 +1078,7 @@ body.player-expanded #site-logo {
 .morph__exit-line:nth-child(1) { transform: translateY(5px) rotate(45deg); }
 .morph__exit-line:nth-child(2) { transform: translateY(-5px) rotate(-45deg); }
 
-body.player-expanded .morph__exit-btn {
+.morph__player.expanded ~ .morph__exit-btn {
   opacity: 1;
   pointer-events: auto;
   transform: translateY(0);

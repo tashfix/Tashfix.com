@@ -593,9 +593,6 @@
 
       if (!isExpanded) {
         isTransitioning = true;
-        // Clear any inline logo styles from a previous collapse
-        var logoEl2 = document.getElementById('site-logo');
-        if (logoEl2) { logoEl2.style.opacity = ''; logoEl2.style.transition = ''; }
         document.body.classList.add('player-expanded');
         // Add transitioning early so player becomes visible on mobile
         player.classList.add('transitioning');
@@ -679,15 +676,6 @@
           player.style.transformOrigin = '';
           player.style.width = '';
           player.style.height = '';
-          var logoEl2 = document.getElementById('site-logo');
-          if (logoEl2) {
-            logoEl2.style.opacity = '0';
-            logoEl2.style.transition = 'none';
-            setTimeout(function() {
-              logoEl2.style.transition = '';
-              logoEl2.style.opacity = '';
-            }, 400);
-          }
           document.body.classList.remove('player-expanded');
           isExpanded = false;
           isTransitioning = false;
@@ -737,17 +725,6 @@
             player.style.height = '';
             var menuBtnEl = document.getElementById('menu-btn');
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
-            // Snap logo to hidden instantly, then fade back in after player has moved away
-            var logoEl2 = document.getElementById('site-logo');
-            if (logoEl2) {
-              logoEl2.style.opacity = '0';
-              logoEl2.style.transition = 'none';
-              setTimeout(function() {
-                logoEl2.style.transition = '';
-                logoEl2.style.opacity = '';
-              }, 700);
-            }
-            // Remove player-expanded so CSS rules restore
             document.body.classList.remove('player-expanded');
             // URL: clear hash when player collapses to landing
             if (!isRestoringFromHash) history.pushState({ view: 'landing' }, '', location.pathname);
