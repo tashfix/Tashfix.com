@@ -1309,6 +1309,12 @@ body.player-expanded .morph__exit-btn {
   mask-image: linear-gradient(to bottom, transparent 0%, black 6%);
 }
 
+/* Remove mask when case study detail is open — prevents bottom fade clipping content */
+.morph__player.expanded .morph__case-studies:has(.morph__cs-detail.active) {
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
 /* Animated breathing grid canvas */
 .cs-grid-canvas {
   position: absolute;
@@ -1661,6 +1667,33 @@ body.player-expanded .morph__exit-btn {
 }
 .morph__cs-detail-asset--small img {
   width: 33%;
+}
+
+/* Persona row — circular image left, text right */
+.morph__cs-persona {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin: 24px 0 32px;
+}
+.morph__cs-persona-img {
+  flex-shrink: 0;
+  width: 25%;
+}
+.morph__cs-persona-img img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 50%;
+}
+.morph__cs-persona-text {
+  flex: 1;
+}
+.morph__cs-persona-text h3 {
+  margin-top: 0;
+}
+.morph__cs-persona-text p {
+  margin-bottom: 0;
 }
 
 /* Asset placeholder — used before real images are available */
