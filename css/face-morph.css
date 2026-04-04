@@ -316,6 +316,11 @@
   color: #ffffff;
 }
 
+.nav-overlay__contact-link:hover .nav-overlay__tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* Tooltip for copy-to-clipboard feedback */
 .nav-overlay__tooltip {
   position: absolute;

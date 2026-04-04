@@ -809,6 +809,11 @@
   opacity: 1;
 }
 
+.video-quotes__footer-link:hover .video-quotes__footer-tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 .video-quotes__footer-copy {
   flex-basis: 100%;
   font-family: 'Share Tech Mono', monospace;

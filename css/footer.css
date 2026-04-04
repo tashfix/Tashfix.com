@@ -93,6 +93,11 @@
   opacity: 1;
 }
 
+.site-footer__link:hover .site-footer__tooltip {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* ── Copy tooltip ── */
 .site-footer__tooltip {
   position: absolute;
