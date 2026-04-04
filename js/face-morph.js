@@ -830,6 +830,10 @@
     var csCards = document.querySelectorAll('.morph__cs-card[data-cs]');
     var vizCanvas = document.getElementById('morph-viz-canvas');
 
+    // Set case study count badge dynamically
+    var csCountEl = document.getElementById('cs-count');
+    if (csCountEl) csCountEl.textContent = csCards.length + ' case studies';
+
     // ── Section TOC ──
     var csToc = document.getElementById('cs-toc');
     var tocScrollHandler = null;
@@ -1440,9 +1444,11 @@
         e.preventDefault();
         var email = copyEmailBtn.dataset.email;
         navigator.clipboard.writeText(email).then(function() {
+          copyEmailTooltip.textContent = 'Copied!';
           copyEmailTooltip.classList.add('visible');
           setTimeout(function() {
             copyEmailTooltip.classList.remove('visible');
+            copyEmailTooltip.textContent = 'Copy email';
           }, 2500);
         });
       });

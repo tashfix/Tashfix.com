@@ -1315,6 +1315,15 @@ body.player-expanded .morph__menu-btn {
   margin-bottom: 28px;
 }
 
+.morph__cs-count {
+  font-family: 'Share Tech Mono', 'Consolas', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(255,255,255,0.3);
+  margin-left: 10px;
+  vertical-align: middle;
+}
+
 .morph__cs-grid { display: flex; gap: 24px; justify-content: center; flex-wrap: wrap; }
 
 .morph__cs-card {
