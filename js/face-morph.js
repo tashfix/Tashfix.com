@@ -2,6 +2,9 @@
    FACE MORPH — canvas eraser, idle strokes, aura, cursor, player
    ═══════════════════════════════════════════════════════════ */
 (function() {
+  // Shared flag: prevents URL writes during programmatic hash restoration
+  var isRestoringFromHash = false;
+
   var canvas = document.getElementById('morph-canvas');
   var ctx = canvas.getContext('2d');
   var metallicImg = document.getElementById('morph-metallic');
@@ -650,6 +653,8 @@
             if (window.TashBrand.csGridStart) window.TashBrand.csGridStart();
             // Let scroll-fade logic check initial state
             window.dispatchEvent(new Event('player-expanded'));
+            // URL: push #work when player finishes expanding
+            if (!isRestoringFromHash) history.pushState({ view: 'work' }, '', '#work');
           }, 620);
         }, 350);
 
@@ -736,6 +741,8 @@
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
             // Remove player-expanded FIRST so CSS !important rules stop overriding
             document.body.classList.remove('player-expanded');
+            // URL: clear hash when player collapses to landing
+            if (!isRestoringFromHash) history.pushState({ view: 'landing' }, '', location.pathname);
             if (logoEl) {
               gsap.set(logoEl, { clearProps: 'top,left,scale' });
               if (logoDark) gsap.set(logoDark, { opacity: 1 });
@@ -942,6 +949,8 @@
         csDetail.scrollTop = 0;
         // Build section TOC for this case study
         buildTOC(csKey);
+        // URL: push case study hash
+        if (!isRestoringFromHash) history.pushState({ view: 'case', cs: csKey }, '', '#work/' + csKey);
       });
     });
 
@@ -954,7 +963,81 @@
       if (vizCanvas) vizCanvas.style.opacity = '';
       // Resume animated grid when returning to selection screen
       if (window.TashBrand.csGridStart) window.TashBrand.csGridStart();
+      // URL: return to #work grid
+      if (!isRestoringFromHash) history.pushState({ view: 'work' }, '', '#work');
     });
+
+    // ── Hash routing: browser back/forward ──
+    window.addEventListener('popstate', function() {
+      var hash = location.hash;
+      isRestoringFromHash = true;
+      try {
+        if (!hash || hash === '#') {
+          // Going back to landing
+          if (csDetail.classList.contains('active')) {
+            teardownTOC();
+            stopCaseStudyVideos();
+            csDetail.classList.remove('active');
+            csGrid.style.display = '';
+            if (csHeading) csHeading.style.display = '';
+            if (vizCanvas) vizCanvas.style.opacity = '';
+            if (window.TashBrand.csGridStart) window.TashBrand.csGridStart();
+          }
+          if (window.TashBrand.isPlayerExpanded()) window.TashBrand.togglePlayerExpanded();
+        } else if (hash === '#work') {
+          // Going back to grid from case study
+          if (csDetail.classList.contains('active')) {
+            teardownTOC();
+            stopCaseStudyVideos();
+            csDetail.classList.remove('active');
+            csGrid.style.display = '';
+            if (csHeading) csHeading.style.display = '';
+            if (vizCanvas) vizCanvas.style.opacity = '';
+            if (window.TashBrand.csGridStart) window.TashBrand.csGridStart();
+          } else if (!window.TashBrand.isPlayerExpanded()) {
+            window.TashBrand.togglePlayerExpanded();
+          }
+        } else if (hash.startsWith('#work/')) {
+          var key = hash.slice(6);
+          var card = document.querySelector('.morph__cs-card[data-cs="' + key + '"]');
+          if (card) card.click();
+        }
+      } finally {
+        setTimeout(function() { isRestoringFromHash = false; }, 800);
+      }
+    });
+
+    // ── Hash routing: restore state on page load / refresh ──
+    (function restoreFromHash() {
+      var hash = window.location.hash;
+      if (!hash || hash === '#') return;
+
+      isRestoringFromHash = true;
+      // Seed a landing entry so browser back can return to /
+      history.replaceState({ view: 'landing' }, '', location.pathname + location.search);
+
+      if (hash === '#work') {
+        history.pushState({ view: 'work' }, '', '#work');
+        setTimeout(function() {
+          window.TashBrand.togglePlayerExpanded();
+          setTimeout(function() { isRestoringFromHash = false; }, 700);
+        }, 150);
+
+      } else if (hash.startsWith('#work/')) {
+        var csKey = hash.slice(6);
+        history.pushState({ view: 'work' }, '', '#work');
+        history.pushState({ view: 'case', cs: csKey }, '', '#work/' + csKey);
+        setTimeout(function() {
+          window.TashBrand.togglePlayerExpanded();
+          setTimeout(function() {
+            var card = document.querySelector('.morph__cs-card[data-cs="' + csKey + '"]');
+            if (card) card.click();
+            setTimeout(function() { isRestoringFromHash = false; }, 200);
+          }, 700);
+        }, 150);
+      }
+    })();
+
   })();
 
   // ── YouTube ↔ site audio coordination ──
