@@ -141,28 +141,32 @@
         </svg>
       </div>
 
-      <!-- Circuit traces (replaces aura wave lines) — GSAP IDs preserved -->
+      <!-- Aura lines — GSAP animates these paths, do not add static content here -->
       <svg class="morph__aura" id="morph-aura" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
-        <!-- Circuit path 1 -->
-        <path id="morph-aura-0" d="M 1360,80 H 1180 V 260 H 1060" stroke="rgba(180,175,168,0.28)" stroke-width="1" />
+        <path id="morph-aura-0" stroke="rgba(180,175,168,0.35)" stroke-width="1.5" />
+        <path id="morph-aura-1" stroke="rgba(180,175,168,0.25)" stroke-width="1.2" />
+        <path id="morph-aura-2" stroke="rgba(180,175,168,0.4)" stroke-width="2" />
+        <path id="morph-aura-3" stroke="rgba(180,175,168,0.2)" stroke-width="1" />
+        <path id="morph-aura-4" stroke="rgba(180,175,168,0.3)" stroke-width="1.4" />
+        <path id="morph-aura-5" stroke="rgba(180,175,168,0.22)" stroke-width="1.2" />
+        <path id="morph-aura-6" stroke="rgba(180,175,168,0.35)" stroke-width="1.8" />
+      </svg>
+
+      <!-- Circuit traces — separate SVG, untouched by GSAP -->
+      <svg class="morph__circuit" aria-hidden="true" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
+        <path d="M 1360,80 H 1180 V 260 H 1060" stroke="rgba(180,175,168,0.28)" stroke-width="1" />
         <circle cx="1060" cy="260" r="3" fill="rgba(180,155,100,0.5)" />
-        <!-- Circuit path 2 -->
-        <path id="morph-aura-1" d="M 1420,310 H 1280 V 140 H 1100 V 200" stroke="rgba(180,175,168,0.2)" stroke-width="1" />
+        <path d="M 1420,310 H 1280 V 140 H 1100 V 200" stroke="rgba(180,175,168,0.2)" stroke-width="1" />
         <circle cx="1100" cy="140" r="2.5" fill="rgba(180,155,100,0.4)" />
-        <!-- Circuit path 3 -->
-        <path id="morph-aura-2" d="M 1380,480 H 1240 V 380 H 1120 V 460 H 980" stroke="rgba(180,175,168,0.32)" stroke-width="1" />
+        <path d="M 1380,480 H 1240 V 380 H 1120 V 460 H 980" stroke="rgba(180,175,168,0.32)" stroke-width="1" />
         <circle cx="980" cy="460" r="3" fill="rgba(180,155,100,0.5)" />
-        <!-- Circuit path 4 -->
-        <path id="morph-aura-3" d="M 1440,580 H 1300 V 660 H 1160" stroke="rgba(180,175,168,0.18)" stroke-width="1" />
+        <path d="M 1440,580 H 1300 V 660 H 1160" stroke="rgba(180,175,168,0.18)" stroke-width="1" />
         <circle cx="1160" cy="660" r="2" fill="rgba(180,155,100,0.35)" />
-        <!-- Circuit path 5 — lower right -->
-        <path id="morph-aura-4" d="M 1320,760 H 1180 V 820 H 1040" stroke="rgba(180,175,168,0.22)" stroke-width="1" />
+        <path d="M 1320,760 H 1180 V 820 H 1040" stroke="rgba(180,175,168,0.22)" stroke-width="1" />
         <circle cx="1040" cy="820" r="2.5" fill="rgba(180,155,100,0.4)" />
-        <!-- Circuit path 6 — top right corner detail -->
-        <path id="morph-aura-5" d="M 1200,40 V 120 H 1080 V 60" stroke="rgba(180,175,168,0.18)" stroke-width="1" />
+        <path d="M 1200,40 V 120 H 1080 V 60" stroke="rgba(180,175,168,0.18)" stroke-width="1" />
         <circle cx="1080" cy="60" r="2" fill="rgba(180,155,100,0.3)" />
-        <!-- Circuit path 7 — mid right connecting trace -->
-        <path id="morph-aura-6" d="M 1440,420 H 1360 V 340 H 1220 V 420 H 1140" stroke="rgba(180,175,168,0.25)" stroke-width="1" />
+        <path d="M 1440,420 H 1360 V 340 H 1220 V 420 H 1140" stroke="rgba(180,175,168,0.25)" stroke-width="1" />
         <circle cx="1140" cy="420" r="2.5" fill="rgba(180,155,100,0.45)" />
       </svg>
 

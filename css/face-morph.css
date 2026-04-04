@@ -2110,10 +2110,61 @@ body.player-expanded .morph__menu-btn {
   pointer-events: none;
   opacity: 0;
   transition: opacity 1.2s ease;
-  /* mask removed — circuit traces span the full right zone */
+  -webkit-mask-image: radial-gradient(ellipse 35% 50% at 50% 45%, transparent 0%, transparent 45%, rgba(0,0,0,0.3) 65%, black 100%);
+  mask-image: radial-gradient(ellipse 35% 50% at 50% 45%, transparent 0%, transparent 45%, rgba(0,0,0,0.3) 65%, black 100%);
 }
 
 .morph__aura.revealed { opacity: 1; }
+
+.morph__circuit {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 50;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 1.2s ease 0.3s;
+}
+.morph__aura.revealed ~ .morph__circuit { opacity: 1; }
+
+/* Base: hairline static trace, very faint */
+.morph__circuit path {
+  stroke-dasharray: 50 700;
+  stroke-dashoffset: 750;
+  animation: circuit-pulse 6s linear infinite;
+}
+/* Signal pulse — short bright dash travels along each trace */
+@keyframes circuit-pulse {
+  0%   { stroke-dashoffset: 750; opacity: 0; }
+  5%   { opacity: 1; }
+  90%  { opacity: 0.8; }
+  100% { stroke-dashoffset: -750; opacity: 0; }
+}
+
+/* Stagger each path */
+.morph__circuit path:nth-child(1)  { animation-duration: 5.2s; animation-delay: 0s;    stroke-dasharray: 55 700; }
+.morph__circuit path:nth-child(3)  { animation-duration: 7.1s; animation-delay: 1.4s;  stroke-dasharray: 40 700; }
+.morph__circuit path:nth-child(5)  { animation-duration: 6.4s; animation-delay: 0.7s;  stroke-dasharray: 60 700; }
+.morph__circuit path:nth-child(7)  { animation-duration: 8.0s; animation-delay: 2.2s;  stroke-dasharray: 35 700; }
+.morph__circuit path:nth-child(9)  { animation-duration: 5.8s; animation-delay: 3.1s;  stroke-dasharray: 45 700; }
+.morph__circuit path:nth-child(11) { animation-duration: 6.9s; animation-delay: 1.8s;  stroke-dasharray: 30 700; }
+.morph__circuit path:nth-child(13) { animation-duration: 7.5s; animation-delay: 0.4s;  stroke-dasharray: 50 700; }
+
+/* Dot terminals — subtle pulse */
+.morph__circuit circle {
+  animation: circuit-dot-pulse 3s ease-in-out infinite;
+}
+.morph__circuit circle:nth-child(2)  { animation-delay: 0s; }
+.morph__circuit circle:nth-child(4)  { animation-delay: 0.8s; }
+.morph__circuit circle:nth-child(6)  { animation-delay: 1.6s; }
+.morph__circuit circle:nth-child(8)  { animation-delay: 0.4s; }
+.morph__circuit circle:nth-child(10) { animation-delay: 1.2s; }
+.morph__circuit circle:nth-child(12) { animation-delay: 2.0s; }
+.morph__circuit circle:nth-child(14) { animation-delay: 0.6s; }
+@keyframes circuit-dot-pulse {
+  0%, 100% { opacity: 0.3; r: 2; }
+  50%       { opacity: 0.9; r: 3.5; }
+}
 
 /* Custom cursor */
 .morph__cursor {
