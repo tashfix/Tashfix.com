@@ -597,21 +597,11 @@
         // Add transitioning early so player becomes visible on mobile
         player.classList.add('transitioning');
 
-        // Contract logo + hamburger into bezel area (desktop only — no bezels on mobile)
-        var logoEl = document.getElementById('site-logo');
         var menuBtnEl = document.getElementById('menu-btn');
-        var logoDark = logoEl ? logoEl.querySelector('.site-logo__dark') : null;
-        var logoLight = logoEl ? logoEl.querySelector('.site-logo__light') : null;
-        var logoGlass = document.getElementById('site-logo-glass');
         var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
         var isMobile = window.innerWidth <= 768;
 
-        if (logoEl) {
-          gsap.set(logoEl, { clearProps: 'top,left,scale' });
-          gsap.set(logoDark, { opacity: 0 });
-          gsap.set(logoLight, { opacity: 1 });
-          if (logoGlass) logoGlass.classList.remove('visible');
-        }
+        // Style hamburger for expanded (white lines) — CSS handles logo hide/show
         if (menuBtnEl) {
           gsap.set(menuBtnEl, { clearProps: 'top,right,scale' });
           gsap.set(menuBtnEl, { borderColor: 'rgba(255,255,255,0.45)' });
@@ -733,21 +723,14 @@
             delete player.dataset.dragged;
             player.style.width = '';
             player.style.height = '';
-            // Restore logo + hamburger to default state (page is at top/hero)
-            var logoEl = document.getElementById('site-logo');
             var menuBtnEl = document.getElementById('menu-btn');
-            var logoDark = logoEl ? logoEl.querySelector('.site-logo__dark') : null;
-            var logoLight = logoEl ? logoEl.querySelector('.site-logo__light') : null;
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
             // Remove player-expanded FIRST so CSS !important rules stop overriding
+            // (CSS handles logo visibility — no GSAP manipulation needed)
             document.body.classList.remove('player-expanded');
             // URL: clear hash when player collapses to landing
             if (!isRestoringFromHash) history.pushState({ view: 'landing' }, '', location.pathname);
-            if (logoEl) {
-              gsap.set(logoEl, { clearProps: 'top,left,scale' });
-              if (logoDark) gsap.set(logoDark, { opacity: 1 });
-              if (logoLight) gsap.set(logoLight, { opacity: 0 });
-            }
+            // Restore hamburger lines to dark (page background is light after collapse)
             if (menuBtnEl) {
               gsap.set(menuBtnEl, { clearProps: 'top,right,scale,borderColor' });
               menuLines.forEach(function(l) { gsap.set(l, { clearProps: 'backgroundColor' }); });
