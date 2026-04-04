@@ -450,6 +450,48 @@
     }
   };
 
+  // Auto-play on first user interaction anywhere on the page
+  var audioStarted = false;
+  function onFirstInteraction() {
+    if (audioStarted || isPlaying) return;
+    audioStarted = true;
+    document.removeEventListener('click', onFirstInteraction);
+    document.removeEventListener('keydown', onFirstInteraction);
+
+    function doPlay() {
+      if (isPlaying) return;
+      initAudioContext();
+      audio.play().then(function() {
+        isPlaying = true;
+        playIcon.classList.remove('visible');
+        pauseIcon.classList.add('visible');
+        playRing.classList.add('glowing');
+        startVisualizer();
+        updateLcdStatus('playing');
+        requestAnimationFrame(updateProgress);
+
+        // Show "Control audio here" tooltip then fade it out
+        var tooltip = document.getElementById('morph-audio-tooltip');
+        if (tooltip) {
+          tooltip.classList.add('visible');
+          setTimeout(function() {
+            tooltip.style.transition = 'opacity 1.8s ease, transform 0.4s ease';
+            tooltip.classList.remove('visible');
+          }, 3000);
+        }
+      }).catch(function() {});
+    }
+
+    if (audioReady) {
+      doPlay();
+    } else {
+      audio.addEventListener('canplaythrough', doPlay, { once: true });
+    }
+  }
+
+  document.addEventListener('click', onFirstInteraction);
+  document.addEventListener('keydown', onFirstInteraction);
+
   function formatTime(s) {
     var m = Math.floor(s / 60);
     var sec = Math.floor(s % 60);
