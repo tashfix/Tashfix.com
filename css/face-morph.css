@@ -1539,7 +1539,7 @@ body.player-expanded .morph__exit-btn {
 .morph__cs-detail-scroll {
   max-width: 780px;
   margin: 0 auto;
-  padding: 80px clamp(24px, 4vw, 48px) 48px;
+  padding: 80px clamp(24px, 4vw, 48px) 120px;
   position: relative;
 }
 
