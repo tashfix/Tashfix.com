@@ -470,9 +470,13 @@
         updateLcdStatus('playing');
         requestAnimationFrame(updateProgress);
 
-        // Show "Control audio here" tooltip then fade it out
+        // Show "Control audio here" tooltip above play button then fade it out
         var tooltip = document.getElementById('morph-audio-tooltip');
-        if (tooltip) {
+        if (tooltip && playRing) {
+          var rect = playRing.getBoundingClientRect();
+          tooltip.style.left = (rect.left + rect.width / 2) + 'px';
+          tooltip.style.top = (rect.top - 14) + 'px';
+          tooltip.style.transform = 'translateX(-50%) translateY(-100%)';
           tooltip.classList.add('visible');
           setTimeout(function() {
             tooltip.style.transition = 'opacity 1.8s ease, transform 0.4s ease';
