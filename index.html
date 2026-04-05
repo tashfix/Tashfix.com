@@ -185,14 +185,6 @@
 
       </div>
 
-      <!-- Scroll hint — bottom-centre, fades in 1s after load, gone on first scroll -->
-      <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
-        <span class="scroll-hint__label">SCROLL</span>
-        <div class="scroll-hint__mouse">
-          <div class="scroll-hint__wheel"></div>
-        </div>
-      </div>
-
       <!-- Custom cursor -->
       <div class="morph__cursor" id="morph-cursor"></div>
     </div>
@@ -1334,6 +1326,13 @@
   <script src="js/video-expand.js"></script>
 
   <!-- Audio tooltip — fixed, escapes player overflow:hidden -->
+  <!-- Scroll hint — fixed body child so GSAP pin/overflow can't clip it -->
+  <div class="scroll-hint" id="scroll-hint" aria-hidden="true">
+    <span class="scroll-hint__label">SCROLL</span>
+    <div class="scroll-hint__mouse">
+      <div class="scroll-hint__wheel"></div>
+    </div>
+  </div>
   <div class="morph__audio-tooltip" id="morph-audio-tooltip">Control audio here</div>
 </body>
 </html>
