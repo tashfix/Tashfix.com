@@ -210,19 +210,43 @@
       });
     }
 
-    // ── Drag-to-scroll (carousel) ──
+    // ── Drag-to-scroll (carousel + momentum) ──
     (function() {
       var isDragging    = false;
       var hasMoved      = false;
       var dragStartX    = 0;
       var dragScrollStart = 0;
 
+      // Velocity tracking — rolling sample over last ~80 ms
+      var velSamples  = [];   // [{ x, t }, ...]
+      var momentumTween = null;
+
+      function getScrollBounds() {
+        var st = horizontalTween.scrollTrigger;
+        var expandSpacer = document.getElementById('video-expand');
+        return {
+          st: st,
+          min: st.start,
+          max: st.end + (expandSpacer ? expandSpacer.offsetHeight : 0)
+        };
+      }
+
+      function applyScroll(raw) {
+        var b = getScrollBounds();
+        raw = Math.max(b.min, Math.min(b.max, raw));
+        var p = Math.min(1, (raw - b.st.start) / (b.st.end - b.st.start));
+        horizontalTween.progress(p);
+        window.scrollTo(0, raw);
+      }
+
       section.addEventListener('mousedown', function(e) {
         if (e.button !== 0) return;
+        if (momentumTween) { momentumTween.kill(); momentumTween = null; }
         isDragging      = true;
         hasMoved        = false;
         dragStartX      = e.clientX;
         dragScrollStart = window.scrollY;
+        velSamples      = [{ x: e.clientX, t: Date.now() }];
         document.body.classList.add('hscroll-dragging');
         e.preventDefault();
       });
@@ -232,23 +256,44 @@
         var dx = e.clientX - dragStartX;
         if (Math.abs(dx) > 4) hasMoved = true;
 
-        var st  = horizontalTween.scrollTrigger;
-        var expandSpacer = document.getElementById('video-expand');
-        var maxScroll = st.end + (expandSpacer ? expandSpacer.offsetHeight : 0);
-        var raw = Math.max(st.start, Math.min(maxScroll, dragScrollStart - dx));
-        var p   = Math.min(1, (raw - st.start) / (st.end - st.start));
+        // Record velocity sample, keep only last 80 ms
+        var now = Date.now();
+        velSamples.push({ x: e.clientX, t: now });
+        while (velSamples.length > 1 && now - velSamples[0].t > 80) velSamples.shift();
 
-        // Immediate visual: bypass scrub lag
-        horizontalTween.progress(p);
-
-        // Keep real scroll in sync so GSAP doesn't snap on release
-        window.scrollTo(0, raw);
+        applyScroll(dragScrollStart - dx);
       });
 
-      window.addEventListener('mouseup', function() {
+      window.addEventListener('mouseup', function(e) {
         if (!isDragging) return;
         isDragging = false;
         document.body.classList.remove('hscroll-dragging');
+
+        // Compute velocity from recent samples (px/ms → scroll px)
+        var vel = 0;
+        if (velSamples.length >= 2) {
+          var first = velSamples[0];
+          var last  = velSamples[velSamples.length - 1];
+          var dt    = last.t - first.t;
+          if (dt > 0) vel = -(last.x - first.x) / dt; // negative: drag right = scroll up
+        }
+
+        // Minimum velocity threshold — below this feels like a deliberate stop
+        var MIN_VEL = 0.3; // px/ms
+        if (Math.abs(vel) < MIN_VEL) return;
+
+        // Throw distance — proportional to velocity with a cap
+        var distance = vel * 420;
+        var target   = window.scrollY + distance;
+        var proxy    = { y: window.scrollY };
+
+        momentumTween = gsap.to(proxy, {
+          y: target,
+          duration: Math.min(1.4, Math.abs(vel) * 0.6 + 0.4),
+          ease: 'power3.out',
+          onUpdate: function() { applyScroll(proxy.y); },
+          onComplete: function() { momentumTween = null; }
+        });
       });
 
       // Suppress clicks that follow a drag gesture
