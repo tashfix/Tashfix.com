@@ -179,28 +179,28 @@
 
 .scroll-hint__label {
   font-family: var(--font-mono, 'JetBrains Mono', monospace);
-  font-size: 8px;
+  font-size: 12px;
   font-weight: 500;
-  letter-spacing: 3.5px;
-  color: rgba(255, 250, 245, 0.55);
+  letter-spacing: 5px;
+  color: #ffffff;
 }
 
 .scroll-hint__mouse {
-  width: 20px;
-  height: 32px;
-  border: 1.5px solid rgba(255, 250, 245, 0.45);
-  border-radius: 10px;
+  width: 30px;
+  height: 48px;
+  border: 2px solid #ffffff;
+  border-radius: 15px;
   position: relative;
   overflow: hidden;
 }
 
 .scroll-hint__wheel {
-  width: 3px;
-  height: 5px;
-  background: rgba(255, 250, 245, 0.6);
-  border-radius: 2px;
+  width: 5px;
+  height: 8px;
+  background: #ffffff;
+  border-radius: 3px;
   position: absolute;
-  top: 5px;
+  top: 8px;
   left: 50%;
   transform: translateX(-50%);
   animation: scroll-hint-drop 1.8s ease-in-out infinite;
@@ -208,7 +208,7 @@
 
 @keyframes scroll-hint-drop {
   0%   { transform: translateX(-50%) translateY(0);    opacity: 1; }
-  55%  { transform: translateX(-50%) translateY(14px); opacity: 0; }
+  55%  { transform: translateX(-50%) translateY(21px); opacity: 0; }
   56%  { transform: translateX(-50%) translateY(0);    opacity: 0; }
   100% { transform: translateX(-50%) translateY(0);    opacity: 1; }
 }
