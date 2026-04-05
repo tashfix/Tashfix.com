@@ -745,11 +745,10 @@ body.player-expanded .morph__scroll-hint {
   100% { transform: translateX(0);   opacity: 1; }
 }
 
-/* Keep-scrolling hint — bottom centre */
-#morph-hscroll-keepscrolling {
-  top: auto;
-  bottom: 32px;
-  transform: translateX(-50%);
+#morph-keepscroll-wheel {
+  animation: scrollWheelDrop 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  transform-box: fill-box;
+  transform-origin: top center;
 }
 
 #morph-keepscroll-arrow {
