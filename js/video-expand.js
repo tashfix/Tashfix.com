@@ -104,21 +104,6 @@
       });
     }
 
-    // Hook into horizontal scroll's onUpdate to snapshot rect near completion
-    var hTween = window.TashBrand && window.TashBrand.horizontalTween;
-    if (hTween && hTween.scrollTrigger) {
-      var origOnUpdate = hTween.scrollTrigger.vars.onUpdate;
-      hTween.scrollTrigger.vars.onUpdate = function(self) {
-        if (origOnUpdate) origOnUpdate(self);
-        if (self.progress > 0.92 && !startRect && !isReparented) {
-          var r = lastItem.getBoundingClientRect();
-          if (r.left >= -r.width && r.left < window.innerWidth) {
-            startRect = { left: r.left, top: r.top, width: r.width, height: r.height };
-          }
-        }
-      };
-    }
-
     function returnToTrack() {
       if (isReparented) {
         lastItem.classList.remove('hscroll__item--expanding');
@@ -170,77 +155,51 @@
           return;
         }
 
-        // Fallback rect if snapshot missed
-        var w = startRect ? startRect.width : Math.min(vw * 0.38, 620);
-        var h = startRect ? startRect.height : w;
-        var naturalRect = startRect || {
-          left: (vw - w) / 2,
-          top: vh * 0.06,
-          width: w,
-          height: h
-        };
-        var centeredTop = (vh - h) / 2;
-
-        // Reparent to body so position:fixed works outside pinned container
+        // On first frame: snapshot the item's live position (it's already centred
+        // because horizontal scroll completed) then reparent to <body>.
         if (!isReparented) {
+          var r = lastItem.getBoundingClientRect();
+          startRect = { left: r.left, top: r.top, width: r.width, height: r.height };
           lastItem.classList.add('hscroll__item--expanding');
-          lastItem.style.left = naturalRect.left + 'px';
-          lastItem.style.top = naturalRect.top + 'px';
-          lastItem.style.width = naturalRect.width + 'px';
-          lastItem.style.height = naturalRect.height + 'px';
+          lastItem.style.left = startRect.left + 'px';
+          lastItem.style.top  = startRect.top  + 'px';
+          lastItem.style.width  = startRect.width  + 'px';
+          lastItem.style.height = startRect.height + 'px';
           document.body.appendChild(lastItem);
           isReparented = true;
         }
 
-        // Phase 1 (0 → 0.3): float upward to vertical centre
-        // Phase 2 (0.3 → 1): expand from centred position to full viewport
-        var floatEnd = 0.3;
+        // Single-phase expansion: grow from startRect → full viewport
+        var curLeft   = startRect.left   * (1 - p);
+        var curTop    = startRect.top    * (1 - p);
+        var curWidth  = startRect.width  + (vw - startRect.width)  * p;
+        var curHeight = startRect.height + (vh - startRect.height) * p;
 
-        if (p <= floatEnd) {
-          var fp = p / floatEnd;
-          var eased = fp * fp * (3 - 2 * fp); // smoothstep
+        lastItem.style.left   = curLeft   + 'px';
+        lastItem.style.top    = curTop    + 'px';
+        lastItem.style.width  = curWidth  + 'px';
+        lastItem.style.height = curHeight + 'px';
+        lastMedia.style.borderRadius = (6 * (1 - p)) + 'px';
 
-          var curTop = naturalRect.top + (centeredTop - naturalRect.top) * eased;
+        // Start video from beginning once nearly fully expanded
+        if (heroVideo && !videoStarted && p > 0.9) {
+          heroVideo.currentTime = 0;
+          heroVideo.play();
+          videoStarted = true;
+        }
 
-          lastItem.style.left = naturalRect.left + 'px';
-          lastItem.style.top = curTop + 'px';
-          lastItem.style.width = naturalRect.width + 'px';
-          lastItem.style.height = naturalRect.height + 'px';
-          lastMedia.style.borderRadius = '6px';
-        } else {
-          var ep = (p - floatEnd) / (1 - floatEnd);
-
-          var curLeft = naturalRect.left * (1 - ep);
-          var curTop2 = centeredTop * (1 - ep);
-          var curWidth = naturalRect.width + (vw - naturalRect.width) * ep;
-          var curHeight = h + (vh - h) * ep;
-
-          lastItem.style.left = curLeft + 'px';
-          lastItem.style.top = curTop2 + 'px';
-          lastItem.style.width = curWidth + 'px';
-          lastItem.style.height = curHeight + 'px';
-          lastMedia.style.borderRadius = (6 * (1 - ep)) + 'px';
-
-          // Start video from beginning once nearly fully expanded
-          if (heroVideo && !videoStarted && ep > 0.95) {
-            heroVideo.currentTime = 0;
-            heroVideo.play();
-            videoStarted = true;
-          }
-
-          // Swap logo + hamburger to white once video is near fullscreen
-          if (!logoSwapped && ep > 0.8) {
-            if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.4, ease: 'power2.out' });
-            if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.4, ease: 'power2.out' });
-            setMenuLight();
-            logoSwapped = true;
-          }
-          if (logoSwapped && ep < 0.8) {
-            if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-            if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-            setMenuDark();
-            logoSwapped = false;
-          }
+        // Swap logo + hamburger to white once video is near fullscreen
+        if (!logoSwapped && p > 0.7) {
+          if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.4, ease: 'power2.out' });
+          if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.4, ease: 'power2.out' });
+          setMenuLight();
+          logoSwapped = true;
+        }
+        if (logoSwapped && p < 0.7) {
+          if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+          if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+          setMenuDark();
+          logoSwapped = false;
         }
 
         // Track full expansion state for quotes gating
