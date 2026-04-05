@@ -266,9 +266,14 @@
 
 .hscroll__track {
   display: flex;
+  align-items: center;
+  gap: clamp(16px, 2.5vw, 40px);
   position: relative;
   height: 100vh;
-  padding: 6vh 0;
+  padding: 0 4vw;
+  box-sizing: border-box;
+  width: max-content;
+  min-width: 100%;
 }
 
 /* Mesh grid canvas */
@@ -288,12 +293,13 @@
   }
 }
 
-/* ═══ MEDIA ITEMS ═══ */
+/* ═══ MEDIA ITEMS — film strip layout ═══ */
 .hscroll__item {
-  position: absolute;
-  left: var(--x);
-  top: var(--y);
-  transform: none;
+  position: relative;
+  flex-shrink: 0;
+  height: 78vh;
+  overflow: hidden;
+  border-radius: 6px;
   opacity: 0;
   will-change: transform, opacity;
   z-index: 1;
@@ -307,32 +313,41 @@
 .hscroll__item img,
 .hscroll__item video {
   width: 100%;
-  max-height: 50vh;
+  height: 100%;
   object-fit: cover;
-  border-radius: 6px;
   display: block;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
   transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
-.hscroll__item:hover img,
-.hscroll__item:hover video {
-  transform: scale(1.1);
+.hscroll__item video {
+  background: rgba(0, 0, 0, 0.15);
 }
 
+.hscroll__item:hover img,
+.hscroll__item:hover video {
+  transform: scale(1.05);
+}
+
+/* Caption — overlays bottom of each item */
 .hscroll__caption {
-  margin-top: 10px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 28px 16px 14px;
+  z-index: 2;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+  pointer-events: none;
   font-size: clamp(0.7rem, 0.9vw, 0.85rem);
   font-weight: 500;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #fff;
-  text-align: center;
   line-height: 1.4;
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
 }
 
 .hscroll__typewriter-text {
@@ -342,7 +357,7 @@
   max-width: 0;
   vertical-align: top;
   border-right: 1.5px solid #fff;
-  background: rgba(0, 0, 0, 0.75);
+  background: rgba(0, 0, 0, 0.55);
   padding: 3px 8px;
   border-radius: 3px;
   -webkit-box-decoration-break: clone;
@@ -356,62 +371,10 @@
   max-width: none;
 }
 
-/* Size classes */
-.hscroll__size-featured {
-  width: 38vw;
-  max-width: 620px;
-}
-.hscroll__size-featured img,
-.hscroll__size-featured video {
-  aspect-ratio: auto;
-}
-
-.hscroll__item video {
-  aspect-ratio: auto !important;
-  background: rgba(0, 0, 0, 0.15);
-}
-
-.hscroll__size-sm {
-  width: 26vw;
-  max-width: 400px;
-}
-.hscroll__size-sm img,
-.hscroll__size-sm video {
-  aspect-ratio: 1 / 1;
-}
-
-.hscroll__size-md {
-  width: 36vw;
-  max-width: 620px;
-}
-.hscroll__size-md img,
-.hscroll__size-md video {
-  aspect-ratio: 16 / 10;
-}
-
-.hscroll__size-lg {
-  width: 44vw;
-  max-width: 780px;
-}
-.hscroll__size-lg img,
-.hscroll__size-lg video {
-  aspect-ratio: 3 / 2;
-}
-
-.hscroll__size-portrait {
-  width: 28vw;
-  max-width: 460px;
-}
-.hscroll__size-portrait img,
-.hscroll__size-portrait video {
-  aspect-ratio: 3 / 4;
-}
-
-.hscroll__square img,
-.hscroll__square video {
-  aspect-ratio: 1 / 1 !important;
-  object-fit: cover;
-}
+/* Type classes — uniform height, aspect-ratio controls width */
+.hscroll__type-wide    { aspect-ratio: 16 / 10; }
+.hscroll__type-standard { aspect-ratio: 4 / 3; }
+.hscroll__type-square  { aspect-ratio: 1 / 1; }
 
 /* ═══ PROGRESS INDICATOR ═══ */
 .hscroll__progress {
@@ -485,11 +448,11 @@
 
   .hscroll__item {
     position: relative !important;
-    left: auto !important;
-    top: auto !important;
     transform: none !important;
     width: 85vw !important;
     max-width: 400px !important;
+    height: auto !important;
+    aspect-ratio: unset !important;
     margin: 0 auto;
     opacity: 1;
   }
@@ -497,15 +460,14 @@
   .hscroll__item img,
   .hscroll__item video {
     aspect-ratio: auto !important;
+    height: auto !important;
     max-height: 60vh;
   }
 
-  .hscroll__size-portrait img,
-  .hscroll__size-portrait video {
-    aspect-ratio: 3 / 4 !important;
-  }
-
   .hscroll__caption {
+    position: relative;
+    background: none;
+    padding: 8px 0 0;
     font-size: 0.6rem;
   }
 
@@ -562,6 +524,9 @@
   max-width: none !important;
   cursor: default !important;
   pointer-events: none;
+  aspect-ratio: unset !important;
+  overflow: visible !important;
+  border-radius: 0 !important;
 }
 
 .hscroll__item--expanding:hover img,
