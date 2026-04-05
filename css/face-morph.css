@@ -745,6 +745,27 @@ body.player-expanded .morph__scroll-hint {
   100% { transform: translateX(0);   opacity: 1; }
 }
 
+/* Keep-scrolling hint — bottom centre */
+#morph-hscroll-keepscrolling {
+  top: auto;
+  bottom: 32px;
+  transform: translateX(-50%);
+}
+
+#morph-keepscroll-arrow {
+  animation: keepScrollArrowPulse 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes keepScrollArrowPulse {
+  0%   { transform: translateY(0);    opacity: 1; }
+  50%  { transform: translateY(4px);  opacity: 0.2; }
+  51%  { transform: translateY(-2px); opacity: 0.2; }
+  75%  { opacity: 0.8; }
+  100% { transform: translateY(0);    opacity: 1; }
+}
+
 /* ═══════════════════════════════════════════════════════════
    HERO LOGO MARQUEE — inline below headline
    ═══════════════════════════════════════════════════════════ */
