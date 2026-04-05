@@ -210,6 +210,52 @@
       });
     }
 
+    // ── Drag-to-scroll (carousel) ──
+    (function() {
+      var isDragging    = false;
+      var hasMoved      = false;
+      var dragStartX    = 0;
+      var dragScrollStart = 0;
+
+      section.addEventListener('mousedown', function(e) {
+        if (e.button !== 0) return;
+        isDragging      = true;
+        hasMoved        = false;
+        dragStartX      = e.clientX;
+        dragScrollStart = window.scrollY;
+        document.body.classList.add('hscroll-dragging');
+        e.preventDefault();
+      });
+
+      window.addEventListener('mousemove', function(e) {
+        if (!isDragging) return;
+        var dx = e.clientX - dragStartX;
+        if (Math.abs(dx) > 4) hasMoved = true;
+
+        var st  = horizontalTween.scrollTrigger;
+        var raw = Math.max(st.start, Math.min(st.end, dragScrollStart - dx));
+        var p   = (raw - st.start) / (st.end - st.start);
+
+        // Immediate visual: bypass scrub lag
+        horizontalTween.progress(p);
+
+        // Keep real scroll in sync so GSAP doesn't snap on release
+        window.scrollTo(0, raw);
+      });
+
+      window.addEventListener('mouseup', function() {
+        if (!isDragging) return;
+        isDragging = false;
+        document.body.classList.remove('hscroll-dragging');
+      });
+
+      // Suppress clicks that follow a drag gesture
+      section.addEventListener('click', function(e) {
+        if (hasMoved) { e.stopPropagation(); e.preventDefault(); }
+        hasMoved = false;
+      }, true);
+    })();
+
     // Per-item reveal + typewriter
     items.forEach(function(item) {
       var tw = item.querySelector('.hscroll__typewriter-text');

@@ -293,6 +293,11 @@
   }
 }
 
+/* Drag-to-scroll cursor */
+#hscroll-gallery { cursor: grab; }
+body.hscroll-dragging,
+body.hscroll-dragging * { cursor: grabbing !important; user-select: none !important; }
+
 /* ═══ MEDIA ITEMS — film strip layout ═══ */
 .hscroll__item {
   position: relative;
