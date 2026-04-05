@@ -20,7 +20,7 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/loader.css">
-  <link rel="stylesheet" href="css/face-morph.css?v=5">
+  <link rel="stylesheet" href="css/face-morph.css?v=8">
   <link rel="stylesheet" href="css/zoom-out.css">
   <link rel="stylesheet" href="css/horizontal.css?v=2">
   <link rel="stylesheet" href="css/about.css">
@@ -1317,6 +1317,21 @@
   <!-- Audio tooltip — fixed, escapes player overflow:hidden -->
   <div class="morph__audio-tooltip" id="morph-audio-tooltip">Control audio here</div>
 
+  <!-- Horizontal scroll hint — appears when hscroll section begins, above progress bar -->
+  <div class="morph__hscroll-hint" id="morph-hscroll-hint">
+    <svg width="16" height="26" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="20" height="34" rx="10" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="9" y="7" width="4" height="7" rx="2" fill="currentColor" id="morph-hscroll-wheel"/>
+    </svg>
+    <span class="morph__hscroll-hint-label">Scroll to view my journey</span>
+    <svg width="18" height="12" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="morph-hscroll-arrow">
+        <line x1="1" y1="8" x2="18" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <polyline points="12,2 19,8 12,14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </g>
+    </svg>
+  </div>
+
   <!-- Scroll hint — direct body child so position:fixed isn't clobbered by GSAP -->
   <div class="morph__scroll-hint" id="morph-scroll-hint">
     <svg width="16" height="26" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1326,7 +1341,7 @@
     <span class="morph__scroll-hint-label">Scroll to explore</span>
   </div>
 
-  <script src="js/face-morph.js?v=8"></script>
+  <script src="js/face-morph.js?v=9"></script>
   <script src="js/zoom-out.js"></script>
   <script src="js/horizontal.js"></script>
   <script src="js/video-expand.js"></script>

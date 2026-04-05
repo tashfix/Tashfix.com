@@ -1555,4 +1555,44 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   })();
 
+  // Horizontal scroll hint — shows once when hscroll section begins
+  (function() {
+    var hHint = document.getElementById('morph-hscroll-hint');
+    if (!hHint) return;
+
+    var gallery = document.getElementById('hscroll-gallery');
+    if (!gallery) return;
+
+    var hintShown = false;
+    var hintDismissed = false;
+    var dismissTimer = null;
+
+    function showHint() {
+      if (hintDismissed || hintShown) return;
+      hintShown = true;
+      hHint.classList.add('visible');
+      // Auto-dismiss after 4 seconds
+      dismissTimer = setTimeout(function() {
+        dismissHint();
+      }, 4000);
+    }
+
+    function dismissHint() {
+      if (hintDismissed) return;
+      hintDismissed = true;
+      hHint.classList.remove('visible');
+      if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+    }
+
+    function checkSection() {
+      if (hintDismissed) return;
+      var rect = gallery.getBoundingClientRect();
+      // Section is pinned at top — we're inside it when top <= 0 and bottom > viewport height
+      var inSection = rect.top <= 10 && rect.bottom > window.innerHeight * 0.3;
+      if (inSection) { showHint(); }
+    }
+
+    window.addEventListener('scroll', checkSection, { passive: true });
+  })();
+
 })();
