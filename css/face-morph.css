@@ -670,10 +670,11 @@
   height: clamp(12px, 1.7vw, 27px);
 }
 
-/* Copilot is a compact icon — scale up to match visual weight */
+/* Copilot wordmark — bring down to match MSN */
 .morph__logo-marquee-track img[alt="Copilot"] {
-  height: clamp(20px, 3vw, 46px);
+  height: clamp(13px, 1.8vw, 28px);
 }
+
 
 @keyframes heroMarqueeScroll {
   0%   { transform: translate3d(0, 0, 0); }
