@@ -233,8 +233,10 @@
         if (Math.abs(dx) > 4) hasMoved = true;
 
         var st  = horizontalTween.scrollTrigger;
-        var raw = Math.max(st.start, Math.min(st.end, dragScrollStart - dx));
-        var p   = (raw - st.start) / (st.end - st.start);
+        var expandSpacer = document.getElementById('video-expand');
+        var maxScroll = st.end + (expandSpacer ? expandSpacer.offsetHeight : 0);
+        var raw = Math.max(st.start, Math.min(maxScroll, dragScrollStart - dx));
+        var p   = Math.min(1, (raw - st.start) / (st.end - st.start));
 
         // Immediate visual: bypass scrub lag
         horizontalTween.progress(p);
