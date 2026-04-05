@@ -1502,23 +1502,26 @@
   })();
 
   // ── Scroll hint ──────────────────────────────────────────────────
-  // Hooked into onLoaderDone so the timer starts after GSAP is fully
-  // settled (GSAP's init fires synthetic scroll events that would
-  // otherwise kill the once-listener before the hint ever appears).
-  // The dismiss listener is attached only after the hint is visible.
+  // MutationObserver watches for morph-hero-intro getting .revealed
+  // (set by main.js dismissConsent). Timer + dismiss listener are
+  // attached only after that, so GSAP's init scroll events can't
+  // pre-emptively kill the once-listener.
   (function() {
-    var hint = document.getElementById('scroll-hint');
-    if (!hint) return;
-    var _origOnLoaderDone = window.TashBrand.onLoaderDone;
-    window.TashBrand.onLoaderDone = function() {
-      if (_origOnLoaderDone) _origOnLoaderDone.apply(this, arguments);
+    var hint     = document.getElementById('scroll-hint');
+    var heroIntro = document.getElementById('morph-hero-intro');
+    if (!hint || !heroIntro) return;
+
+    var observer = new MutationObserver(function() {
+      if (!heroIntro.classList.contains('revealed')) return;
+      observer.disconnect();
       setTimeout(function() {
         hint.classList.add('visible');
         window.addEventListener('scroll', function() {
           hint.classList.remove('visible');
         }, { passive: true, once: true });
       }, 1000);
-    };
+    });
+    observer.observe(heroIntro, { attributes: true, attributeFilter: ['class'] });
   })();
 
 })();
