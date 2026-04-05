@@ -1501,26 +1501,4 @@
     }
   })();
 
-  // ── Scroll hint ──────────────────────────────────────────────────
-  // Polls every 100 ms until morph-hero-intro has .revealed, then
-  // waits 1 s and shows the hint. Polling handles both the case where
-  // the class is added after setup AND already present (cached load).
-  (function() {
-    var hint      = document.getElementById('scroll-hint');
-    var heroIntro = document.getElementById('morph-hero-intro');
-    if (!hint || !heroIntro) return;
-
-    var poll = setInterval(function() {
-      if (!heroIntro.classList.contains('revealed')) return;
-      clearInterval(poll);
-      setTimeout(function() {
-        if (window.scrollY > 0) return; // user already scrolled
-        hint.classList.add('visible');
-        window.addEventListener('scroll', function() {
-          hint.classList.remove('visible');
-        }, { passive: true, once: true });
-      }, 1000);
-    }, 100);
-  })();
-
 })();
