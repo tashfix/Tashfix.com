@@ -1501,4 +1501,18 @@
     }
   })();
 
+  // ── Scroll hint ──────────────────────────────────────────────────
+  // Appears 1 s after load; disappears on first scroll, never returns.
+  (function() {
+    var hint = document.getElementById('scroll-hint');
+    if (!hint) return;
+    var showTimer = setTimeout(function() {
+      hint.classList.add('visible');
+    }, 1000);
+    window.addEventListener('scroll', function() {
+      clearTimeout(showTimer);
+      hint.classList.remove('visible');
+    }, { passive: true, once: true });
+  })();
+
 })();
