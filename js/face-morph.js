@@ -438,26 +438,16 @@
     }).catch(function() {});
   }
 
-  // Wait for loader dismiss (user click provides gesture for audio)
+  // Track audio readiness
   var audioReady = false;
   audio.addEventListener('canplaythrough', function() { audioReady = true; }, { once: true });
 
-  window.TashBrand.onLoaderDone = function() {
-    if (audioReady) {
-      startPlayback();
-    } else {
-      audio.addEventListener('canplaythrough', function() { startPlayback(); }, { once: true });
-    }
-  };
+  // Loader done — audio is ready on demand but don't autoplay
+  window.TashBrand.onLoaderDone = function() {};
 
-  // Auto-play on first user interaction anywhere on the page
-  var audioStarted = false;
-  function onFirstInteraction() {
-    if (audioStarted || isPlaying) return;
-    audioStarted = true;
-    document.removeEventListener('click', onFirstInteraction);
-    document.removeEventListener('keydown', onFirstInteraction);
-
+  // Autoplay audio only the first time the media player expands to fullscreen
+  window.addEventListener('player-expanded', function() {
+    if (isPlaying) return;
     function doPlay() {
       if (isPlaying) return;
       initAudioContext();
@@ -491,10 +481,7 @@
     } else {
       audio.addEventListener('canplaythrough', doPlay, { once: true });
     }
-  }
-
-  document.addEventListener('click', onFirstInteraction);
-  document.addEventListener('keydown', onFirstInteraction);
+  }, { once: true });
 
   function formatTime(s) {
     var m = Math.floor(s / 60);

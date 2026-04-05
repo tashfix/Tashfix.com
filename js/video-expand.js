@@ -42,6 +42,9 @@
     var videoQuotes = document.getElementById('video-quotes');
     var quotesShown = false;
 
+    // Autoplay only on the very first fullscreen expansion — never again after that.
+    var hasAutoplayedOnce = false;
+
     // Case Studies CTA — triggers player fullscreen expand
     var caseStudyCta = document.getElementById('view-case-studies-cta');
     if (caseStudyCta) {
@@ -221,11 +224,14 @@
           lastItem.style.height = curHeight + 'px';
           lastMedia.style.borderRadius = (6 * (1 - ep)) + 'px';
 
-          // Start video from beginning once nearly fully expanded
+          // Autoplay only the very first time the video reaches full expansion.
           if (heroVideo && !videoStarted && ep > 0.95) {
-            heroVideo.currentTime = 0;
-            heroVideo.play();
-            videoStarted = true;
+            if (!hasAutoplayedOnce) {
+              heroVideo.currentTime = 0;
+              heroVideo.play();
+              videoStarted = true;
+              hasAutoplayedOnce = true;
+            }
           }
 
           // Swap logo + hamburger to white once video is near fullscreen
