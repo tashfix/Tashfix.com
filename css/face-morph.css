@@ -693,9 +693,9 @@ body.player-expanded .morph__scroll-hint {
 /* ── Horizontal scroll hint — above progress indicator ── */
 .morph__hscroll-hint {
   position: fixed;
-  bottom: 52px;
+  top: 50%;
   left: 50%;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   z-index: 99990;
   opacity: 0;
   transition: opacity 0.6s ease;
