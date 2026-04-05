@@ -635,6 +635,62 @@
 
 
 /* ═══════════════════════════════════════════════════════════
+   SCROLL HINT — fixed bottom-centre, fades in then out
+   ═══════════════════════════════════════════════════════════ */
+.morph__scroll-hint {
+  position: fixed;
+  bottom: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 99990;
+  opacity: 0;
+  transition: opacity 0.8s ease 1.8s;
+  pointer-events: none;
+  color: rgba(255, 255, 255, 0.9);
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 100px;
+  padding: 10px 18px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  white-space: nowrap;
+}
+
+.morph__scroll-hint-label {
+  font-family: 'Share Tech Mono', 'Consolas', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.morph__scroll-hint.visible {
+  opacity: 1;
+}
+
+body.player-expanded .morph__scroll-hint {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+#morph-scroll-wheel {
+  animation: scrollWheelDrop 1.6s cubic-bezier(0.45, 0, 0.55, 1) infinite;
+  transform-box: fill-box;
+  transform-origin: top center;
+}
+
+@keyframes scrollWheelDrop {
+  0%   { transform: translateY(0);   opacity: 1; }
+  50%  { transform: translateY(6px); opacity: 0; }
+  51%  { transform: translateY(0);   opacity: 0; }
+  75%  { opacity: 1; }
+  100% { transform: translateY(0);   opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════
    HERO LOGO MARQUEE — inline below headline
    ═══════════════════════════════════════════════════════════ */
 .morph__logo-marquee {
@@ -644,6 +700,7 @@
   margin-top: 0;
   margin-bottom: clamp(20px, 2vw, 36px);
   pointer-events: none;
+  opacity: 0.98;
   -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
   mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
 }

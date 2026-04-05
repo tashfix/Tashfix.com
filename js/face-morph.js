@@ -1513,4 +1513,46 @@
     }
   })();
 
+  // Scroll hint — fade in after hero reveals, fade out after 2 scroll gestures
+  (function() {
+    var hint = document.getElementById('morph-scroll-hint');
+    if (!hint) return;
+
+    var heroIntro = document.getElementById('morph-hero-intro');
+    var cta = document.querySelector('.morph__hero-cta');
+
+    function alignWithCta() {
+      if (!cta) return;
+      var rect = cta.getBoundingClientRect();
+      var ctaMidY = rect.top + rect.height / 2;
+      var offset = window.innerHeight * 0.03;
+      hint.style.top = (ctaMidY - hint.offsetHeight / 2 - offset) + 'px';
+      hint.style.bottom = 'auto';
+    }
+
+    alignWithCta();
+    hint.classList.add('visible');
+    shown = true;
+    window.addEventListener('resize', alignWithCta);
+
+    var lastScrollY = window.scrollY;
+    function onWheel(e) {
+      if (e.deltaY > 0) {
+        hint.classList.remove('visible');
+        window.removeEventListener('wheel', onWheel);
+        window.removeEventListener('scroll', onScroll);
+      }
+    }
+    function onScroll() {
+      if (window.scrollY > lastScrollY) {
+        hint.classList.remove('visible');
+        window.removeEventListener('wheel', onWheel);
+        window.removeEventListener('scroll', onScroll);
+      }
+      lastScrollY = window.scrollY;
+    }
+    window.addEventListener('wheel', onWheel, { passive: true });
+    window.addEventListener('scroll', onScroll, { passive: true });
+  })();
+
 })();
