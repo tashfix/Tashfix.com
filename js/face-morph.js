@@ -1502,17 +1502,23 @@
   })();
 
   // ── Scroll hint ──────────────────────────────────────────────────
-  // Appears 1 s after load; disappears on first scroll, never returns.
+  // Hooked into onLoaderDone so the timer starts after GSAP is fully
+  // settled (GSAP's init fires synthetic scroll events that would
+  // otherwise kill the once-listener before the hint ever appears).
+  // The dismiss listener is attached only after the hint is visible.
   (function() {
     var hint = document.getElementById('scroll-hint');
     if (!hint) return;
-    var showTimer = setTimeout(function() {
-      hint.classList.add('visible');
-    }, 1000);
-    window.addEventListener('scroll', function() {
-      clearTimeout(showTimer);
-      hint.classList.remove('visible');
-    }, { passive: true, once: true });
+    var _origOnLoaderDone = window.TashBrand.onLoaderDone;
+    window.TashBrand.onLoaderDone = function() {
+      if (_origOnLoaderDone) _origOnLoaderDone.apply(this, arguments);
+      setTimeout(function() {
+        hint.classList.add('visible');
+        window.addEventListener('scroll', function() {
+          hint.classList.remove('visible');
+        }, { passive: true, once: true });
+      }, 1000);
+    };
   })();
 
 })();
