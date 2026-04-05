@@ -654,6 +654,8 @@
   gap: clamp(24px, 3vw, 40px);
   width: max-content;
   animation: heroMarqueeScroll 20s linear infinite;
+  will-change: transform;
+  backface-visibility: hidden;
 }
 
 .morph__logo-marquee-track img {
@@ -664,8 +666,8 @@
 }
 
 @keyframes heroMarqueeScroll {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
+  0%   { transform: translate3d(0, 0, 0); }
+  100% { transform: translate3d(-50%, 0, 0); }
 }
 
 /* ═══════════════════════════════════════════════════════════
