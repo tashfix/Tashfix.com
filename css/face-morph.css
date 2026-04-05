@@ -593,13 +593,6 @@
   letter-spacing: -0.025em;
 }
 
-.morph__hero-credits {
-  font-family: 'Share Tech Mono', 'Consolas', monospace;
-  font-size: clamp(9px, 1vw, 17px);
-  letter-spacing: 2px;
-  color: rgba(0, 0, 0, 0.32);
-  margin-bottom: 24px;
-}
 
 .morph__hero-cta {
   display: inline-flex;
@@ -641,25 +634,17 @@
 
 
 /* ═══════════════════════════════════════════════════════════
-   HERO LOGO MARQUEE — bottom center, subtle over portrait
+   HERO LOGO MARQUEE — inline below headline
    ═══════════════════════════════════════════════════════════ */
 .morph__logo-marquee {
-  position: absolute;
-  bottom: 28px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: clamp(280px, 50vw, 680px);
+  position: relative;
+  width: 100%;
   overflow: hidden;
-  z-index: 140;
-  opacity: 0;
-  transition: opacity 0.8s ease 0.5s;
+  margin-top: 16px;
+  margin-bottom: 24px;
   pointer-events: none;
-  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 18%, black 82%, transparent 100%);
-  mask-image: linear-gradient(90deg, transparent 0%, black 18%, black 82%, transparent 100%);
-}
-
-.morph__hero-intro.revealed ~ .morph__logo-marquee {
-  opacity: 1;
+  -webkit-mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
+  mask-image: linear-gradient(90deg, transparent 0%, black 14%, black 86%, transparent 100%);
 }
 
 .morph__logo-marquee-track {
@@ -674,8 +659,6 @@
   height: clamp(14px, 1.8vw, 28px);
   width: auto;
   object-fit: contain;
-  filter: brightness(0) invert(1);
-  opacity: 0.3;
   flex-shrink: 0;
 }
 
@@ -1989,9 +1972,10 @@ body.player-expanded .morph__menu-btn {
     height: clamp(51px, 10.2vw, 77px);
   }
 
-  /* Hide landing page marquee on mobile */
+  /* Logo marquee on mobile — scale down slightly */
   .morph__logo-marquee {
-    display: none;
+    margin-top: 10px;
+    margin-bottom: 16px;
   }
   /* Smaller hamburger on mobile */
   .morph__menu-btn {

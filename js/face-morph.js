@@ -1482,6 +1482,18 @@
       if (e.key === 'Escape' && isOpen) closeMenu();
     });
 
+    // Size logo marquee to match "Designer" word width
+    (function() {
+      var designerWord = document.getElementById('hero-designer-word');
+      var marquee      = document.getElementById('morph-logo-marquee');
+      if (!designerWord || !marquee) return;
+      function matchWidth() {
+        marquee.style.width = designerWord.offsetWidth + 'px';
+      }
+      matchWidth();
+      window.addEventListener('resize', matchWidth);
+    })();
+
     // Copy email to clipboard with tooltip feedback
     var copyEmailBtn = document.getElementById('copy-email-btn');
     var copyEmailTooltip = document.getElementById('copy-email-tooltip');
