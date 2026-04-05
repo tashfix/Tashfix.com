@@ -293,10 +293,20 @@
   }
 }
 
-/* Drag-to-scroll cursor */
-#hscroll-gallery { cursor: grab; }
+/* Drag-to-scroll cursor + selection prevention */
+#hscroll-gallery {
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+#hscroll-gallery img,
+#hscroll-gallery video {
+  -webkit-user-drag: none;
+  user-drag: none;
+  pointer-events: none;
+}
 body.hscroll-dragging,
-body.hscroll-dragging * { cursor: grabbing !important; user-select: none !important; }
+body.hscroll-dragging * { cursor: grabbing !important; user-select: none !important; -webkit-user-select: none !important; }
 
 /* ═══ MEDIA ITEMS — film strip layout ═══ */
 .hscroll__item {
