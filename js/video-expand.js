@@ -155,14 +155,22 @@
           return;
         }
 
-        // On first frame: snapshot the item's live position (it's already centred
-        // because horizontal scroll completed) then reparent to <body>.
+        // On first frame: compute item's film-strip size and derive the centred
+        // viewport position from it, rather than trusting getBoundingClientRect()
+        // whose left/top value may still be drifting while the horizontal-scroll
+        // GSAP scrub settles.  offsetWidth/offsetHeight are layout-accurate.
         if (!isReparented) {
-          var r = lastItem.getBoundingClientRect();
-          startRect = { left: r.left, top: r.top, width: r.width, height: r.height };
+          var iw = lastItem.offsetWidth;
+          var ih = lastItem.offsetHeight;
+          startRect = {
+            left:   (vw - iw) / 2,
+            top:    (vh - ih) / 2,
+            width:  iw,
+            height: ih
+          };
           lastItem.classList.add('hscroll__item--expanding');
-          lastItem.style.left = startRect.left + 'px';
-          lastItem.style.top  = startRect.top  + 'px';
+          lastItem.style.left   = startRect.left   + 'px';
+          lastItem.style.top    = startRect.top    + 'px';
           lastItem.style.width  = startRect.width  + 'px';
           lastItem.style.height = startRect.height + 'px';
           document.body.appendChild(lastItem);
