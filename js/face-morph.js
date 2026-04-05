@@ -1551,6 +1551,9 @@
 
     function show() {
       if (dismissed || shown) return;
+      // Dismiss the journey hint if still visible
+      var journeyHint = document.getElementById('morph-hscroll-hint');
+      if (journeyHint) journeyHint.classList.remove('visible');
       shown = true;
       hint.classList.add('visible');
       timer = setTimeout(dismiss, 5000);
@@ -1569,7 +1572,7 @@
       if (!ht || !ht.scrollTrigger) return;
       var st = ht.scrollTrigger;
       // Show when 90 % through the gallery
-      if (st.progress >= 0.9) show();
+      if (st.progress >= 0.82) show();
       // Dismiss once past the gallery end (entering video-expand zone)
       if (window.scrollY > st.end) dismiss();
     }
@@ -1591,6 +1594,9 @@
 
     function showHint() {
       if (hintDismissed || hintShown) return;
+      // Dismiss the keep-scrolling hint if somehow already visible
+      var keepHint = document.getElementById('morph-hscroll-keepscrolling');
+      if (keepHint) keepHint.classList.remove('visible');
       hintShown = true;
       hHint.classList.add('visible');
       // Auto-dismiss after 4 seconds
