@@ -927,9 +927,8 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
     box-shadow: 0 6px 24px rgba(0, 0, 0, 0.18);
   }
 
-  /* Show Alice Lee (1st), So Eun Ahn (3rd), Ashaya Sharma (5th) on mobile */
-  .video-quotes__item:nth-child(2),
-  .video-quotes__item:nth-child(4) {
+  /* Show So Eun (1), Alice (2), Ashaya (3), Maz (4) — hide Sanad (5) */
+  .video-quotes__item:nth-child(5) {
     display: none;
   }
 
@@ -954,6 +953,11 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   /* Hide embedded footer on mobile — standalone footer handles it */
   .video-quotes__footer {
     display: none;
+  }
+
+  /* Hide all scroll-hint pills on mobile */
+  .morph__hscroll-hint {
+    display: none !important;
   }
 }
 
