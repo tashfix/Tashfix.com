@@ -2153,7 +2153,7 @@ body.player-expanded .morph__menu-btn {
   .morph__player.expanded .morph__progress-section,
   .morph__player.expanded .morph__bottom-controls { display: none; }
 
-  /* LCD screen: strip all chrome, become invisible container */
+  /* LCD screen: strip all chrome, become full-height invisible container */
   .morph__player.expanded .morph__lcd-screen {
     background: transparent !important;
     border: none !important;
@@ -2161,6 +2161,14 @@ body.player-expanded .morph__menu-btn {
     box-shadow: none !important;
     border-radius: 0 !important;
     overflow: visible !important;
+    /* Fill the entire inner-panel so case-studies has real height to scroll in */
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: auto !important;
+    height: auto !important;
   }
   .morph__player.expanded .morph__lcd-screen::before,
   .morph__player.expanded .morph__lcd-screen::after { display: none !important; }
