@@ -308,6 +308,65 @@
   }
 }
 
+/* ── Intro text panel (first item in track) ── */
+.hscroll__intro {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 1.25rem;
+  width: clamp(260px, 28vw, 420px);
+  flex-shrink: 0;
+  padding-right: clamp(1rem, 2vw, 2.5rem);
+  position: relative;
+  z-index: 1;
+}
+
+.hscroll__intro-statement {
+  font-family: var(--font-dm-serif);
+  font-size: clamp(1.6rem, 3.2vw, 4.2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  margin: 0;
+}
+
+.hscroll__intro-statement em {
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-cobalt);
+}
+
+.hscroll__intro-desc {
+  font-family: var(--font-body);
+  font-size: clamp(0.8rem, 0.95vw, 1rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(26, 26, 26, 0.6);
+  margin: 0;
+  max-width: 34ch;
+}
+
+/* Mobile: intro panel becomes a stacked block above the videos */
+@media (max-width: 768px) {
+  .hscroll__intro {
+    width: 100%;
+    max-width: 100%;
+    padding-right: 0;
+    padding-bottom: 0.5rem;
+    padding-top: 3rem; /* clear the pinned label */
+  }
+
+  .hscroll__intro-statement {
+    font-size: clamp(1.6rem, 7vw, 2.4rem);
+  }
+
+  .hscroll__intro-statement br {
+    display: none;
+  }
+}
+
 /* Drag-to-scroll cursor + selection prevention */
 #hscroll-gallery {
   cursor: grab;
