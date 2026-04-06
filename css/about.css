@@ -22,8 +22,6 @@
   display: grid;
   grid-template-columns: 44fr 56fr;
   gap: clamp(4rem, 6vw, 8rem);
-  max-width: min(1400px, 88vw);
-  margin: 0 auto;
   align-items: start;
 }
 
