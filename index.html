@@ -23,6 +23,7 @@
   <link rel="stylesheet" href="css/face-morph.css?v=9">
   <link rel="stylesheet" href="css/zoom-out.css">
   <link rel="stylesheet" href="css/horizontal.css?v=2">
+  <link rel="stylesheet" href="css/work-spotlight.css">
   <link rel="stylesheet" href="css/about.css">
   <link rel="stylesheet" href="css/footer.css">
 
@@ -212,6 +213,102 @@
       <span class="accent">lifetime</span> of building<br>
       &amp; shaping experiences<br>
       at a <span class="accent">global scale</span>.
+    </div>
+  </section>
+
+  <!-- ====== SECTION 3.6: WORK SPOTLIGHT ====== -->
+  <section id="work-spotlight">
+    <header class="spotlight__header">
+      <span class="spotlight__label">Work Spotlight</span>
+      <h2 class="spotlight__heading">Selected <em>work</em></h2>
+    </header>
+
+    <div class="spotlight__grid">
+
+      <!-- Card 1: VoltSafe Home App -->
+      <a class="spotlight__card" href="#" data-cs="home">
+        <div class="spotlight__thumb">
+          <img
+            src="assets/images/case-studies/WIP%20Placeholders/Home%20Mobile%20App.png"
+            alt="VoltSafe Home Mobile App"
+            class="spotlight__thumb-img"
+          >
+        </div>
+        <div class="spotlight__overlay">
+          <div class="spotlight__top-meta">
+            <span class="spotlight__client">VoltSafe</span>
+            <span class="spotlight__separator">·</span>
+            <span class="spotlight__type">Mobile Design</span>
+          </div>
+          <div class="spotlight__bottom">
+            <h3 class="spotlight__title">Home Mobile App</h3>
+            <p class="spotlight__desc">A consumer IoT companion designed for effortless smart home energy control — from plug to app in under a minute.</p>
+            <span class="spotlight__cta">
+              View Case Study
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 2: Microsoft MSN -->
+      <a class="spotlight__card" href="#" data-cs="msn">
+        <div class="spotlight__thumb">
+          <img
+            src="assets/images/case-studies/WIP%20Placeholders/Improving%20MSN%27s%20Reading%20Experience.png"
+            alt="Improving MSN's Reading Experience"
+            class="spotlight__thumb-img"
+          >
+        </div>
+        <div class="spotlight__overlay">
+          <div class="spotlight__top-meta">
+            <span class="spotlight__client">Microsoft</span>
+            <span class="spotlight__separator">·</span>
+            <span class="spotlight__type">Ad Experience</span>
+          </div>
+          <div class="spotlight__bottom">
+            <h3 class="spotlight__title">Improving MSN's Reading Experience</h3>
+            <p class="spotlight__desc">Redesigning the reader–ad relationship across a platform reaching over 100 million people every month.</p>
+            <span class="spotlight__cta">
+              View Case Study
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Card 3: PropKeep -->
+      <a class="spotlight__card" href="#" data-cs="propkeep">
+        <div class="spotlight__thumb">
+          <img
+            src="assets/images/case-studies/propkeep/thumbnail.png"
+            alt="PropKeep — From WhatsApp Chaos to One-Click Repairs"
+            class="spotlight__thumb-img"
+          >
+        </div>
+        <div class="spotlight__overlay">
+          <div class="spotlight__top-meta">
+            <span class="spotlight__client">PropKeep</span>
+            <span class="spotlight__separator">·</span>
+            <span class="spotlight__type">Product Design</span>
+          </div>
+          <div class="spotlight__bottom">
+            <h3 class="spotlight__title">From WhatsApp Chaos to One-Click Repairs</h3>
+            <p class="spotlight__desc">Replacing fragmented back-channels with a structured property management platform people actually want to use.</p>
+            <span class="spotlight__cta">
+              View Case Study
+              <svg width="14" height="10" viewBox="0 0 14 10" fill="none" aria-hidden="true">
+                <path d="M1 5h12M8 1l5 4-5 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </div>
+        </div>
+      </a>
+
     </div>
   </section>
 
@@ -1186,6 +1283,39 @@
   <!-- Scripts -->
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+
+  <!-- Work Spotlight: scroll reveal + card click → open player -->
+  <script>
+  (function() {
+    var section = document.getElementById('work-spotlight');
+    if (!section) return;
+
+    // Scroll reveal
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top 82%',
+      once: true,
+      onEnter: function() { section.classList.add('is-visible'); }
+    });
+
+    // Card clicks → expand player to that case study
+    section.querySelectorAll('.spotlight__card').forEach(function(card) {
+      card.addEventListener('click', function(e) {
+        e.preventDefault();
+        var csId = card.dataset.cs;
+        // Expand player, then fire the matching inner card click
+        if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
+          window.TashBrand.togglePlayerExpanded();
+          // Give the expansion animation time to settle, then select the study
+          setTimeout(function() {
+            var inner = document.querySelector('.morph__cs-card[data-cs="' + csId + '"]');
+            if (inner) inner.click();
+          }, 700);
+        }
+      });
+    });
+  })();
+  </script>
 
   <!-- About section: timeline animation + logo swap -->
   <script>
