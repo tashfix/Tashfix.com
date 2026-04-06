@@ -1739,6 +1739,11 @@ body.player-expanded .morph__menu-btn {
   stroke: #ffffff;
 }
 
+/* Spotlight path: back button is irrelevant (no grid to return to) — hide it everywhere */
+.morph__player.spotlight-entry .morph__cs-detail-back {
+  display: none !important;
+}
+
 /* ── Section progress / TOC ── */
 .morph__cs-toc {
   position: fixed;
@@ -2313,6 +2318,11 @@ body.player-expanded .morph__menu-btn {
 
   .morph__cs-detail-scroll {
     padding-top: 0 !important;
+  }
+
+  /* Spotlight path on mobile: no back-button gradient, so pad manually to clear the X button */
+  .morph__player.spotlight-entry .morph__cs-detail-scroll {
+    padding-top: 100px !important;
   }
 
   /* Navigation overlay: smaller text so links fit on one line */
