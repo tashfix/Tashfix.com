@@ -246,6 +246,11 @@
   display: block;
 }
 
+/* MS icon: scale up 20% so it fills the circle better */
+.spotlight__logo--ms .spotlight__logo-img {
+  transform: scale(1.2);
+}
+
 /* PropKeep monogram — warm teal */
 .spotlight__logo--pk {
   background: linear-gradient(135deg, #1a4a3a 0%, #0e6b4a 100%);
