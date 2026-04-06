@@ -998,6 +998,8 @@ body.player-expanded .morph__scroll-hint {
   pointer-events: none; z-index: 9;
 }
 
+.morph__chrome-bar { width: 100%; flex-shrink: 0; display: flex; flex-direction: column; }
+
 .morph__progress-section { width: 100%; flex-shrink: 0; margin-top: 6px; }
 
 .morph__progress-groove {
@@ -1346,13 +1348,26 @@ body.player-expanded .morph__menu-btn {
 .morph__player.expanded .morph__progress-groove { height: 22px; border-radius: 11px; }
 .morph__player.expanded .morph__progress-knob { width: 16px; height: 16px; }
 
-/* Expanded bottom controls — chrome toolbar at bottom */
+/* Expanded chrome bar wrapper — clips controls, owns hover zone + border-radius */
+.morph__player.expanded .morph__chrome-bar {
+  border-radius: 0 0 6px 6px;
+  overflow: hidden;
+  max-height: 30px; /* show only progress section (~29px) */
+  transition: max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+  background: linear-gradient(172deg, #c8c8c8 0%, #c0c0c0 30%, #b8b8b8 60%, #b0b0b0 100%);
+}
+
+/* Hover reveals full controls */
+.morph__player.expanded .morph__chrome-bar:hover {
+  max-height: 100px;
+}
+
+/* Expanded bottom controls — restore natural height, no clipping needed */
 .morph__player.expanded .morph__bottom-controls {
   margin-top: 0; padding: 6px 20px; min-height: 56px;
   flex: 0; align-items: center; justify-content: flex-start; gap: 16px;
   background: linear-gradient(172deg, #c0c0c0 0%, #b8b8b8 30%, #b0b0b0 60%, #a8a8a8 100%);
   border-top: 1px solid rgba(255,255,255,0.35); position: relative;
-  border-radius: 0 0 6px 6px;
 }
 .morph__player.expanded .morph__bottom-controls::before {
   content: ''; position: absolute; top: 0; left: 20px; right: 20px; height: 1px;
@@ -1372,9 +1387,27 @@ body.player-expanded .morph__menu-btn {
   text-shadow: 0 1px 0 rgba(255,255,255,0.5); flex-shrink: 0;
 }
 
-.morph__player.expanded .morph__volume-row { order: 4; width: auto; margin-left: auto; gap: 10px; }
+.morph__player.expanded .morph__volume-row { order: 4; width: auto; gap: 10px; }
 .morph__player.expanded .morph__volume-slider-track { width: 110px; }
 .morph__player.expanded .morph__volume-icon { width: 18px; height: 18px; fill: #585858; }
+
+/* Track label — hidden in compact, visible in expanded */
+.morph__track-label { display: none; }
+
+.morph__player.expanded .morph__track-label {
+  display: flex; align-items: center; gap: 5px;
+  order: 3; flex: 1 1 0; min-width: 0; margin-left: 4px;
+}
+.morph__player.expanded .morph__track-note {
+  color: #606060; flex-shrink: 0;
+  filter: drop-shadow(0 1px 0 rgba(255,255,255,0.5));
+}
+.morph__player.expanded .morph__track-name {
+  font-family: 'Share Tech Mono', 'Consolas', monospace;
+  font-size: 11px; color: #5a5a5a; letter-spacing: 0.5px;
+  text-shadow: 0 1px 0 rgba(255,255,255,0.45);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0;
+}
 
 /* ── Close button — chrome ring + sphere ── */
 .morph__expand-close-ring {
@@ -2046,6 +2079,10 @@ body.player-expanded .morph__menu-btn {
   .morph__player.revealed { transform: scale(1) translateY(0); }
 }
 
+@media (max-width: 900px) {
+  .morph__player.expanded .morph__track-label { max-width: 140px; }
+}
+
 @media (max-width: 700px) {
   /* White gradient at top for logo/hamburger legibility over portrait */
   .mobile-top-gradient {
@@ -2151,6 +2188,7 @@ body.player-expanded .morph__menu-btn {
   .morph__player.expanded .morph__specular-streak,
   .morph__player.expanded .morph__specular-streak-bottom,
   .morph__player.expanded .morph__flare,
+  .morph__player.expanded .morph__chrome-bar,
   .morph__player.expanded .morph__progress-section,
   .morph__player.expanded .morph__bottom-controls { display: none; }
 
