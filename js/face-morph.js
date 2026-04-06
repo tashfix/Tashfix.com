@@ -446,8 +446,10 @@
   window.TashBrand.onLoaderDone = function() {};
 
   // Autoplay audio only the first time the media player expands to fullscreen
+  // Skip if opened from a spotlight card — user came to read, not listen
   window.addEventListener('player-expanded', function() {
     if (isPlaying) return;
+    if (window.TashBrand && window.TashBrand._fromSpotlight) return;
     function doPlay() {
       if (isPlaying) return;
       initAudioContext();
@@ -697,10 +699,13 @@
           document.body.style.position = '';
           document.body.style.width = '';
           document.body.style.top = '';
-          // Scroll to top of page
-          window.scrollTo({ top: 0, behavior: 'instant' });
+          // Scroll: return to spotlight origin if opened from there, else top
+          var _mobileTarget = window.TashBrand._fromSpotlight ? (window.TashBrand._spotlightScrollY || 0) : 0;
+          window.TashBrand._fromSpotlight = false;
+          window.TashBrand._spotlightScrollY = 0;
+          window.scrollTo({ top: _mobileTarget, behavior: 'instant' });
           // Clean up player state
-          player.classList.remove('expanded', 'transitioning');
+          player.classList.remove('expanded', 'transitioning', 'spotlight-entry');
           player.style.left = '';
           player.style.top = '';
           player.style.right = '';
@@ -718,8 +723,11 @@
           return;
         }
 
-        // Scroll to top so user lands on face morph hero after collapse
-        window.scrollTo({ top: 0, behavior: 'instant' });
+        // Scroll: return to spotlight origin if opened from there, else top
+        var _desktopTarget = window.TashBrand._fromSpotlight ? (window.TashBrand._spotlightScrollY || 0) : 0;
+        window.TashBrand._fromSpotlight = false;
+        window.TashBrand._spotlightScrollY = 0;
+        window.scrollTo({ top: _desktopTarget, behavior: 'instant' });
 
         // Stop animated grid
         if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
@@ -756,6 +764,7 @@
             delete player.dataset.dragged;
             player.style.width = '';
             player.style.height = '';
+            player.classList.remove('spotlight-entry');
             var menuBtnEl = document.getElementById('menu-btn');
             var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
             document.body.classList.remove('player-expanded');

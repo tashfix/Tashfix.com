@@ -7,7 +7,7 @@
   position: relative;
   z-index: 10;
   margin-top: -2px;
-  padding: 9vh 5vw 6vh;
+  padding: 9vh 4vw 6vh;
   opacity: 0;
   transform: translateY(28px);
   transition: opacity 0.75s ease, transform 0.75s ease;
@@ -23,8 +23,8 @@
   grid-template-columns: 44fr 56fr;
   gap: clamp(4rem, 6vw, 8rem);
   align-items: start;
-  max-width: min(1600px, 78vw);
-  margin: 0 auto;
+  max-width: min(1600px, 92vw);
+  margin: 0;
 }
 
 /* ── Shared label ── */
@@ -201,7 +201,7 @@
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   #about {
-    padding: 4vh 7vw 10vh;
+    padding: 4vh 1.25rem 10vh;
   }
 
   .about__inner {

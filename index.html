@@ -1322,10 +1322,15 @@
       card.addEventListener('click', function(e) {
         e.preventDefault();
         var csId = card.dataset.cs;
-        // Expand player, then fire the matching inner card click
         if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
+          // Remember where we came from so X returns here
+          window.TashBrand._fromSpotlight = true;
+          window.TashBrand._spotlightScrollY = window.pageYOffset;
+          // Mark the player so the back button stays hidden
+          var playerEl = document.getElementById('morph-player');
+          if (playerEl) playerEl.classList.add('spotlight-entry');
+          // Expand player, then fire the matching inner card click
           window.TashBrand.togglePlayerExpanded();
-          // Give the expansion animation time to settle, then select the study
           setTimeout(function() {
             var inner = document.querySelector('.morph__cs-card[data-cs="' + csId + '"]');
             if (inner) inner.click();
