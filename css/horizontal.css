@@ -581,10 +581,9 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   transition: opacity 0.8s ease;
 }
 
-/* Desktop: hide 4th and 5th testimonial cards — keep to one row */
+/* Desktop: hide 4th card only — show Alice, Maz, So Eun, Ashaya */
 @media (min-width: 769px) {
-  .video-quotes__item:nth-child(4),
-  .video-quotes__item:nth-child(5) {
+  .video-quotes__item:nth-child(4) {
     display: none;
   }
 }
