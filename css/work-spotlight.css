@@ -57,7 +57,7 @@
 /* ── Card grid ── */
 .spotlight__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: clamp(0.75rem, 1.2vw, 1.25rem);
   align-items: stretch; /* all cards grow to match the tallest in the row */
 }
@@ -252,6 +252,17 @@
   transform: scale(1.2);
 }
 
+/* Samsung — white bg, wordmark contained */
+.spotlight__logo--sg {
+  background: #ffffff;
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  padding: 5px;
+}
+
+.spotlight__logo--sg .spotlight__logo-img {
+  transform: scale(1.2);
+}
+
 /* PropKeep monogram — warm teal */
 .spotlight__logo--pk {
   background: linear-gradient(135deg, #1a4a3a 0%, #0e6b4a 100%);
@@ -306,8 +317,8 @@
   }
 
   .spotlight__grid {
-    grid-template-columns: 1fr;
-    gap: 1rem;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 0.85rem;
   }
 
   .spotlight__heading {
