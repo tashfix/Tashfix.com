@@ -581,9 +581,9 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   transition: opacity 0.8s ease;
 }
 
-/* Desktop: hide 4th card only — show Alice, Maz, So Eun, Ashaya */
+/* Desktop: hide 5th card (Sanad) — show So Eun, Alice, Ashaya, Maz */
 @media (min-width: 769px) {
-  .video-quotes__item:nth-child(4) {
+  .video-quotes__item:nth-child(5) {
     display: none;
   }
 }
