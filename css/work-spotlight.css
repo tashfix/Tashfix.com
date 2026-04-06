@@ -59,7 +59,7 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: clamp(0.75rem, 1.2vw, 1.25rem);
-  align-items: start;   /* allow cards to differ in height without stretching */
+  align-items: stretch; /* all cards grow to match the tallest in the row */
 }
 
 
