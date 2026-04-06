@@ -1440,22 +1440,38 @@
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
+        } else if (action === 'about-me') {
+          if (playerExpanded) {
+            setTimeout(function() {
+              if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
+                window.TashBrand.togglePlayerExpanded();
+              }
+              setTimeout(function() {
+                var aboutSection = document.getElementById('about');
+                if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+              }, 1500);
+            }, 400);
+          } else {
+            var aboutSection = document.getElementById('about');
+            if (aboutSection) {
+              aboutSection.scrollIntoView({ behavior: 'smooth' });
+            }
+          }
         } else if (action === 'my-journey') {
           if (playerExpanded) {
             setTimeout(function() {
               if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
                 window.TashBrand.togglePlayerExpanded();
               }
-              // After collapse finishes, scroll to journey section
               setTimeout(function() {
-                var journeySection = document.getElementById('about');
-                if (journeySection) journeySection.scrollIntoView({ behavior: 'smooth' });
+                var gallerySection = document.getElementById('hscroll-gallery');
+                if (gallerySection) gallerySection.scrollIntoView({ behavior: 'smooth' });
               }, 1500);
             }, 400);
           } else {
-            var journeySection = document.getElementById('about');
-            if (journeySection) {
-              journeySection.scrollIntoView({ behavior: 'smooth' });
+            var gallerySection = document.getElementById('hscroll-gallery');
+            if (gallerySection) {
+              gallerySection.scrollIntoView({ behavior: 'smooth' });
             }
           }
         } else if (action === 'case-studies') {

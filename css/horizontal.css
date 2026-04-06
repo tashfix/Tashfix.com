@@ -264,6 +264,21 @@
   background: var(--color-offwhite);
 }
 
+/* Section label — pinned top-left, matches spotlight/about label style */
+.hscroll__section-label {
+  position: absolute;
+  top: clamp(1.25rem, 2.5vh, 2rem);
+  left: 4vw;
+  z-index: 20;
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.75vw, 0.75rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-tangerine);
+  pointer-events: none;
+}
+
 .hscroll__track {
   display: flex;
   align-items: center;
