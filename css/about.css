@@ -6,6 +6,7 @@
   background: var(--color-offwhite);
   position: relative;
   z-index: 10;
+  margin-top: -2px;
   padding: 9vh 5vw 6vh;
   opacity: 0;
   transform: translateY(28px);
