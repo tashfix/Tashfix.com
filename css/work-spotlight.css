@@ -246,8 +246,9 @@
   display: block;
 }
 
-/* MS icon: scale up 20% so it fills the circle better */
-.spotlight__logo--ms .spotlight__logo-img {
+/* MS + VoltSafe icons: scale up 20% so they fill the circle better */
+.spotlight__logo--ms .spotlight__logo-img,
+.spotlight__logo--vs .spotlight__logo-img {
   transform: scale(1.2);
 }
 
