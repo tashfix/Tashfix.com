@@ -2051,6 +2051,11 @@ body.player-expanded .morph__menu-btn {
     display: block;
   }
 
+  /* Hide "Scroll to explore" hint on mobile */
+  .morph__scroll-hint {
+    display: none !important;
+  }
+
   /* Hide player during normal browsing — only show during fullscreen expansion */
   .morph__player {
     width: 360px; height: 155px; right: 10px; bottom: 10px;
