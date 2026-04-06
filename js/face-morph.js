@@ -15,7 +15,8 @@
   portraitImg.src = 'assets/images/portrait.png';
 
   var canvasW, canvasH, offsetX, offsetY;
-  var mouse = { x: -1000, y: -1000, active: false, idleTimeout: null };
+  var mouse = { x: -1000, y: -1000, moved: false };
+  var cursorVisible = false;
   var lastMouse = { x: -1000, y: -1000 };
   var idleTimer = 0;
   var isIdle = true;
@@ -67,17 +68,15 @@
     if (this.t >= 1) this.alive = false;
   };
 
-  IdleStroke.prototype.draw = function(ctx) {
+  IdleStroke.prototype.draw = function(context) {
     if (!this.alive) return;
     var pt = this.getPoint(this.t);
     var edgeFade = Math.sin(this.t * Math.PI);
     var alpha = 0.4 + edgeFade * 0.5;
-    drawSoftBrush(ctx, pt.x, pt.y, this.radius, alpha);
+    drawSoftBrushRaw(context, pt.x, pt.y, this.radius, alpha);
   };
 
-  function drawSoftBrush(context, x, y, radius, alpha) {
-    context.save();
-    context.globalCompositeOperation = 'destination-out';
+  function drawSoftBrushRaw(context, x, y, radius, alpha) {
     var gradient = context.createRadialGradient(x, y, 0, x, y, radius);
     gradient.addColorStop(0, 'rgba(0, 0, 0, ' + alpha + ')');
     gradient.addColorStop(0.5, 'rgba(0, 0, 0, ' + (alpha * 0.6) + ')');
@@ -87,18 +86,20 @@
     context.beginPath();
     context.arc(x, y, radius, 0, Math.PI * 2);
     context.fill();
-    context.restore();
   }
 
   function interpolateBrush(context, x1, y1, x2, y2, radius, alpha) {
     var dx = x2 - x1;
     var dy = y2 - y1;
     var dist = Math.sqrt(dx * dx + dy * dy);
-    var steps = Math.max(1, Math.floor(dist / (radius * 0.3)));
+    var steps = Math.max(1, Math.floor(dist / (radius * 0.5)));
+    context.save();
+    context.globalCompositeOperation = 'destination-out';
     for (var i = 0; i <= steps; i++) {
       var t = i / steps;
-      drawSoftBrush(context, x1 + dx * t, y1 + dy * t, radius, alpha);
+      drawSoftBrushRaw(context, x1 + dx * t, y1 + dy * t, radius, alpha);
     }
+    context.restore();
   }
 
   function resize() {
@@ -134,16 +135,8 @@
     var dt = timestamp - lastTime;
     lastTime = timestamp;
 
-    // Fade-back — only when NOT actively erasing
-    if (!mouse.active) {
-      ctx.globalCompositeOperation = 'source-over';
-      ctx.globalAlpha = FADE_BACK_ALPHA;
-      ctx.drawImage(portraitImg, 0, 0, canvasW, canvasH);
-      ctx.globalAlpha = 1;
-    }
-
-    // Mouse brush
-    if (mouse.active) {
+    // Mouse brush — draw on frames where the mouse actually moved
+    if (mouse.moved) {
       var mx = mouse.x - offsetX;
       var my = mouse.y - offsetY;
       var lx = lastMouse.x - offsetX;
@@ -151,9 +144,15 @@
       interpolateBrush(ctx, lx, ly, mx, my, MOUSE_BRUSH_RADIUS, 0.65);
       lastMouse.x = mouse.x;
       lastMouse.y = mouse.y;
+      mouse.moved = false;
       idleTimer = 0;
       isIdle = false;
     } else {
+      // Fade-back — only when NOT actively erasing
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.globalAlpha = FADE_BACK_ALPHA;
+      ctx.drawImage(portraitImg, 0, 0, canvasW, canvasH);
+      ctx.globalAlpha = 1;
       idleTimer += dt;
       if (idleTimer > IDLE_DELAY) isIdle = true;
     }
@@ -165,10 +164,15 @@
         strokes.push(new IdleStroke(canvasW, canvasH));
         lastStrokeSpawn = 0;
       }
-      for (var i = strokes.length - 1; i >= 0; i--) {
-        strokes[i].update();
-        strokes[i].draw(ctx);
-        if (!strokes[i].alive) strokes.splice(i, 1);
+      if (strokes.length > 0) {
+        ctx.save();
+        ctx.globalCompositeOperation = 'destination-out';
+        for (var i = strokes.length - 1; i >= 0; i--) {
+          strokes[i].update();
+          strokes[i].draw(ctx);
+          if (!strokes[i].alive) strokes.splice(i, 1);
+        }
+        ctx.restore();
       }
     }
 
@@ -179,26 +183,25 @@
   section.addEventListener('mousemove', function(e) {
     // Disable interaction once zoom-out scroll begins
     if (window.TashBrand && window.TashBrand.zoomProgress > 0.05) {
-      mouse.active = false;
-      cursorEl.classList.remove('visible');
+      if (cursorVisible) { cursorEl.classList.remove('visible'); cursorVisible = false; }
       return;
     }
     mouse.x = e.clientX;
     mouse.y = e.clientY;
-    mouse.active = true;
-    cursorEl.style.left = e.clientX + 'px';
-    cursorEl.style.top = e.clientY + 'px';
-    cursorEl.classList.add('visible');
-    clearTimeout(mouse.idleTimeout);
-    mouse.idleTimeout = setTimeout(function() { mouse.active = false; }, 100);
+    mouse.moved = true;
+    cursorEl.style.transform = 'translate(calc(' + e.clientX + 'px - 50%), calc(' + e.clientY + 'px - 50%))';
+    if (!cursorVisible) { cursorEl.classList.add('visible'); cursorVisible = true; }
   });
 
   section.addEventListener('mouseleave', function() {
-    mouse.active = false;
-    cursorEl.classList.remove('visible');
+    if (cursorVisible) { cursorEl.classList.remove('visible'); cursorVisible = false; }
   });
 
-  window.addEventListener('resize', resize);
+  var resizeTimeout;
+  window.addEventListener('resize', function() {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(resize, 150);
+  });
 
   // IntersectionObserver to pause when off-screen
   var observer = new IntersectionObserver(function(entries) {
@@ -207,10 +210,11 @@
         isVisible = true;
         lastTime = 0;
         morphAnimId = requestAnimationFrame(animate);
-        requestAnimationFrame(updateAura);
+        startAura();
       } else {
         isVisible = false;
         if (morphAnimId) { cancelAnimationFrame(morphAnimId); morphAnimId = null; }
+        if (auraAnimId) { cancelAnimationFrame(auraAnimId); auraAnimId = null; }
       }
     });
   }, { threshold: 0.01 });
@@ -230,6 +234,8 @@
   var NUM_LINES = 7;
   var auraPaths = [];
   var auraData = [];
+  var auraAnimId = null;
+  var auraFrameSkip = false;
 
   for (var i = 0; i < NUM_LINES; i++) {
     auraPaths.push(document.getElementById('morph-aura-' + i));
@@ -244,6 +250,11 @@
   }
 
   function updateAura(timestamp) {
+    if (!isVisible) { auraAnimId = null; return; }
+    // Run at half frame rate — 30fps sine waves look identical
+    auraFrameSkip = !auraFrameSkip;
+    if (auraFrameSkip) { auraAnimId = requestAnimationFrame(updateAura); return; }
+
     var t = timestamp * 0.001;
     for (var i = 0; i < NUM_LINES; i++) {
       var d = auraData[i];
@@ -251,10 +262,10 @@
       var numPoints = 8;
       for (var j = 0; j <= numPoints; j++) {
         var xFrac = j / numPoints;
-        var x = d.xOffset + xFrac * 1640;
+        var x = (d.xOffset + xFrac * 1640).toFixed(1);
         var wave1 = Math.sin(xFrac * Math.PI * 2 * (1 + d.frequency * 500) + t * d.speed * 1000 + d.phase);
         var wave2 = Math.sin(xFrac * Math.PI * 1.3 + t * d.speed * 600 + d.phase * 1.7) * 0.4;
-        var y = d.baseY + (wave1 + wave2) * d.amplitude;
+        var y = (d.baseY + (wave1 + wave2) * d.amplitude).toFixed(1);
         points.push({ x: x, y: y });
       }
       var pathStr = 'M ' + points[0].x + ' ' + points[0].y;
@@ -263,17 +274,22 @@
         var p1 = points[j];
         var p2 = points[j + 1];
         var p3 = points[Math.min(points.length - 1, j + 2)];
-        var cp1x = p1.x + (p2.x - p0.x) / 6;
-        var cp1y = p1.y + (p2.y - p0.y) / 6;
-        var cp2x = p2.x - (p3.x - p1.x) / 6;
-        var cp2y = p2.y - (p3.y - p1.y) / 6;
+        var cp1x = (+p1.x + (+p2.x - +p0.x) / 6).toFixed(1);
+        var cp1y = (+p1.y + (+p2.y - +p0.y) / 6).toFixed(1);
+        var cp2x = (+p2.x - (+p3.x - +p1.x) / 6).toFixed(1);
+        var cp2y = (+p2.y - (+p3.y - +p1.y) / 6).toFixed(1);
         pathStr += ' C ' + cp1x + ' ' + cp1y + ', ' + cp2x + ' ' + cp2y + ', ' + p2.x + ' ' + p2.y;
       }
       if (auraPaths[i]) auraPaths[i].setAttribute('d', pathStr);
     }
-    requestAnimationFrame(updateAura);
+    auraAnimId = requestAnimationFrame(updateAura);
   }
-  requestAnimationFrame(updateAura);
+
+  function startAura() {
+    if (auraAnimId) return;
+    auraAnimId = requestAnimationFrame(updateAura);
+  }
+  startAura();
 
   // ═══════════════════════════════════════════════════════════
   // MUSIC PLAYER
@@ -721,6 +737,8 @@
           isTransitioning = false;
           if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
           if (window.TashBrand.stopCaseStudyVideos) window.TashBrand.stopCaseStudyVideos();
+          var _mobileGridCanvas = document.getElementById('cs-grid-canvas');
+          if (_mobileGridCanvas) _mobileGridCanvas.style.display = '';
           ScrollTrigger.refresh();
           return;
         }
@@ -786,6 +804,8 @@
             if (csDetail) csDetail.classList.remove('active');
             if (csGrid) csGrid.style.display = '';
             if (csHeading) csHeading.style.display = '';
+            var csGridCanvas = document.getElementById('cs-grid-canvas');
+            if (csGridCanvas) csGridCanvas.style.display = '';
             // Re-evaluate all ScrollTrigger positions at scroll=0 so
             // zoom-out animations work correctly on next scroll
             ScrollTrigger.refresh();

@@ -1645,6 +1645,7 @@ body.player-expanded .morph__menu-btn {
   display: none;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  background: #0d0d0d;
 }
 
 .morph__cs-detail.active {
@@ -2309,6 +2310,8 @@ body.player-expanded .morph__menu-btn {
 /* Custom cursor */
 .morph__cursor {
   position: fixed;
+  left: 0;
+  top: 0;
   pointer-events: none;
   z-index: 1000;
   width: 80px;
@@ -2319,6 +2322,7 @@ body.player-expanded .morph__menu-btn {
   transition: opacity 0.3s ease;
   opacity: 0;
   mix-blend-mode: difference;
+  will-change: transform, opacity;
 }
 
 .morph__cursor.visible {

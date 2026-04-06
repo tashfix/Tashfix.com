@@ -1419,6 +1419,10 @@
           // Mark the player so the back button stays hidden
           var playerEl = document.getElementById('morph-player');
           if (playerEl) playerEl.classList.add('spotlight-entry');
+          // Hide grid immediately — we're going straight to case study detail, not selection screen
+          var gridCanvas = document.getElementById('cs-grid-canvas');
+          if (gridCanvas) gridCanvas.style.display = 'none';
+          if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
           // Expand player, then fire the matching inner card click
           window.TashBrand.togglePlayerExpanded();
           setTimeout(function() {
