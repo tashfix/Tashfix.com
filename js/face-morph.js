@@ -1636,11 +1636,17 @@
     }
 
     function checkSection() {
-      if (hintDismissed) return;
       var rect = gallery.getBoundingClientRect();
       // Section is pinned at top — we're inside it when top <= 0 and bottom > viewport height
       var inSection = rect.top <= 10 && rect.bottom > window.innerHeight * 0.3;
-      if (inSection) { showHint(); }
+      if (inSection) {
+        if (!hintDismissed) showHint();
+      } else {
+        // Hide immediately when the user scrolls out of the section
+        hHint.classList.remove('visible');
+        if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+        hintShown = false; // allow re-show if they scroll back in
+      }
     }
 
     window.addEventListener('scroll', checkSection, { passive: true });
