@@ -446,9 +446,11 @@
   window.TashBrand.onLoaderDone = function() {};
 
   // Autoplay audio only the first time the media player expands to fullscreen
+  // Skip on mobile — never autoplay on small screens
   // Skip if opened from a spotlight card — user came to read, not listen
   window.addEventListener('player-expanded', function() {
     if (isPlaying) return;
+    if (window.innerWidth <= 700) return;
     if (window.TashBrand && window.TashBrand._fromSpotlight) return;
     function doPlay() {
       if (isPlaying) return;
