@@ -23,6 +23,8 @@
   grid-template-columns: 44fr 56fr;
   gap: clamp(4rem, 6vw, 8rem);
   align-items: start;
+  max-width: 1600px;
+  margin: 0 auto;
 }
 
 /* ── Shared label ── */
