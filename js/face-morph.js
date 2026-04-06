@@ -1440,22 +1440,20 @@
           } else {
             window.scrollTo({ top: 0, behavior: 'smooth' });
           }
-        } else if (action === 'about-me') {
+        } else if (action === 'work-spotlight') {
           if (playerExpanded) {
             setTimeout(function() {
               if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
                 window.TashBrand.togglePlayerExpanded();
               }
               setTimeout(function() {
-                var aboutSection = document.getElementById('about');
-                if (aboutSection) aboutSection.scrollIntoView({ behavior: 'smooth' });
+                var spotlightSection = document.getElementById('work-spotlight');
+                if (spotlightSection) spotlightSection.scrollIntoView({ behavior: 'smooth' });
               }, 1500);
             }, 400);
           } else {
-            var aboutSection = document.getElementById('about');
-            if (aboutSection) {
-              aboutSection.scrollIntoView({ behavior: 'smooth' });
-            }
+            var spotlightSection = document.getElementById('work-spotlight');
+            if (spotlightSection) spotlightSection.scrollIntoView({ behavior: 'smooth' });
           }
         } else if (action === 'my-journey') {
           if (playerExpanded) {
@@ -1464,14 +1462,14 @@
                 window.TashBrand.togglePlayerExpanded();
               }
               setTimeout(function() {
-                var gallerySection = document.getElementById('hscroll-gallery');
-                if (gallerySection) gallerySection.scrollIntoView({ behavior: 'smooth' });
+                var journeyIntro = document.getElementById('journey-intro');
+                if (journeyIntro) journeyIntro.scrollIntoView({ behavior: 'smooth' });
               }, 1500);
             }, 400);
           } else {
-            var gallerySection = document.getElementById('hscroll-gallery');
-            if (gallerySection) {
-              gallerySection.scrollIntoView({ behavior: 'smooth' });
+            var journeyIntro = document.getElementById('journey-intro');
+            if (journeyIntro) {
+              journeyIntro.scrollIntoView({ behavior: 'smooth' });
             }
           }
         } else if (action === 'case-studies') {

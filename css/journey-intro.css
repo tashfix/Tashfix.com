@@ -1,0 +1,77 @@
+/* ═══════════════════════════════════════════════════════════
+   JOURNEY INTRO — scrolls away naturally before gallery pins
+   ═══════════════════════════════════════════════════════════ */
+
+#journey-intro {
+  background: var(--color-offwhite);
+  padding: 9vh 4vw 8vh;
+  position: relative;
+  z-index: 10;
+  margin-top: -2px;
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+
+#journey-intro.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.journey-intro__label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: clamp(0.6rem, 0.75vw, 0.75rem);
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--color-tangerine);
+  margin-bottom: 1.75rem;
+}
+
+.journey-intro__statement {
+  font-family: var(--font-dm-serif);
+  font-size: clamp(1.75rem, 3.8vw, 5.5rem);
+  font-weight: 400;
+  line-height: 1.15;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  margin: 0 0 1.25rem;
+  max-width: min(900px, 70vw);
+}
+
+.journey-intro__statement em {
+  font-family: var(--font-cormorant);
+  font-style: italic;
+  font-weight: 600;
+  color: var(--color-cobalt);
+}
+
+.journey-intro__desc {
+  font-family: var(--font-body);
+  font-size: clamp(0.88rem, 1.05vw, 1.1rem);
+  font-weight: 300;
+  line-height: 1.7;
+  color: rgba(26, 26, 26, 0.68);
+  margin: 0;
+  max-width: min(540px, 60vw);
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  #journey-intro {
+    padding: 6vh 1.25rem 6vh;
+  }
+
+  .journey-intro__statement {
+    font-size: clamp(1.7rem, 6.5vw, 2.2rem);
+    max-width: 100%;
+  }
+
+  .journey-intro__statement br {
+    display: none;
+  }
+
+  .journey-intro__desc {
+    max-width: 100%;
+  }
+}

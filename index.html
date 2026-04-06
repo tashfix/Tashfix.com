@@ -25,6 +25,7 @@
   <link rel="stylesheet" href="css/horizontal.css?v=2">
   <link rel="stylesheet" href="css/work-spotlight.css">
   <link rel="stylesheet" href="css/about.css">
+  <link rel="stylesheet" href="css/journey-intro.css">
   <link rel="stylesheet" href="css/footer.css">
 
   <!-- Preloads -->
@@ -218,9 +219,29 @@
 
   <!-- ====== SECTION 3.6: WORK SPOTLIGHT ====== -->
   <section id="work-spotlight">
+    <canvas class="spotlight__mesh-canvas" id="spotlight-mesh"></canvas>
     <header class="spotlight__header">
       <span class="spotlight__label">Work Spotlight</span>
       <h2 class="spotlight__heading">Selected <em>work</em></h2>
+      <p class="spotlight__desc">A focused look at three products. Each built for scale, shipped under pressure and used by real people.</p>
+      <div class="spotlight__metrics">
+        <div class="spotlight__metric">
+          <span class="spotlight__metric-num" data-count="8" data-suffix="+">0</span>
+          <span class="spotlight__metric-label">Years</span>
+        </div>
+        <div class="spotlight__metric">
+          <span class="spotlight__metric-num" data-count="10" data-suffix="M+">0</span>
+          <span class="spotlight__metric-label">Users Impacted</span>
+        </div>
+        <div class="spotlight__metric">
+          <span class="spotlight__metric-num" data-count="5" data-suffix="">0</span>
+          <span class="spotlight__metric-label">Awards</span>
+        </div>
+        <div class="spotlight__metric">
+          <span class="spotlight__metric-num" data-count="2.5" data-suffix="" data-decimals="1">0</span>
+          <span class="spotlight__metric-label">Days to Ship</span>
+        </div>
+      </div>
     </header>
 
     <div class="spotlight__grid">
@@ -331,111 +352,15 @@
     </div>
   </section>
 
-  <!-- ====== SECTION 3.5: ABOUT ====== -->
-  <section id="about" class="about">
-    <div class="about__inner">
-
-      <!-- Left: Statement + metrics -->
-      <div class="about__left">
-        <span class="about__label">About Me</span>
-        <h2 class="about__statement">
-          I make complex things<br>
-          make <em>sense.</em>
-        </h2>
-        <p class="about__philosophy">Part engineer's brain, part editorial eye. 8+ years across Samsung, Microsoft, and a multi-award-winning cleantech startup — from founding-team work to platforms touching tens of millions.</p>
-        <div class="about__metrics">
-          <div class="about__metric">
-            <span class="about__metric-num">8+</span>
-            <span class="about__metric-label">years</span>
-          </div>
-          <div class="about__metric">
-            <span class="about__metric-num">10M+</span>
-            <span class="about__metric-label">users impacted</span>
-          </div>
-          <div class="about__metric">
-            <span class="about__metric-num">5</span>
-            <span class="about__metric-label">awards</span>
-          </div>
-          <div class="about__metric">
-            <span class="about__metric-num">2.5</span>
-            <span class="about__metric-label">days to ship</span>
-          </div>
-        </div>
-        <div class="about__rule"></div>
-      </div>
-
-      <!-- Right: Timeline -->
-      <div class="about__right">
-        <div class="about__timeline">
-          <div class="about__tl-item">
-            <span class="about__tl-year">2026</span>
-            <div class="about__tl-body">
-              <span class="about__tl-role">AI-Native Builder</span>
-              <span class="about__tl-note">Full SaaS in 2.5 days · 6,000+ Figma plugin users</span>
-            </div>
-          </div>
-          <div class="about__tl-item">
-            <span class="about__tl-year">2025</span>
-            <div class="about__tl-body">
-              <span class="about__tl-role">Product Designer — Samsung</span>
-              <span class="about__tl-note">Knox Design System · 100K+ device dashboards</span>
-            </div>
-          </div>
-          <div class="about__tl-item">
-            <span class="about__tl-year">2024</span>
-            <div class="about__tl-body">
-              <span class="about__tl-role">Product Designer II — Microsoft AI</span>
-              <span class="about__tl-note">Edge 4.0 · AI transparency patterns · 3.3× engagement</span>
-            </div>
-          </div>
-          <div class="about__tl-item">
-            <span class="about__tl-year">2023</span>
-            <div class="about__tl-body">
-              <span class="about__tl-role">2× CES Honoree · IBEX Award</span>
-              <span class="about__tl-note">Among 3,200+ competing products</span>
-            </div>
-          </div>
-          <div class="about__tl-item">
-            <span class="about__tl-year">2019</span>
-            <div class="about__tl-body">
-              <span class="about__tl-role">Founding Designer — VoltSafe</span>
-              <span class="about__tl-note">5 yrs · IoT · CBC Dragons' Den · BC Cleantech Award</span>
-            </div>
-          </div>
-          <div class="about__tl-item">
-            <span class="about__tl-year">2016</span>
-            <div class="about__tl-body">
-              <span class="about__tl-role">BSc EECE — University of British Columbia</span>
-              <span class="about__tl-note">Engineering foundation — rare for a product designer</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Logo marquee — full width, below metrics + timeline -->
-    <div class="about__logo-marquee">
-      <div class="about__logo-marquee-track">
-        <img src="assets/images/micosoft.png" alt="Microsoft">
-        <img src="assets/images/samsung.png" alt="Samsung">
-        <img src="assets/images/ces.png" alt="CES">
-        <img src="assets/images/bing.png" alt="Bing">
-        <img src="assets/images/cbc.png" alt="CBC">
-        <img src="assets/images/msn.png" alt="MSN">
-        <img src="assets/images/micosoft.png" alt="Microsoft">
-        <img src="assets/images/samsung.png" alt="Samsung">
-        <img src="assets/images/ces.png" alt="CES">
-        <img src="assets/images/bing.png" alt="Bing">
-        <img src="assets/images/cbc.png" alt="CBC">
-        <img src="assets/images/msn.png" alt="MSN">
-      </div>
-    </div>
+  <!-- ====== SECTION 4: MY JOURNEY INTRO ====== -->
+  <section id="journey-intro" class="journey-intro">
+    <span class="journey-intro__label">My Journey</span>
+    <h2 class="journey-intro__statement">Shipped, scaled,<br>and shown on <em>live TV.</em></h2>
+    <p class="journey-intro__desc">A scroll through real moments from Dragon's Den, Consumer Electronics Show, and personal milestones.</p>
   </section>
 
-  <!-- ====== SECTION 4: HORIZONTAL SCROLL GALLERY ====== -->
+  <!-- ====== SECTION 5: HORIZONTAL SCROLL GALLERY ====== -->
   <section id="hscroll-gallery" class="hscroll__section">
-    <span class="hscroll__section-label">My Journey</span>
     <div class="hscroll__track" id="hscroll-track">
       <canvas class="hscroll__mesh-canvas" id="hscroll-mesh"></canvas>
 
@@ -1285,7 +1210,7 @@
   <div class="nav-overlay" id="nav-overlay">
     <nav class="nav-overlay__content">
       <a href="#" class="nav-overlay__link" data-nav="home">Home</a>
-      <a href="#" class="nav-overlay__link" data-nav="about-me">About Me</a>
+      <a href="#" class="nav-overlay__link" data-nav="work-spotlight">Work Spotlight</a>
       <a href="#" class="nav-overlay__link" data-nav="my-journey">My Journey</a>
       <a href="#" class="nav-overlay__link" data-nav="case-studies">Case Studies</a>
     </nav>
@@ -1311,12 +1236,175 @@
     var section = document.getElementById('work-spotlight');
     if (!section) return;
 
-    // Scroll reveal
+    // Scroll reveal + count-up together
     ScrollTrigger.create({
       trigger: section,
       start: 'top 82%',
       once: true,
-      onEnter: function() { section.classList.add('is-visible'); }
+      onEnter: function() {
+        section.classList.add('is-visible');
+
+        section.querySelectorAll('.spotlight__metric-num[data-count]').forEach(function(el) {
+          var target   = parseFloat(el.dataset.count);
+          var suffix   = el.dataset.suffix || '';
+          var decimals = parseInt(el.dataset.decimals || '0', 10);
+          var duration = 1400;
+          var startTime = performance.now();
+          function step(now) {
+            var p = Math.min((now - startTime) / duration, 1);
+            var e = 1 - Math.pow(1 - p, 3); // ease out cubic
+            var val = e * target;
+            el.textContent = (decimals ? val.toFixed(decimals) : Math.floor(val)) + suffix;
+            if (p < 1) requestAnimationFrame(step);
+            else el.textContent = (decimals ? target.toFixed(decimals) : target) + suffix;
+          }
+          requestAnimationFrame(step);
+        });
+      }
+    });
+
+    // Logo swap — dark logo + frosted glass on beige sections
+    var siteLogo = document.getElementById('site-logo');
+    var logoGlass = document.getElementById('site-logo-glass');
+    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
+    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
+    var menuBtn = document.getElementById('menu-btn');
+    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
+
+    function toBeige() {
+      if (logoGlass) logoGlass.classList.add('visible');
+      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      menuLines.forEach(function(l) { l.style.background = 'rgba(26,26,26,0.75)'; });
+    }
+    function toDark() {
+      if (logoGlass) logoGlass.classList.remove('visible');
+      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      menuLines.forEach(function(l) { l.style.background = ''; });
+    }
+
+    // Swap when work-spotlight top reaches viewport top; revert when scrolling back above it
+    var journeyIntro = document.getElementById('journey-intro');
+    var beigeEnd = journeyIntro || section;
+    ScrollTrigger.create({
+      trigger: section,
+      start: 'top top',
+      end: 'bottom top',
+      onEnter: toBeige,
+      onLeaveBack: toDark
+    });
+    // Journey intro section — stay in beige mode
+    if (journeyIntro) {
+      ScrollTrigger.create({
+        trigger: journeyIntro,
+        start: 'top top',
+        end: 'bottom top',
+        onEnter: toBeige,
+        onLeaveBack: toBeige
+      });
+    }
+
+    // Mesh grid animation — deferred until all scripts (incl. main.js) are loaded
+    window.addEventListener('load', function() {
+      var canvas = document.getElementById('spotlight-mesh');
+      if (!canvas || window.innerWidth <= 768) return;
+      var ctx = canvas.getContext('2d');
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      var ROWS = 26;
+      var waves = [
+        { cx: 0.3,  cy: 0.4,  amp: 50, freq: 0.0028, speed:  0.7 },
+        { cx: 0.72, cy: 0.55, amp: 32, freq: 0.0032, speed: -0.55 },
+        { cx: 0.5,  cy: 0.25, amp: 22, freq: 0.0045, speed:  1.0 },
+      ];
+      var maxH = waves.reduce(function(s, w) { return s + w.amp; }, 0);
+      var coolColor = window.TashBrand && window.TashBrand.coolColor;
+      if (!coolColor) return;
+
+      var meshTime = 0, animId = null, isVisible = false;
+
+      function getH(x, y, t, W, H) {
+        var h = 0;
+        for (var i = 0; i < waves.length; i++) {
+          var w = waves[i];
+          var dx = x - w.cx * W, dy = y - w.cy * H;
+          h += w.amp * Math.sin(Math.sqrt(dx * dx + dy * dy) * w.freq + t * w.speed);
+        }
+        return h;
+      }
+
+      // Fade all four edges — large top fade pushes grid below the heading
+      function edgeAlpha(cx, cy) {
+        var fSide = 0.10, fTop = 0.62, fBot = 0.10;
+        var ax = cx < fSide ? cx / fSide : cx > 1 - fSide ? (1 - cx) / fSide : 1;
+        var ay = cy < fTop  ? cy / fTop  : cy > 1 - fBot  ? (1 - cy) / fBot  : 1;
+        return ax * ay;
+      }
+
+      function sizeCanvas() {
+        var W = section.offsetWidth, H = section.offsetHeight;
+        canvas.width = W * dpr; canvas.height = H * dpr;
+        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      }
+
+      function draw() {
+        if (!isVisible) { animId = null; return; }
+        var W = canvas.width / dpr, H = canvas.height / dpr;
+        ctx.clearRect(0, 0, W, H);
+        meshTime += 0.012;
+
+        var cellSize = H / ROWS;
+        var COLS = Math.round(W / cellSize);
+        var pts = [], ags = [], hts = [];
+
+        for (var r = 0; r <= ROWS; r++) {
+          var rp = [], ra = [], rh = [];
+          for (var c = 0; c <= COLS; c++) {
+            var x = (c / COLS) * W, y = (r / ROWS) * H;
+            var z = getH(x, y, meshTime, W, H);
+            rp.push({ x: x, y: y + z * 0.35 });
+            ra.push(edgeAlpha(c / COLS, r / ROWS));
+            rh.push((z + maxH) / (2 * maxH));
+          }
+          pts.push(rp); ags.push(ra); hts.push(rh);
+        }
+
+        var breath = (0.45 + 0.2 * Math.sin(meshTime * 0.8)) * 0.55;
+        ctx.lineWidth = 1.0;
+
+        // Horizontal lines
+        for (var r = 0; r <= ROWS; r++) {
+          for (var c = 0; c < COLS; c++) {
+            var a = Math.min(ags[r][c], ags[r][c + 1]);
+            if (a < 0.01) continue;
+            var col = coolColor((hts[r][c] + hts[r][c + 1]) / 2);
+            ctx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath).toFixed(3) + ')';
+            ctx.beginPath(); ctx.moveTo(pts[r][c].x, pts[r][c].y); ctx.lineTo(pts[r][c + 1].x, pts[r][c + 1].y); ctx.stroke();
+          }
+        }
+
+        // Vertical lines
+        for (var c = 0; c <= COLS; c++) {
+          for (var r = 0; r < ROWS; r++) {
+            var a = Math.min(ags[r][c], ags[r + 1][c]);
+            if (a < 0.01) continue;
+            var col = coolColor((hts[r][c] + hts[r + 1][c]) / 2);
+            ctx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath).toFixed(3) + ')';
+            ctx.beginPath(); ctx.moveTo(pts[r][c].x, pts[r][c].y); ctx.lineTo(pts[r + 1][c].x, pts[r + 1][c].y); ctx.stroke();
+          }
+        }
+
+        animId = requestAnimationFrame(draw);
+      }
+
+      sizeCanvas();
+      var meshObs = new IntersectionObserver(function(entries) {
+        isVisible = entries[0].isIntersecting;
+        if (isVisible && !animId) draw();
+      }, { threshold: 0.01 });
+      meshObs.observe(section);
+      window.addEventListener('resize', sizeCanvas);
     });
 
     // Card clicks → expand player to that case study
@@ -1437,6 +1525,20 @@
       var rect = trigger.getBoundingClientRect();
       if (rect.bottom < 80) { setDark(); } else { setLight(); }
     }, { passive: true });
+  })();
+  </script>
+
+  <!-- Journey Intro: scroll reveal -->
+  <script>
+  (function() {
+    var el = document.getElementById('journey-intro');
+    if (!el) return;
+    ScrollTrigger.create({
+      trigger: el,
+      start: 'top 82%',
+      once: true,
+      onEnter: function() { el.classList.add('is-visible'); }
+    });
   })();
   </script>
 
