@@ -2169,11 +2169,18 @@ body.player-expanded .morph__menu-btn {
   .morph__player.expanded .morph__lcd-pixels,
   .morph__player.expanded .morph__lcd-visualizer { display: none; }
 
+  /* ── Hide mesh grid on mobile ── */
+  .morph__player.expanded .cs-grid-canvas {
+    display: none !important;
+  }
+
   /* ── Text-only case studies on mobile ── */
   .morph__player.expanded .morph__case-studies {
     top: 100px; left: 16px; right: 16px; bottom: 24px;
     justify-content: flex-start;
     padding-top: 10px;
+    overflow-y: scroll;
+    -webkit-overflow-scrolling: touch;
   }
 
   .morph__player.expanded .morph__cs-heading {
