@@ -1,15 +1,14 @@
 /* ═══════════════════════════════════════════════════════════
-   WORK SPOTLIGHT — editorial case study showcase
-   Sits between the horizontal gallery and the About section.
-   Three full-bleed cards in a row, each ~50vh, with a gradient
-   overlay carrying the title, description, and CTA.
+   WORK SPOTLIGHT — editorial case-study cards
+   Template: image → frosted pills on image → white content zone
+   → bold title → 2-line desc → byline + read time
    ═══════════════════════════════════════════════════════════ */
 
 #work-spotlight {
   background: var(--color-offwhite, #f5f5f0);
   position: relative;
   z-index: 10;
-  margin-top: -2px;               /* seal any subpixel gap from above */
+  margin-top: -2px;
   padding: 7vh 4vw 8vh;
   opacity: 0;
   transform: translateY(32px);
@@ -59,62 +58,45 @@
 .spotlight__grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: clamp(0.6rem, 1vw, 1rem);
+  gap: clamp(0.75rem, 1.2vw, 1.25rem);
+  align-items: start;   /* allow cards to differ in height without stretching */
 }
 
 
 /* ── Individual card ── */
 .spotlight__card {
-  position: relative;
-  display: block;
-  height: clamp(280px, 50vh, 580px);
-  border-radius: 12px;
+  display: flex;
+  flex-direction: column;
+  background: #ffffff;
+  border-radius: 14px;
   overflow: hidden;
   text-decoration: none;
   cursor: pointer;
-  background: var(--color-ink);
-}
-
-/* Subtle scale-down on rest, up on hover — adds tactility */
-.spotlight__card {
-  transform: scale(1);
+  border: 1px solid rgba(26, 26, 26, 0.07);
+  box-shadow:
+    0 2px 8px rgba(0, 0, 0, 0.06),
+    0 1px 2px rgba(0, 0, 0, 0.04);
   transition:
-    transform 0.45s cubic-bezier(0.25, 0.46, 0.45, 0.94),
-    box-shadow 0.45s ease;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+    transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+    box-shadow 0.4s ease;
 }
 
 .spotlight__card:hover {
-  transform: scale(1.015);
+  transform: translateY(-5px);
   box-shadow:
-    0 20px 60px rgba(0, 0, 0, 0.22),
-    0 4px 12px rgba(0, 0, 0, 0.12);
-}
-
-/* Soft corner glow on hover */
-.spotlight__card::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 12px;
-  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
-  z-index: 5;
-  pointer-events: none;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-
-.spotlight__card:hover::before {
-  opacity: 1;
+    0 18px 48px rgba(0, 0, 0, 0.13),
+    0 4px 12px rgba(0, 0, 0, 0.07);
 }
 
 
-/* ── Thumbnail ── */
+/* ── Thumbnail zone ── */
 .spotlight__thumb {
-  position: absolute;
-  inset: 0;
+  position: relative;
   width: 100%;
-  height: 100%;
+  aspect-ratio: 16 / 10;
+  overflow: hidden;
+  background: #1a1a1a;
+  flex-shrink: 0;
 }
 
 .spotlight__thumb-img {
@@ -123,165 +105,189 @@
   object-fit: cover;
   object-position: center top;
   display: block;
-  /* Slightly cool, editorial tone */
-  filter: saturate(0.78) brightness(0.72);
+  filter: saturate(0.82) brightness(0.88);
   transform: scale(1);
-  transition: filter 0.5s ease, transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition:
+    filter 0.5s ease,
+    transform 0.55s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .spotlight__card:hover .spotlight__thumb-img {
-  filter: saturate(0.88) brightness(0.8);
-  transform: scale(1.06);
+  filter: saturate(0.95) brightness(0.95);
+  transform: scale(1.04);
 }
 
 
-/* ── Gradient overlays ── */
-/* Persistent dark vignette — always readable */
-.spotlight__thumb::after {
-  content: '';
+/* ── Frosted glass pills — overlay on image ── */
+.spotlight__pills {
   position: absolute;
-  inset: 0;
-  background:
-    linear-gradient(
-      to top,
-      rgba(6, 4, 2, 0.96)  0%,
-      rgba(6, 4, 2, 0.72)  32%,
-      rgba(6, 4, 2, 0.22)  60%,
-      rgba(6, 4, 2, 0.04)  80%,
-      transparent          100%
-    );
-  z-index: 1;
-  pointer-events: none;
-}
-
-/* Top-left vignette for the meta pill readability */
-.spotlight__overlay::before {
-  content: '';
-  position: absolute;
-  top: 0; left: 0; right: 0;
-  height: 40%;
-  background: linear-gradient(
-    180deg,
-    rgba(6, 4, 2, 0.55) 0%,
-    transparent 100%
-  );
-  border-radius: 12px 12px 0 0;
-  z-index: 1;
-  pointer-events: none;
-}
-
-
-/* ── Text overlay container ── */
-.spotlight__overlay {
-  position: absolute;
-  inset: 0;
+  bottom: 12px;
+  left: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
   z-index: 2;
+}
+
+.spotlight__pill {
+  display: inline-block;
+  padding: 5px 11px;
+  border-radius: 100px;
+  font-family: var(--font-body);
+  font-size: clamp(0.6rem, 0.7vw, 0.68rem);
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 255, 255, 0.92);
+  /* Frosted glass */
+  background: rgba(255, 255, 255, 0.18);
+  -webkit-backdrop-filter: blur(10px) saturate(140%);
+  backdrop-filter: blur(10px) saturate(140%);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.18);
+}
+
+
+/* ── Content zone (below image) ── */
+.spotlight__content {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  padding: clamp(1rem, 1.8vw, 1.6rem);
+  flex: 1;
+  padding: clamp(1rem, 1.4vw, 1.35rem) clamp(1rem, 1.4vw, 1.35rem) clamp(0.9rem, 1.2vw, 1.2rem);
+  gap: 0.55rem;
 }
 
 
-/* ── Top meta (client · type) ── */
-.spotlight__top-meta {
-  position: relative;
-  z-index: 3;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-}
-
-.spotlight__client {
-  font-family: var(--font-mono);
-  font-size: clamp(0.6rem, 0.75vw, 0.72rem);
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-  color: var(--color-tangerine);
-  text-shadow: 0 0 12px rgba(255, 107, 53, 0.45);
-}
-
-.spotlight__separator {
-  color: rgba(255, 255, 255, 0.3);
-  font-size: 0.65rem;
-}
-
-.spotlight__type {
-  font-family: var(--font-mono);
-  font-size: clamp(0.55rem, 0.7vw, 0.68rem);
-  letter-spacing: 0.16em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.45);
-}
-
-
-/* ── Bottom text block ── */
-.spotlight__bottom {
-  position: relative;
-  z-index: 3;
-}
-
+/* ── Title ── */
 .spotlight__title {
-  font-family: var(--font-dm-serif);
-  font-size: clamp(1.1rem, 1.55vw, 1.85rem);
-  font-weight: 400;
-  line-height: 1.22;
-  letter-spacing: -0.01em;
-  color: rgba(255, 255, 255, 0.96);
-  margin: 0 0 0.6rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.95rem, 1.1vw, 1.15rem);
+  font-weight: 700;
+  line-height: 1.35;
+  letter-spacing: -0.015em;
+  color: var(--color-ink);
+  margin: 0;
+  /* Hover: subtle cobalt tint */
+  transition: color 0.25s ease;
 }
 
+.spotlight__card:hover .spotlight__title {
+  color: var(--color-cobalt);
+}
+
+
+/* ── Description — max 2 lines ── */
 .spotlight__desc {
   font-family: var(--font-body);
-  font-size: clamp(0.72rem, 0.85vw, 0.85rem);
-  font-weight: 300;
+  font-size: clamp(0.75rem, 0.85vw, 0.82rem);
+  font-weight: 400;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.58);
-  margin: 0 0 1.1rem;
-  /* Clamp to 2 lines on smaller viewports */
+  color: rgba(26, 26, 26, 0.52);
+  margin: 0;
   display: -webkit-box;
-  -webkit-line-clamp: 3;
+  -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }
 
-.spotlight__card:hover .spotlight__desc {
-  color: rgba(255, 255, 255, 0.72);
-}
 
-
-/* ── CTA pill ── */
-.spotlight__cta {
-  display: inline-flex;
+/* ── Footer: byline + read time ── */
+.spotlight__footer {
+  display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-family: var(--font-mono);
-  font-size: clamp(0.58rem, 0.72vw, 0.7rem);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--color-tangerine);
-  opacity: 0;
-  transform: translateY(6px);
-  transition: opacity 0.35s ease, transform 0.35s ease, color 0.25s ease;
+  justify-content: space-between;
+  margin-top: auto;
+  padding-top: 0.75rem;
+  border-top: 1px solid rgba(26, 26, 26, 0.07);
 }
 
-.spotlight__card:hover .spotlight__cta {
-  opacity: 1;
-  transform: translateY(0);
+.spotlight__byline {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
 }
 
-.spotlight__cta svg {
+/* Company logo circle */
+.spotlight__logo {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
   flex-shrink: 0;
-  transition: transform 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-rajdhani);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  color: #ffffff;
+  overflow: hidden;
 }
 
-.spotlight__card:hover .spotlight__cta svg {
-  transform: translateX(3px);
+/* VoltSafe monogram — cobalt */
+.spotlight__logo--vs {
+  background: linear-gradient(135deg, #0A1A4A 0%, #1a3870 100%);
+}
+
+/* Microsoft — white bg, image inside */
+.spotlight__logo--ms {
+  background: #ffffff;
+  border: 1px solid rgba(26, 26, 26, 0.1);
+}
+
+.spotlight__logo-img {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  display: block;
+}
+
+/* PropKeep monogram — warm teal */
+.spotlight__logo--pk {
+  background: linear-gradient(135deg, #1a4a3a 0%, #0e6b4a 100%);
+}
+
+.spotlight__byline-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+}
+
+.spotlight__company {
+  font-family: var(--font-body);
+  font-size: clamp(0.7rem, 0.78vw, 0.76rem);
+  font-weight: 600;
+  color: var(--color-ink);
+  line-height: 1;
+}
+
+.spotlight__date {
+  font-family: var(--font-body);
+  font-size: clamp(0.62rem, 0.7vw, 0.68rem);
+  font-weight: 400;
+  color: rgba(26, 26, 26, 0.42);
+  line-height: 1;
+}
+
+/* Read time */
+.spotlight__readtime {
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-family: var(--font-body);
+  font-size: clamp(0.62rem, 0.7vw, 0.68rem);
+  font-weight: 400;
+  color: rgba(26, 26, 26, 0.45);
+  white-space: nowrap;
+}
+
+.spotlight__readtime svg {
+  flex-shrink: 0;
+  opacity: 0.6;
 }
 
 
 /* ═══════════════════════════════════════════════════════════
-   MOBILE — stack vertically
+   MOBILE — single column stack
    ═══════════════════════════════════════════════════════════ */
 @media (max-width: 768px) {
   #work-spotlight {
@@ -293,21 +299,11 @@
     gap: 1rem;
   }
 
-  .spotlight__card {
-    height: clamp(240px, 44vh, 380px);
-  }
-
   .spotlight__heading {
     font-size: clamp(1.8rem, 7vw, 2.8rem);
   }
 
-  /* Always show CTA on mobile (no hover) */
-  .spotlight__cta {
-    opacity: 1;
-    transform: none;
-  }
-
-  .spotlight__desc {
-    -webkit-line-clamp: 2;
+  .spotlight__pill {
+    font-size: 0.65rem;
   }
 }
