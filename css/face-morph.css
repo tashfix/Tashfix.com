@@ -2290,7 +2290,7 @@ body.player-expanded .morph__menu-btn {
     left: auto !important;
     z-index: 11;
     margin: 0 -20px 20px;
-    padding: 110px 20px 18px 20px !important;
+    padding: 88px 20px 18px 20px !important;
     height: auto !important;
     width: calc(100% + 40px);
     min-height: 48px;
@@ -2312,7 +2312,7 @@ body.player-expanded .morph__menu-btn {
   }
 
   .morph__cs-detail-scroll {
-    padding-top: 160px !important;
+    padding-top: 0 !important;
   }
 
   /* Navigation overlay: smaller text so links fit on one line */
