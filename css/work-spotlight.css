@@ -174,12 +174,10 @@
   flex-shrink: 0;
 }
 
-/* Ensure <picture> wrapper fills the thumb container so there are no
-   pointer-event dead zones caused by inline baseline gaps */
+/* display:contents removes the <picture> box from layout entirely,
+   making the img a direct child of .spotlight__thumb for sizing/hit-testing */
 .spotlight__thumb picture {
-  display: block;
-  width: 100%;
-  height: 100%;
+  display: contents;
 }
 
 /* Pre-promote to compositor layer via will-change so there is no
