@@ -124,9 +124,21 @@
 /* ── Card grid ── */
 .spotlight__grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(4, 1fr);
   gap: clamp(0.75rem, 1.2vw, 1.25rem);
   align-items: stretch; /* all cards grow to match the tallest in the row */
+}
+
+@media (max-width: 960px) {
+  .spotlight__grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .spotlight__grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 
@@ -418,7 +430,6 @@
   }
 
   .spotlight__grid {
-    grid-template-columns: 1fr;
     gap: 1rem;
   }
 
