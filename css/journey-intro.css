@@ -19,7 +19,7 @@
 }
 
 .journey-intro__label {
-  display: block;
+  display: none;
   font-family: var(--font-mono);
   font-size: clamp(0.6rem, 0.75vw, 0.75rem);
   letter-spacing: 0.22em;
