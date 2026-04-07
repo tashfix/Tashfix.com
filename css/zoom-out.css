@@ -78,6 +78,7 @@
   height: 100%;
   overflow: hidden;
   border-radius: inherit;
+  will-change: transform;
 }
 
 /* Static portrait: hidden initially, fades in during zoom-out scroll */

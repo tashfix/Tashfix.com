@@ -15,7 +15,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Caveat:wght@500;700&family=Cormorant+Garamond:wght@600;700&family=DM+Serif+Display&family=Inter:wght@300;400;500;600;700;900&family=Orbitron:wght@600&family=Rajdhani:wght@400;500;600;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
 
-  <!-- CSS -->
+  <!-- Critical CSS — needed for loader + hero sections -->
   <link rel="stylesheet" href="css/reset.css">
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/global.css">
@@ -23,14 +23,34 @@
   <link rel="stylesheet" href="css/face-morph.css?v=9">
   <link rel="stylesheet" href="css/zoom-out.css">
   <link rel="stylesheet" href="css/horizontal.css?v=2">
-  <link rel="stylesheet" href="css/work-spotlight.css">
-  <link rel="stylesheet" href="css/about.css">
-  <link rel="stylesheet" href="css/journey-intro.css">
-  <link rel="stylesheet" href="css/footer.css">
+
+  <!-- Deferred CSS — below-fold sections -->
+  <link rel="stylesheet" href="css/work-spotlight.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/about.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/journey-intro.css" media="print" onload="this.media='all'">
+  <link rel="stylesheet" href="css/footer.css" media="print" onload="this.media='all'">
+  <noscript>
+    <link rel="stylesheet" href="css/work-spotlight.css">
+    <link rel="stylesheet" href="css/about.css">
+    <link rel="stylesheet" href="css/journey-intro.css">
+    <link rel="stylesheet" href="css/footer.css">
+  </noscript>
 
   <!-- Preloads -->
-  <link rel="preload" as="image" href="assets/images/portrait.png">
-  <link rel="preload" as="image" href="assets/images/metallic.png">
+  <link rel="preload" as="image" href="assets/images/portrait.webp">
+  <link rel="preload" as="image" href="assets/images/metallic.webp">
+
+  <!-- Scripts — defer preserves order, executes after HTML parsing -->
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js" defer></script>
+  <script src="js/work-spotlight.js" defer></script>
+  <script src="js/about-reveal.js" defer></script>
+  <script src="js/journey-reveal.js" defer></script>
+  <script src="js/main.js" defer></script>
+  <script src="js/face-morph.js?v=9" defer></script>
+  <script src="js/zoom-out.js" defer></script>
+  <script src="js/horizontal.js" defer></script>
+  <script src="js/video-expand.js" defer></script>
 </head>
 <body>
 
@@ -97,9 +117,9 @@
       <!-- Portrait container: face morph canvas replaces static portrait -->
       <div class="zoomout__portrait-container" id="zoomout-portrait-ctn">
         <div class="zoomout__portrait-clip">
-          <img class="morph__metallic" id="morph-metallic" src="assets/images/metallic.png" alt="">
+          <picture><source srcset="assets/images/metallic.webp" type="image/webp"><img class="morph__metallic" id="morph-metallic" src="assets/images/metallic.png" alt=""></picture>
           <canvas class="morph__canvas" id="morph-canvas"></canvas>
-          <img class="zoomout__portrait-static" id="zoomout-portrait-static" src="assets/images/portrait.png" alt="">
+          <picture><source srcset="assets/images/portrait.webp" type="image/webp"><img class="zoomout__portrait-static" id="zoomout-portrait-static" src="assets/images/portrait.png" alt=""></picture>
         </div>
         <svg class="zoomout__signature" id="zoomout-signature"
              xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 295 278">
@@ -164,14 +184,14 @@
           <!-- Logo marquee — inline below headline -->
           <div class="morph__logo-marquee" id="morph-logo-marquee">
             <div class="morph__logo-marquee-track">
-              <img src="assets/images/micosoft.png" alt="Microsoft">
-              <img src="assets/images/samsung.png" alt="Samsung">
-              <img src="assets/images/msn.png" alt="MSN">
-              <img src="assets/images/copilot.png" alt="Copilot">
-              <img src="assets/images/micosoft.png" alt="Microsoft">
-              <img src="assets/images/samsung.png" alt="Samsung">
-              <img src="assets/images/msn.png" alt="MSN">
-              <img src="assets/images/copilot.png" alt="Copilot">
+              <picture><source srcset="assets/images/micosoft.webp" type="image/webp"><img src="assets/images/micosoft.png" alt="Microsoft"></picture>
+              <picture><source srcset="assets/images/samsung.webp" type="image/webp"><img src="assets/images/samsung.png" alt="Samsung"></picture>
+              <picture><source srcset="assets/images/msn.webp" type="image/webp"><img src="assets/images/msn.png" alt="MSN"></picture>
+              <picture><source srcset="assets/images/copilot.webp" type="image/webp"><img src="assets/images/copilot.png" alt="Copilot"></picture>
+              <picture><source srcset="assets/images/micosoft.webp" type="image/webp"><img src="assets/images/micosoft.png" alt="Microsoft"></picture>
+              <picture><source srcset="assets/images/samsung.webp" type="image/webp"><img src="assets/images/samsung.png" alt="Samsung"></picture>
+              <picture><source srcset="assets/images/msn.webp" type="image/webp"><img src="assets/images/msn.png" alt="MSN"></picture>
+              <picture><source srcset="assets/images/copilot.webp" type="image/webp"><img src="assets/images/copilot.png" alt="Copilot"></picture>
             </div>
           </div>
           <a class="morph__hero-cta" href="#">View My Work
@@ -199,7 +219,7 @@
     </svg>
     <div class="hscroll__emblem">
       <div class="hscroll__laurel-wrap">
-        <img class="hscroll__laurel-img" src="assets/images/laurel.png" alt="Laurel wreath">
+        <picture><source srcset="assets/images/laurel.webp" type="image/webp"><img class="hscroll__laurel-img" src="assets/images/laurel.png" alt="Laurel wreath" loading="lazy"></picture>
         <div class="hscroll__cursor-wrap">
           <svg width="28" height="36" viewBox="0 0 28 36" fill="rgba(225,230,240,0.9)" stroke="none">
             <path d="M2 1 L2 28 L8 22 L14 34 L18 32 L12 20 L20 20 Z" />
@@ -249,11 +269,11 @@
       <!-- Card 1: VoltSafe Home App -->
       <a class="spotlight__card" href="#" data-cs="home">
         <div class="spotlight__thumb">
-          <img
+          <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Home%20Mobile%20App.webp" type="image/webp"><img
             src="assets/images/case-studies/WIP%20Placeholders/Home%20Mobile%20App.png"
             alt="VoltSafe Home Mobile App"
             class="spotlight__thumb-img"
-          >
+           loading="lazy"></picture>
           <div class="spotlight__pills">
             <span class="spotlight__pill">Product Design</span>
             <span class="spotlight__pill">IoT</span>
@@ -265,7 +285,7 @@
           <footer class="spotlight__footer">
             <div class="spotlight__byline">
               <div class="spotlight__logo spotlight__logo--vs" aria-label="VoltSafe">
-                <img src="assets/images/voltsafe%20icon.jpeg" alt="VoltSafe" class="spotlight__logo-img">
+                <picture><source srcset="assets/images/voltsafe%20icon.webp" type="image/webp"><img src="assets/images/voltsafe%20icon.jpeg" alt="VoltSafe" class="spotlight__logo-img" loading="lazy"></picture>
               </div>
               <div class="spotlight__byline-text">
                 <span class="spotlight__company">VoltSafe</span>
@@ -283,11 +303,11 @@
       <!-- Card 2: Microsoft MSN -->
       <a class="spotlight__card" href="#" data-cs="msn">
         <div class="spotlight__thumb">
-          <img
+          <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Improving%20MSN%27s%20Reading%20Experience.webp" type="image/webp"><img
             src="assets/images/case-studies/WIP%20Placeholders/Improving%20MSN%27s%20Reading%20Experience.png"
             alt="Improving MSN's Reading Experience"
             class="spotlight__thumb-img"
-          >
+           loading="lazy"></picture>
           <div class="spotlight__pills">
             <span class="spotlight__pill">UX Research</span>
             <span class="spotlight__pill">Ad Experience</span>
@@ -299,7 +319,7 @@
           <footer class="spotlight__footer">
             <div class="spotlight__byline">
               <div class="spotlight__logo spotlight__logo--ms" aria-label="Microsoft">
-                <img src="assets/images/MS%20icon.png" alt="Microsoft" class="spotlight__logo-img">
+                <picture><source srcset="assets/images/MS%20icon.webp" type="image/webp"><img src="assets/images/MS%20icon.png" alt="Microsoft" class="spotlight__logo-img"></picture>
               </div>
               <div class="spotlight__byline-text">
                 <span class="spotlight__company">Microsoft</span>
@@ -317,11 +337,11 @@
       <!-- Card 3: Samsung Knox Design System -->
       <a class="spotlight__card" href="#" data-cs="samsung">
         <div class="spotlight__thumb">
-          <img
+          <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Unifying%20Samsung%27s%20Design%20System.webp" type="image/webp"><img
             src="assets/images/case-studies/WIP%20Placeholders/Unifying%20Samsung%27s%20Design%20System.png"
             alt="Unifying Samsung's Design System"
             class="spotlight__thumb-img"
-          >
+           loading="lazy"></picture>
           <div class="spotlight__pills">
             <span class="spotlight__pill">Design Systems</span>
             <span class="spotlight__pill">Enterprise UX</span>
@@ -333,7 +353,7 @@
           <footer class="spotlight__footer">
             <div class="spotlight__byline">
               <div class="spotlight__logo spotlight__logo--sg" aria-label="Samsung">
-                <img src="assets/images/samsung%20icon.png" alt="Samsung" class="spotlight__logo-img">
+                <picture><source srcset="assets/images/samsung%20icon.webp" type="image/webp"><img src="assets/images/samsung%20icon.png" alt="Samsung" class="spotlight__logo-img"></picture>
               </div>
               <div class="spotlight__byline-text">
                 <span class="spotlight__company">Samsung</span>
@@ -366,61 +386,69 @@
 
       <!-- 3. Dragon's Den -->
       <div class="hscroll__item hscroll__type-wide">
-        <video src="assets/video/3 dragonden.mp4" muted autoplay loop playsinline preload="metadata"></video>
+        <video muted autoplay loop playsinline preload="metadata">
+        <source src="assets/video/3 dragonden.webm" type="video/webm">
+        <source src="assets/video/3 dragonden.mp4" type="video/mp4"></video>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">Product I designed appearing on Dragon's Den</span></p>
       </div>
 
       <!-- 4. Smart Home Mobile App -->
       <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
-        <video src="assets/video/4. smarthome.mp4" muted autoplay loop playsinline preload="metadata"></video>
+        <video muted autoplay loop playsinline preload="metadata">
+        <source src="assets/video/4. smarthome.webm" type="video/webm">
+        <source src="assets/video/4. smarthome.mp4" type="video/mp4"></video>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">Smart Home Mobile App I designed end to end</span></p>
       </div>
 
       <!-- 5. Winning 2 awards at CES -->
       <div class="hscroll__item hscroll__type-square">
-        <img src="assets/images/5 (Winning 2 awards at CES).png" alt="Winning 2 awards at CES" loading="lazy">
+        <picture><source srcset="assets/images/5 (Winning 2 awards at CES).webp" type="image/webp"><img src="assets/images/5 (Winning 2 awards at CES).png" alt="Winning 2 awards at CES" loading="lazy"></picture>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">Winning 2 awards at CES</span></p>
       </div>
 
       <!-- 6. Marine ecosystem -->
       <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
-        <img src="assets/images/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy">
+        <picture><source srcset="assets/images/6. (Marine ecosystem I design end to end).webp" type="image/webp"><img src="assets/images/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy"></picture>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">Marine ecosystem I designed end to end</span></p>
       </div>
 
       <!-- 8. YES! -->
       <div class="hscroll__item hscroll__type-square">
-        <img src="assets/images/8.(%22YES!%22).png" alt="YES!" loading="lazy">
+        <picture><source srcset="assets/images/8.(%22YES!%22).webp" type="image/webp"><img src="assets/images/8.(%22YES!%22).png" alt="YES!" loading="lazy"></picture>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">"YES!"</span></p>
       </div>
 
       <!-- 9. Brain Station -->
       <div class="hscroll__item hscroll__type-square hscroll__mobile-hide">
-        <img src="assets/images/9. (%22industry expert%22 panel at Brain Station).png" alt="Industry expert panel at Brain Station" loading="lazy">
+        <picture><source srcset="assets/images/9. (%22industry expert%22 panel at Brain Station).webp" type="image/webp"><img src="assets/images/9. (%22industry expert%22 panel at Brain Station).png" alt="Industry expert panel at Brain Station" loading="lazy"></picture>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">"Industry expert" panel at Brain Station</span></p>
       </div>
 
       <!-- 10. Cardistry Collaboration -->
       <div class="hscroll__item hscroll__type-wide">
-        <video src="assets/video/Cardistry clip.mp4" muted autoplay loop playsinline preload="metadata"></video>
+        <video muted autoplay loop playsinline preload="metadata">
+        <source src="assets/video/Cardistry clip.webm" type="video/webm">
+        <source src="assets/video/Cardistry clip.mp4" type="video/mp4"></video>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">Representing Canada for an international cardistry collaboration</span></p>
       </div>
 
       <!-- 11. Microsoft AI -->
       <div class="hscroll__item hscroll__type-standard">
-        <img src="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .jpeg" alt="Recruited onto the MSAN team at Microsoft AI" loading="lazy">
+        <picture><source srcset="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .webp" type="image/webp"><img src="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .jpeg" alt="Recruited onto the MSAN team at Microsoft AI" loading="lazy"></picture>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">Recruited onto the MSAN team at Microsoft AI</span></p>
       </div>
 
       <!-- 14. Samsung -->
       <div class="hscroll__item hscroll__type-square">
-        <img src="assets/images/13. (Joing the Samsung Research Canada Team).png" alt="Joining the Samsung Research Canada Team" loading="lazy">
+        <picture><source srcset="assets/images/13. (Joing the Samsung Research Canada Team).webp" type="image/webp"><img src="assets/images/13. (Joing the Samsung Research Canada Team).png" alt="Joining the Samsung Research Canada Team" loading="lazy"></picture>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">Joining the Samsung Research Canada Team</span></p>
       </div>
 
       <!-- 15. And here we are -->
       <div class="hscroll__item hscroll__type-square" id="hscroll-last-item">
-        <video src="assets/video/Hero%20Video%20Final%20(kling).mp4" poster="assets/images/hero-video-poster.jpg" muted playsinline preload="metadata"></video>
+        <video poster="assets/images/hero-video-poster.jpg" muted playsinline preload="metadata">
+        <source src="assets/video/Hero%20Video%20Final%20(kling).webm" type="video/webm">
+        <source src="assets/video/Hero%20Video%20Final%20(kling).mp4" type="video/mp4"></video>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">And here we are</span></p>
       </div>
     </div>
@@ -441,7 +469,7 @@
   <div class="video-quotes" id="video-quotes">
     <div class="video-quotes__item">
       <div class="vq-avatar">
-        <img src="assets/images/testimonial%20avatars/so-eun.jpeg" alt="So Eun Ahn">
+        <picture><source srcset="assets/images/testimonial%20avatars/so-eun.webp" type="image/webp"><img src="assets/images/testimonial%20avatars/so-eun.jpeg" alt="So Eun Ahn" loading="lazy"></picture>
       </div>
       <strong class="vq-name">So Eun Ahn</strong>
       <span class="vq-role">Product Designer, Microsoft</span>
@@ -452,7 +480,7 @@
     </div>
     <div class="video-quotes__item">
       <div class="vq-avatar">
-        <img src="assets/images/testimonial%20avatars/Alice.jpeg" alt="Alice Lee">
+        <picture><source srcset="assets/images/testimonial%20avatars/Alice.webp" type="image/webp"><img src="assets/images/testimonial%20avatars/Alice.jpeg" alt="Alice Lee" loading="lazy"></picture>
       </div>
       <strong class="vq-name">Alice Lee</strong>
       <span class="vq-role">Product Designer, Amazon Prime</span>
@@ -463,7 +491,7 @@
     </div>
     <div class="video-quotes__item">
       <div class="vq-avatar">
-        <img src="assets/images/testimonial%20avatars/Ashaya.jpeg" alt="Ashaya Sharma">
+        <picture><source srcset="assets/images/testimonial%20avatars/Ashaya.webp" type="image/webp"><img src="assets/images/testimonial%20avatars/Ashaya.jpeg" alt="Ashaya Sharma" loading="lazy"></picture>
       </div>
       <strong class="vq-name">Ashaya Sharma</strong>
       <span class="vq-role">CTO, Honeycomb AI</span>
@@ -474,7 +502,7 @@
     </div>
     <div class="video-quotes__item">
       <div class="vq-avatar">
-        <img src="assets/images/testimonial%20avatars/maz.jpeg" alt="Maz Haque">
+        <picture><source srcset="assets/images/testimonial%20avatars/maz.webp" type="image/webp"><img src="assets/images/testimonial%20avatars/maz.jpeg" alt="Maz Haque" loading="lazy"></picture>
       </div>
       <strong class="vq-name">Maz Haque</strong>
       <span class="vq-role">Project Management Professional</span>
@@ -634,7 +662,7 @@
             <div class="morph__cs-grid">
               <a class="morph__cs-card" href="#" data-cs="propkeep">
                 <div class="morph__cs-thumb">
-                  <img src="assets/images/case-studies/propkeep/thumbnail.png" alt="PropKeep thumbnail" class="morph__cs-thumb-img">
+                  <picture><source srcset="assets/images/case-studies/propkeep/thumbnail.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/thumbnail.png" alt="PropKeep thumbnail" class="morph__cs-thumb-img" loading="lazy"></picture>
                 </div>
                 <div class="morph__cs-info">
                   <div class="morph__cs-client">PropKeep</div>
@@ -648,7 +676,7 @@
               </a>
               <a class="morph__cs-card" href="#" data-cs="voltsafe">
                 <div class="morph__cs-thumb">
-                  <img src="assets/images/case-studies/WIP%20Placeholders/Smart%20Block%20Heater%20Mobile%20App.jpg" alt="VoltSafe Winter" class="morph__cs-thumb-img">
+                  <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Smart%20Block%20Heater%20Mobile%20App.webp" type="image/webp"><img src="assets/images/case-studies/WIP%20Placeholders/Smart%20Block%20Heater%20Mobile%20App.jpg" alt="VoltSafe Winter" class="morph__cs-thumb-img" loading="lazy"></picture>
                 </div>
                 <div class="morph__cs-info">
                   <div class="morph__cs-client">VoltSafe</div>
@@ -662,7 +690,7 @@
               </a>
               <a class="morph__cs-card" href="#" data-cs="home">
                 <div class="morph__cs-thumb">
-                  <img src="assets/images/case-studies/WIP%20Placeholders/Home%20Mobile%20App.png" alt="VoltSafe Home Mobile App" class="morph__cs-thumb-img">
+                  <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Home%20Mobile%20App.webp" type="image/webp"><img src="assets/images/case-studies/WIP%20Placeholders/Home%20Mobile%20App.png" alt="VoltSafe Home Mobile App" class="morph__cs-thumb-img" loading="lazy"></picture>
                 </div>
                 <div class="morph__cs-info">
                   <div class="morph__cs-client">VoltSafe</div>
@@ -676,7 +704,7 @@
               </a>
               <a class="morph__cs-card" href="#" data-cs="msn">
                 <div class="morph__cs-thumb">
-                  <img src="assets/images/case-studies/WIP%20Placeholders/Improving%20MSN's%20Reading%20Experience.png" alt="Improving MSN's Reading Experience" class="morph__cs-thumb-img">
+                  <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Improving%20MSN's%20Reading%20Experience.webp" type="image/webp"><img src="assets/images/case-studies/WIP%20Placeholders/Improving%20MSN's%20Reading%20Experience.png" alt="Improving MSN's Reading Experience" class="morph__cs-thumb-img" loading="lazy"></picture>
                 </div>
                 <div class="morph__cs-info">
                   <div class="morph__cs-client">Microsoft</div>
@@ -690,7 +718,7 @@
               </a>
               <a class="morph__cs-card" href="#" data-cs="samsung">
                 <div class="morph__cs-thumb">
-                  <img src="assets/images/case-studies/WIP%20Placeholders/Unifying%20Samsung's%20Design%20System.png" alt="Unifying Samsung's Design System" class="morph__cs-thumb-img">
+                  <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Unifying%20Samsung's%20Design%20System.webp" type="image/webp"><img src="assets/images/case-studies/WIP%20Placeholders/Unifying%20Samsung's%20Design%20System.png" alt="Unifying Samsung's Design System" class="morph__cs-thumb-img" loading="lazy"></picture>
                 </div>
                 <div class="morph__cs-info">
                   <div class="morph__cs-client">Samsung</div>
@@ -704,7 +732,7 @@
               </a>
               <a class="morph__cs-card" href="#" data-cs="marine">
                 <div class="morph__cs-thumb">
-                  <img src="assets/images/case-studies/WIP%20Placeholders/Marine%20Ecosystem%20Dashboard%20and%20App.png" alt="Marine Ecosystem Dashboard and App" class="morph__cs-thumb-img">
+                  <picture><source srcset="assets/images/case-studies/WIP%20Placeholders/Marine%20Ecosystem%20Dashboard%20and%20App.webp" type="image/webp"><img src="assets/images/case-studies/WIP%20Placeholders/Marine%20Ecosystem%20Dashboard%20and%20App.png" alt="Marine Ecosystem Dashboard and App" class="morph__cs-thumb-img" loading="lazy"></picture>
                 </div>
                 <div class="morph__cs-info">
                   <div class="morph__cs-client">VoltSafe</div>
@@ -732,20 +760,20 @@
                   <h1>PropKeep gives independent landlords a single place to run their properties.</h1>
                   <div class="morph__cs-detail-tags"><span>Product Design</span><span>UX Research</span><span>Proof of Concept</span></div>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/propkeep hero.png" alt="PropKeep hero" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/propkeep hero.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/propkeep hero.png" alt="PropKeep hero" / loading="lazy"></picture>
                   </div>
 
                   <h2>Most independent landlords are running their operations inside their heads</h2>
                   <p>My dad manages several rental properties and Airbnb listings. His tenants messaged him on WhatsApp at all hours &mdash; trivial questions mixed in with urgent repair requests, no system separating them. He&rsquo;d keep a mental log, try to diagnose problems over text, then scramble to find someone to fix them. He was constantly flustered, constantly reactive, constantly tied to his phone.</p>
                   <p>That was the starting point for PropKeep.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/before state.png" alt="Before state — landlord juggling messages" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/before state.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/before state.png" alt="Before state — landlord juggling messages" / loading="lazy"></picture>
                   </div>
 
                   <h2>Landlords aren&rsquo;t disorganised &mdash; they&rsquo;re using the wrong tools for an operational problem</h2>
                   <p>The real issue isn&rsquo;t that landlords are careless. It&rsquo;s that they&rsquo;re running an operational system using communication tools. WhatsApp and texts are designed for conversations, not for tracking work states or scheduling repairs. Every task lives in their head or in a thread they&rsquo;ll never find again. PropKeep&rsquo;s job was to turn that incoming chaos into structured, trackable workflows.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/problem framing.png" alt="Problem framing diagram" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/problem framing.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/problem framing.png" alt="Problem framing diagram" / loading="lazy"></picture>
                   </div>
 
                   <h2>The risk was building something that added to the problem instead of solving it</h2>
@@ -762,31 +790,31 @@
                     <li>Tenant profiles and lease management</li>
                   </ul>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/scope map.png" alt="Scope map — what was included and excluded" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/scope map.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/scope map.png" alt="Scope map — what was included and excluded" / loading="lazy"></picture>
                   </div>
 
                   <h2>The &ldquo;Book-a-Pro&rdquo; feature was the most complex design problem in the product</h2>
                   <p>Connecting landlords to vetted service providers sounds simple but involves location matching, availability windows, trust signals, pricing transparency, and liability questions. I designed a booking flow that surfaced relevant pros quickly and gave landlords enough information to make a confident decision without needing to leave the app or make a phone call.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/book a pro flow.png" alt="Book-a-Pro flow — step 1" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/book a pro flow.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/book a pro flow.png" alt="Book-a-Pro flow — step 1" / loading="lazy"></picture>
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/book a pro flow 2.png" alt="Book-a-Pro flow — step 2" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/book a pro flow 2.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/book a pro flow 2.png" alt="Book-a-Pro flow — step 2" / loading="lazy"></picture>
                   </div>
 
                   <h2>The dashboard needed to communicate urgency without creating anxiety</h2>
                   <p>A landlord opening PropKeep first thing in the morning should immediately see what needs attention today &mdash; not a wall of equal-weight information. I designed the hierarchy around time-sensitivity, surfacing overdue tasks and pending tenant requests above general maintenance logs and completed work.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/Dashboard Hierarchy.png" alt="Dashboard hierarchy — primary view" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/Dashboard Hierarchy.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/Dashboard Hierarchy.png" alt="Dashboard hierarchy — primary view" / loading="lazy"></picture>
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/dashboard hierarchy (2).png" alt="Dashboard hierarchy — secondary view" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/dashboard hierarchy (2).webp" type="image/webp"><img src="assets/images/case-studies/propkeep/dashboard hierarchy (2).png" alt="Dashboard hierarchy — secondary view" / loading="lazy"></picture>
                   </div>
 
                   <h2>The strongest signal of success would be landlords stopping their mental notes</h2>
                   <p>PropKeep is a proof of concept, so there are no live usage metrics yet. But I defined a clear behavioural signal for success &mdash; landlords stop relying on memory and external notes. If a user says &ldquo;I don&rsquo;t have to remember this stuff anymore,&rdquo; the product has done its job.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="assets/images/case-studies/propkeep/key metric success signal.png" alt="Key metric and success signal" />
+                    <picture><source srcset="assets/images/case-studies/propkeep/key metric success signal.webp" type="image/webp"><img src="assets/images/case-studies/propkeep/key metric success signal.png" alt="Key metric and success signal" / loading="lazy"></picture>
                   </div>
 
                   <h2>Final product</h2>
@@ -810,7 +838,7 @@
                   <h1>VoltSafe Winter keeps your engine alive when temperatures drop below freezing.</h1>
                   <div class="morph__cs-detail-tags"><span>Product Design</span><span>IoT</span><span>React Native</span></div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/64e7832bb5ca5d989b8bdcf8_Cover%20Photo%202%20.jpg" alt="VoltSafe Winter hero — app on phone beside magnetic smart plug" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/64e7832bb5ca5d989b8bdcf8_Cover%20Photo%202%20.jpg" alt="VoltSafe Winter hero — app on phone beside magnetic smart plug" / loading="lazy">
                   </div>
 
                   <h2>I joined VoltSafe as founding designer when the company was headed to Dragon&rsquo;s Den</h2>
@@ -822,19 +850,19 @@
                   <h2>The original app worked over Bluetooth &mdash; which meant it only worked if you were standing next to your car</h2>
                   <p>The first version of the app was Bluetooth-only. That kept everything local and simple to build, but it came with a hard physical constraint: you had to be in range to interact with your device. For a product designed around remote engine management, that was a fundamental mismatch. Schedules weren&rsquo;t backed up to the cloud, which meant the device needed to be reflashed whenever something went wrong.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae33a07ae7cde4e1fe766_ble%20teth%201.png" alt="Bluetooth tethering limitation diagram" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae33a07ae7cde4e1fe766_ble%20teth%201.png" alt="Bluetooth tethering limitation diagram" / loading="lazy">
                   </div>
 
                   <h2>Users were asking for remote access, cloud schedules, and status alerts &mdash; none of which Bluetooth could deliver</h2>
                   <p>VoltSafe ran a feature upvote program where users logged and ranked what they wanted most. Remote on/off, cloud-backed schedules, and status notifications were the top three. Every request pointed to the same gap: the architecture couldn&rsquo;t support the product users needed it to be.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae01f105bc5626a6f66b8_Screenshot%202026-03-06%20at%206.08.09%E2%80%AFAM.png" alt="Feature upvote data showing top-ranked requests" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae01f105bc5626a6f66b8_Screenshot%202026-03-06%20at%206.08.09%E2%80%AFAM.png" alt="Feature upvote data showing top-ranked requests" / loading="lazy">
                   </div>
 
                   <h2>A frozen engine at 6am isn&rsquo;t a UX problem &mdash; it&rsquo;s a safety problem</h2>
                   <p>If a plug was knocked loose overnight, users had no way of knowing until they turned the key. No alert, no status check, no fallback. For drivers in Edmonton or Winnipeg where overnight lows hit &minus;30&deg;C, an unheated engine can mean a missed shift, a missed flight, or a car that won&rsquo;t start for hours. The Bluetooth architecture couldn&rsquo;t support the safety layer this product needed to be.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae13fe183c52bf525b7b7_Gemini_Generated_Image_f5mdb5f5mdb5f5md.png" alt="Cold-weather use case scenario" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae13fe183c52bf525b7b7_Gemini_Generated_Image_f5mdb5f5mdb5f5md.png" alt="Cold-weather use case scenario" / loading="lazy">
                   </div>
 
                   <h2>I introduced an IoT framework to move the product beyond its physical limits</h2>
@@ -846,29 +874,29 @@
                     <li>Geofencing auto-triggers &mdash; deferred until IoT stability was confirmed in production</li>
                   </ul>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aadeb1765dc776f070c703_ble%20image.png" alt="Architecture shift — Bluetooth-only vs IoT-enabled" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aadeb1765dc776f070c703_ble%20image.png" alt="Architecture shift — Bluetooth-only vs IoT-enabled" / loading="lazy">
                   </div>
 
                   <h2>Scheduling was the most-requested feature and the hardest to get right</h2>
                   <p>Automated schedules were the top-rated request. The design challenge was making schedule creation feel simple for non-technical users while handling cloud sync, timezone logic, and device state underneath. I worked through multiple iterations of the scheduling interface &mdash; testing time-block selection, conflict handling, and confirmation states &mdash; before landing on a pattern that felt reliable and easy to trust.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae5e262197d10cd69d6a7_Screenshot%202026-03-06%20at%206.30.54%E2%80%AFAM.png" alt="Schedule UI iterations" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae5e262197d10cd69d6a7_Screenshot%202026-03-06%20at%206.30.54%E2%80%AFAM.png" alt="Schedule UI iterations" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset morph__cs-detail-asset--small">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae7e3ca4fa72f5bc4640e_64ee45d20da86184dbc8d3ec_circle%20slider.png" alt="Final schedule screen with time-block UI" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aae7e3ca4fa72f5bc4640e_64ee45d20da86184dbc8d3ec_circle%20slider.png" alt="Final schedule screen with time-block UI" / loading="lazy">
                   </div>
 
                   <h2>Remote on/off needed to feel instant even when it wasn&rsquo;t</h2>
                   <p>Latency is unavoidable in any IoT system. The design question wasn&rsquo;t how to eliminate it but how to keep users feeling in control despite it. I designed optimistic UI states that gave immediate visual feedback on toggle actions, with clear loading and confirmation indicators that set accurate expectations without making the interaction feel slow. Getting this right required close back-and-forth with the front-end developer to sync state transitions between the UI and the hardware response.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aaea22d1759ecf825a2763_Screenshot%202026-03-06%20at%206.50.50%E2%80%AFAM.png" alt="Remote toggle states — default, loading, confirmed, error" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69aaea22d1759ecf825a2763_Screenshot%202026-03-06%20at%206.50.50%E2%80%AFAM.png" alt="Remote toggle states — default, loading, confirmed, error" / loading="lazy">
                   </div>
 
                   <h2>The IoT-enabled app launched in Canada alongside the physical product in major retail chains</h2>
                   <p>VoltSafe Winter shipped as the companion app for a product already on shelves at Canadian Tire, Home Depot, Rona, and Federated Co-op locations across Canada. The IoT-enabled version replaced the Bluetooth-only app and delivered exactly what users had been asking for since launch.</p>
                   <div class="morph__cs-detail-pullquote">&ldquo;First mobile product shipped by VoltSafe &mdash; moving from Bluetooth-only to full IoT capability across 11 months of design and development.&rdquo;</div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69ab5eea70782bfd2d339796_Screenshot%202026-03-06%20at%203.09.00%E2%80%AFPM.png" alt="Retail presence — VoltSafe Winter at Canadian Tire" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69ab5eea70782bfd2d339796_Screenshot%202026-03-06%20at%203.09.00%E2%80%AFPM.png" alt="Retail presence — VoltSafe Winter at Canadian Tire" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset morph__cs-detail-asset--video">
                     <iframe src="https://www.youtube.com/embed/v-f4bCEakos?start=19&enablejsapi=1" title="VoltSafe Winter app demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
@@ -884,7 +912,7 @@
                     <li>The IoT foundation now makes the next layer possible: geofencing triggers, energy usage history, and push notification controls</li>
                   </ul>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69ab59480d5b844afc127d84_production%20line.png" alt="Product evolution — Bluetooth v1 to IoT v2" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69ab59480d5b844afc127d84_production%20line.png" alt="Product evolution — Bluetooth v1 to IoT v2" / loading="lazy">
                   </div>
                 </div>
 
@@ -893,7 +921,7 @@
                   <h1>VoltSafe Home Demo App — designed for CES 2023.</h1>
                   <div class="morph__cs-detail-tags"><span>Product Design</span><span>IoT</span><span>Figma</span></div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6519aef9d51e49055a374c94_cover%20image%203.png" alt="VoltSafe Home app — cover image" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6519aef9d51e49055a374c94_cover%20image%203.png" alt="VoltSafe Home app — cover image" / loading="lazy">
                   </div>
 
                   <h2>Background</h2>
@@ -911,7 +939,7 @@
                   <p>The problem that VoltSafe is trying to solve is to create an IoT interface for their new technology that provides real-time energy monitoring at the outlet level, coupled with smart plug capabilities. To design for different user groups, I created several personas, based off user surveying, research and findings from previous discovery phases of our other similar VoltSafe projects such as VoltSafe Marine and VoltSafe Winter. Each persona has different needs and desires when it comes to the VoltSafe Home product, and the app was designed with these needs in mind. Empathy maps were created for each persona to better understand their thoughts, feelings, and behaviors.</p>
                   <div class="morph__cs-persona">
                     <div class="morph__cs-persona-img">
-                      <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a33ea11b53a7905e7ec77_ivan%20bubble.png" alt="Persona — Investor Ivan" />
+                      <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a33ea11b53a7905e7ec77_ivan%20bubble.png" alt="Persona — Investor Ivan" / loading="lazy">
                     </div>
                     <div class="morph__cs-persona-text">
                       <h3>Persona 1: Investor Ivan</h3>
@@ -920,7 +948,7 @@
                   </div>
                   <div class="morph__cs-persona">
                     <div class="morph__cs-persona-img">
-                      <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a34016598f3dd3a7cdbb0_Emily%20Bubble.png" alt="Persona — Early Adopter Emily" />
+                      <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a34016598f3dd3a7cdbb0_Emily%20Bubble.png" alt="Persona — Early Adopter Emily" / loading="lazy">
                     </div>
                     <div class="morph__cs-persona-text">
                       <h3>Persona 2: Early Adopter Emily</h3>
@@ -933,17 +961,17 @@
                   <div class="morph__cs-detail-pullquote">&ldquo;VoltSafe Home: The world&rsquo;s first magnetic AC power connector with IoT capabilities&rdquo;</div>
                   <p>The app was designed to be visually appealing and engaging, with high-quality images and graphics that showcased the product&rsquo;s unique design and functionality. It was also important for the app to be easy to navigate and use, with clear and concise instructions provided for each feature.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/64e67af65d0ab7fd506a873b_voltsafe%20home%20inline.jpg" alt="VoltSafe Home IoT plug — inline product shot" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/64e67af65d0ab7fd506a873b_voltsafe%20home%20inline.jpg" alt="VoltSafe Home IoT plug — inline product shot" / loading="lazy">
                   </div>
 
                   <h2>Production</h2>
                   <p>The VoltSafe Home App was designed to not only be visually appealing and engaging, but also highly usable and accessible. The UI style was inspired by the Jony Ive generation iOS 7 — we felt it suited the design of the physical product. The app combined some aspects of the clean minimal aesthetic while using realistic 3D renders to depict the corresponding real-life product.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651b31356a8005ab9c99ff0d_3%20screens%20Light.png" alt="VoltSafe Home app — 3 screens light mode" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651b31356a8005ab9c99ff0d_3%20screens%20Light.png" alt="VoltSafe Home app — 3 screens light mode" / loading="lazy">
                   </div>
                   <p>The design system was built using the Atomic Design model for UI design by Brad Frost, ensuring consistency and scalability across all screens.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6578ae69f29c8ed4815f2b5d_Home%20Design%20System.png" alt="VoltSafe Home design system — Atomic Design model" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6578ae69f29c8ed4815f2b5d_Home%20Design%20System.png" alt="VoltSafe Home design system — Atomic Design model" / loading="lazy">
                   </div>
 
                   <h2>Onboarding</h2>
@@ -961,7 +989,7 @@
                   <h2>Scheduling &amp; Circle Slider</h2>
                   <p>With the ability to schedule devices, users can set multiple schedules for each receptacle individually or assign them as a group action. To facilitate this feature, the app incorporates the VoltSafe Circle Slider interface, which was previously used in the VoltSafe Winter product. This interface allows users to easily set on and off times for their devices, providing convenience and control over their electrical usage.</p>
                   <div class="morph__cs-detail-asset morph__cs-detail-asset--small">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a3047cac08b07e4c9a923_Circle%20Slider%202.0.png" alt="VoltSafe Circle Slider 2.0 — schedule interface" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a3047cac08b07e4c9a923_Circle%20Slider%202.0.png" alt="VoltSafe Circle Slider 2.0 — schedule interface" / loading="lazy">
                   </div>
 
                   <h2>Customisability &amp; Cross Compatibility</h2>
@@ -973,14 +1001,14 @@
                   <h2>Dark Mode</h2>
                   <p>Of course, we can&rsquo;t forget about our dark mode interface. Dark mode provides users with a sleek and modern interface that reduces eye strain and enhances readability. With improved battery efficiency on certain devices, dark mode offers a comfortable and customisable user experience in various lighting conditions. All three tabs are showcased in the dark mode UI theme.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a392beca0ce9f1be6df88_dark%20modezz.png" alt="VoltSafe Home — dark mode UI across all three tabs" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651a392beca0ce9f1be6df88_dark%20modezz.png" alt="VoltSafe Home — dark mode UI across all three tabs" / loading="lazy">
                   </div>
 
                   <h2>Results</h2>
                   <p>The VoltSafe Home app played a crucial role in testing and refining the VoltSafe Home technology. It effectively demonstrated the capabilities of the VoltSafe Home product, showcasing its safety, simplicity, and energy monitoring features in a clear and concise manner. As a result, VoltSafe Home was able to establish partnerships with homeowners and residential communities, and played a key role in securing funding from the National Research Council of Canada.</p>
                   <p>The VoltSafe Home was recognised as a CES 2023 Innovation Awards Honoree in the Smart Homes category for its innovation in home automation technology. This recognition significantly raised the profile of VoltSafe Home, attracting investors and generating further interest in the product.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651b11caba91ebd673e5efad_ces%20awards.png" alt="CES 2023 Innovation Awards — VoltSafe Marine and Home" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/651b11caba91ebd673e5efad_ces%20awards.png" alt="CES 2023 Innovation Awards — VoltSafe Marine and Home" / loading="lazy">
                   </div>
 
                   <h2>Conclusion</h2>
@@ -992,36 +1020,36 @@
                   <h1>Unifying and scaling Samsung Knox.</h1>
                   <div class="morph__cs-detail-tags"><span>Design Systems</span><span>Enterprise UX</span><span>Figma</span></div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69604ce658f4ebc888b0eaa1_design%20system%20image.png" alt="Samsung Knox design system — cover" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69604ce658f4ebc888b0eaa1_design%20system%20image.png" alt="Samsung Knox design system — cover" / loading="lazy">
                   </div>
 
                   <p>At Samsung, I worked on internal operational tools within the Knox Enterprise Suite, helping teams manage and monitor large fleets of devices through a unified platform. My work focused on improving how operational teams access system status, identify issues, and take action in real time, supporting day-to-day operations through clear information architecture, dashboards, and consistent design patterns.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b0122e5115c7b2c3eb6e_me.png" alt="Knox operational dashboard context" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b0122e5115c7b2c3eb6e_me.png" alt="Knox operational dashboard context" / loading="lazy">
                   </div>
 
                   <h2>Operational Visibility at a Glance</h2>
                   <p>I designed asset security dashboard cards, data visualizations, and information hierarchy to help operational teams quickly assess system status and identify issues in real time. The goal was to surface critical information at a glance, prioritize actionable signals, and reduce the time required to understand system health and respond to incidents.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b3dd57e6f497f69cad12_Only%20has%20KAI.png" alt="Knox dashboard — KAI status cards" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b3dd57e6f497f69cad12_Only%20has%20KAI.png" alt="Knox dashboard — KAI status cards" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b41ea8b2ed6e642d5027_Security%20center.png" alt="Knox security center dashboard" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b41ea8b2ed6e642d5027_Security%20center.png" alt="Knox security center dashboard" / loading="lazy">
                   </div>
 
                   <h2>Knox Design System</h2>
                   <p>I helped scale the Knox Design System as the product suite expanded across teams and use cases. I audited and unified roughly 65% of the system, aligning foundations such as typography, color, tokens, and documentation to support consistency at scale. I rebuilt core components into flexible, variant-based patterns and introduced new system solutions, including a nested table pattern for complex data. This work reduced one-off designs, improved handoff with engineering, and supported the unification of Knox into a single, cohesive platform used by operational teams.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7311340c8145a0aac1e_design%20sys.png" alt="Knox design system — component library" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7311340c8145a0aac1e_design%20sys.png" alt="Knox design system — component library" / loading="lazy">
                   </div>
 
                   <h2>Competitive Research &amp; Strategic Recommendations</h2>
                   <p>I defined a structured research approach to evaluate how large-scale operational platforms organize data, structure navigation, and communicate complex system concepts. This work helped clarify which system models best support operational tasks, reduce cognitive load, and enable teams to find and act on critical information more efficiently.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b787d3df64effddf56a9_comp.png" alt="Competitive research — operational platform analysis" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b787d3df64effddf56a9_comp.png" alt="Competitive research — operational platform analysis" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7a02844752583a0df1a_plan.png" alt="Strategic recommendations — planning framework" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7a02844752583a0df1a_plan.png" alt="Strategic recommendations — planning framework" / loading="lazy">
                   </div>
                 </div>
 
@@ -1030,7 +1058,7 @@
                   <h1>Improving MSN&rsquo;s reading experience without sacrificing advertiser value.</h1>
                   <div class="morph__cs-detail-tags"><span>Ad Experience</span><span>UX Research</span><span>Figma</span></div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976fc23c85a6cc3b9215c34_thumbnail.png" alt="MSN reading experience — cover" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976fc23c85a6cc3b9215c34_thumbnail.png" alt="MSN reading experience — cover" / loading="lazy">
                   </div>
 
                   <p>I worked directly on Edge, MSN, and Bing monetization surfaces, designing ad experiences embedded within content feeds and article pages used by millions of users. The challenge was to improve readability on MSN article pages by optimizing banner ad placement &mdash; doing so while maintaining advertiser value without disrupting content consumption.</p>
@@ -1038,34 +1066,34 @@
                   <h2>Exploration &amp; Patterns</h2>
                   <p>I identified viable banner placement patterns and evaluated questioning to identify user sentiment across readability, distraction, and perceived quality.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f1a0e64a222537466771_questions.png" alt="User sentiment evaluation — readability and distraction questions" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f1a0e64a222537466771_questions.png" alt="User sentiment evaluation — readability and distraction questions" / loading="lazy">
                   </div>
 
                   <h2>Prototypes</h2>
                   <p>I built interactive prototypes to accurately simulate reading flow and banner behaviour, ensuring feedback reflected real consumption patterns rather than static mockups.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f3bdc85a6cc3b920ae60_mockups.png" alt="Mid-fidelity prototypes — banner placement simulations" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f3bdc85a6cc3b920ae60_mockups.png" alt="Mid-fidelity prototypes — banner placement simulations" / loading="lazy">
                   </div>
 
                   <h2>Outcomes</h2>
                   <p>Banner placements that preserve content flow and image hierarchy are perceived as significantly less distracting while maintaining ad visibility. Long-term effects such as banner blindness require continued measurement. I synthesized findings into a clear recommendation aligned across design, product, and engineering, determining whether to iterate further or move forward with development.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f4f38ec4e4a809e7a268_results.png" alt="Research outcomes — banner placement findings" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f4f38ec4e4a809e7a268_results.png" alt="Research outcomes — banner placement findings" / loading="lazy">
                   </div>
 
                   <h2>Motion &amp; Fit-and-Finish</h2>
                   <p>With a similar methodology I arrived at this animation for the loading state. This animation signals that the space is &ldquo;not done loading&rdquo; so when the content loads it doesn&rsquo;t disrupt the layout or feel as jarring as other motion design concepts with varying durations and b&eacute;zier curves.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f69fccf24cf86b369ad0_Adobe%20Express%20-%20Screen%20Recording%202026-01-24%20at%209.55.32%E2%80%AFPM.gif" alt="Loading state animation" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f69fccf24cf86b369ad0_Adobe%20Express%20-%20Screen%20Recording%202026-01-24%20at%209.55.32%E2%80%AFPM.gif" alt="Loading state animation" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f812296144f6c5a16db2_animation%20tests.png" alt="Motion design concepts — duration and bézier curve tests" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f812296144f6c5a16db2_animation%20tests.png" alt="Motion design concepts — duration and bézier curve tests" / loading="lazy">
                   </div>
 
                   <h2>Applying the Pattern</h2>
                   <p>Using the same evaluation framework, I applied these principles to intra-article native ads, where preserving reading flow and layout stability is even more critical. The resulting design integrates naturally within the article, maintains image hierarchy, and clearly communicates sponsorship &mdash; reducing disruption while supporting visibility and trust.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f87ec18b0fcf27117f2f_native%20ads.png" alt="Native ads — intra-article integration" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f87ec18b0fcf27117f2f_native%20ads.png" alt="Native ads — intra-article integration" / loading="lazy">
                   </div>
                 </div>
 
@@ -1074,38 +1102,38 @@
                   <h1>End-to-end design for VoltSafe&rsquo;s marine IoT ecosystem.</h1>
                   <div class="morph__cs-detail-tags"><span>End-to-End Design</span><span>IoT</span><span>Figma</span></div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659ae8f4046a0c4cb5cb62b8_Cover%20image%20final%20version%202.png" alt="VoltSafe Marine — cover" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659ae8f4046a0c4cb5cb62b8_Cover%20image%20final%20version%202.png" alt="VoltSafe Marine — cover" / loading="lazy">
                   </div>
 
                   <p>In my role as the end-to-end designer for the VoltSafe Marine ecosystem, I was entrusted with the responsibility of creating a cohesive, intuitive, and engaging experience across both digital platforms and physical hardware. My design journey was shaped by the real-world functionality and accessibility needs within the marina industry environment.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659ae9842cc4996768f9de87_plugging%20in.png" alt="VoltSafe's smart IoT shore power connector" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659ae9842cc4996768f9de87_plugging%20in.png" alt="VoltSafe's smart IoT shore power connector" / loading="lazy">
                   </div>
 
                   <h2>The Ecosystem</h2>
                   <p>The VoltSafe Marine ecosystem &mdash; comprising the power pedestal hardware, the enterprise web app, and the client mobile app &mdash; represents a harmonious blend of design and technology. My contribution as the end-to-end product designer spanned across this entire ecosystem, ensuring consistency, usability, and satisfaction at every touchpoint. Each element is a piece of a larger puzzle, designed to work together to create an efficient, user-friendly marina management system.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a11268b0931a1a34c971e_Pedestal%20laptop%20and%20mobile.JPG" alt="VoltSafe Marine ecosystem — pedestal, web app, and mobile app" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a11268b0931a1a34c971e_Pedestal%20laptop%20and%20mobile.JPG" alt="VoltSafe Marine ecosystem — pedestal, web app, and mobile app" / loading="lazy">
                   </div>
 
                   <h2>Ideation Journey</h2>
                   <p>During the ideation phase, I collaborated closely with the engineering team to define our MVP and MVE, ensuring alignment between technical capabilities and the envisioned user experience. This was followed by hands-on sketching, where initial concepts and features were drafted, setting the foundational blueprint for the project.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4d676a43dcf0de498c7b_sketch%20side%20by%20side.png" alt="Sketching initial concepts for the web app layout" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4d676a43dcf0de498c7b_sketch%20side%20by%20side.png" alt="Sketching initial concepts for the web app layout" / loading="lazy">
                   </div>
                   <p>Transitioning these ideas from paper to digital form, we conducted collaborative sessions employing a tactile approach with printed dashboard elements. This allowed us to physically rearrange and fine-tune features, fostering a creative synergy between design and engineering expertise.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4dbbb26d4e6c1d170065_Paper%20Cutouts.png" alt="Physically laying out card printouts to combine features" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4dbbb26d4e6c1d170065_Paper%20Cutouts.png" alt="Physically laying out card printouts to combine features" / loading="lazy">
                   </div>
 
                   <h2>Design Methodology &amp; Accessibility</h2>
                   <p>I applied the Atomic Design framework within an iterative Agile workflow to establish a robust yet adaptable design system. This dual approach enabled me to efficiently manage design tasks while staying attuned to users&rsquo; needs, resulting in a user experience that was both cohesive and responsive to the dynamic marina environment.</p>
                   <p>Accessibility was a central theme throughout. Following Nielsen&rsquo;s usability heuristics, I implemented intuitive language and pictography, accommodated maximum font sizes, integrated large touch targets, and maintained high contrast ratios for optimal readability across a broad demographic.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a0b20aa81920504d298eb_Working%20From%20Home.jpeg" alt="Design methodology — agile workflow" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a0b20aa81920504d298eb_Working%20From%20Home.jpeg" alt="Design methodology — agile workflow" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b3be64ee19afb14414568_App%20Tutorial%20wide.png" alt="App accessibility — tutorial and font size compatibility" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b3be64ee19afb14414568_App%20Tutorial%20wide.png" alt="App accessibility — tutorial and font size compatibility" / loading="lazy">
                   </div>
 
                   <h2>The Enterprise Dashboard</h2>
@@ -1116,45 +1144,45 @@
                     <iframe src="https://www.youtube.com/embed/0ZxGr2qnrLE?enablejsapi=1" title="VoltSafe Marine — Slip Map interface" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d81c91e8c8fd745666624_leakage%20map.png" alt="Slip map — leakage status view" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d81c91e8c8fd745666624_leakage%20map.png" alt="Slip map — leakage status view" / loading="lazy">
                   </div>
                   <h3>CRM Management</h3>
                   <p>A central hub for managing customer information, payments, and invoicing, ensuring efficient and streamlined operations. I integrated a comprehensive CRM interface enabling marina employees to efficiently manage customer data, track invoices and payments, and log slip assignments for each customer.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659de364c4ff6941e4e47b14_CRM%20mockup.png" alt="CRM management interface" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659de364c4ff6941e4e47b14_CRM%20mockup.png" alt="CRM management interface" / loading="lazy">
                   </div>
                   <h3>Client Check In</h3>
                   <p>I designed the client check-in flow to employ progressive disclosure, guiding marina attendants step-by-step through booking available slips. This process automatically prepares invoices and payment details based on the information entered during check-in, enhancing efficiency and accuracy.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d77c450a34b7efb58093e_Check%20in%20customer%20flow.png" alt="Client check-in flow" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d77c450a34b7efb58093e_Check%20in%20customer%20flow.png" alt="Client check-in flow" / loading="lazy">
                   </div>
 
                   <h2>The Client Mobile App</h2>
                   <p>The mobile app, tailored for boaters, provides personalised control and insights. Users can manage their slip&rsquo;s power, monitor energy consumption, and stay informed through notifications designed to alert them to critical conditions affecting their vessel.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b604e80468e6edfbdf2f7_All%20Screens%20mobile.png" alt="Marine mobile app — all screens overview" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b604e80468e6edfbdf2f7_All%20Screens%20mobile.png" alt="Marine mobile app — all screens overview" / loading="lazy">
                   </div>
                   <h3>Live Video Feed</h3>
                   <p>The app includes a live video feed option for camera-equipped pedestals, enabling boat owners to view their slip remotely for added convenience and monitoring.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d79922e3bb7844d08c861_mobile%20cam%20feed.png" alt="Mobile live video feed for boat slip monitoring" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d79922e3bb7844d08c861_mobile%20cam%20feed.png" alt="Mobile live video feed for boat slip monitoring" / loading="lazy">
                   </div>
                   <h3>Dark Mode</h3>
                   <p>I integrated a Dark Mode feature providing a visually comfortable alternative for users in low-light conditions, enhancing usability and reducing eye strain. All components were designed to be compatible with a Dark Mode colour palette to improve low-light visibility.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b678b727339296234c573_mobile%20dark%20mode.png" alt="Mobile app — dark mode" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b678b727339296234c573_mobile%20dark%20mode.png" alt="Mobile app — dark mode" / loading="lazy">
                   </div>
 
                   <h2>Designing for Real-World Interaction</h2>
                   <p>The effectiveness of the VoltSafe Marine ecosystem is most evident in its seamless integration. When changes occur in the marina&rsquo;s physical environment &mdash; whether a slip becomes occupied or a power pedestal is switched off &mdash; these updates are instantly reflected in the user&rsquo;s app. This immediate feedback loop is crucial, adhering to Jacob Nielsen&rsquo;s principle of matching the system with the real world, particularly critical in IoT product design.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4e3aac962913172c16f6_HM%20pointing%20at%20slip%20split%20screen.png" alt="Harbour Master — physical vs digital marina view" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4e3aac962913172c16f6_HM%20pointing%20at%20slip%20split%20screen.png" alt="Harbour Master — physical vs digital marina view" / loading="lazy">
                   </div>
 
                   <h2>Outcomes</h2>
                   <p>The deployment of the VoltSafe Marine ecosystem across a growing number of marinas has yielded tangible success, evidenced by robust adoption rates and positive feedback from end-users. The project was recognised with the IBEX Innovation Award from the National Marine Manufacturers Association. The ecosystem&rsquo;s development was also bolstered by a $180,000 grant from BC Fast Pilot. The product is currently undergoing its pilot program, receiving positive reviews from marinas across British Columbia, with an increasing number of marinas across North America signing up to implement the ecosystem.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a11ca4415cad2933d9dba_IBEX_Award.jpeg" alt="IBEX 2023 Innovation Award — VoltSafe Marine" />
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a11ca4415cad2933d9dba_IBEX_Award.jpeg" alt="IBEX 2023 Innovation Award — VoltSafe Marine" / loading="lazy">
                   </div>
 
                   <h2>Conclusion</h2>
@@ -1235,327 +1263,11 @@
     </div>
   </div>
 
-  <!-- Scripts -->
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/ScrollTrigger.min.js"></script>
+  <!-- Work Spotlight script moved to js/work-spotlight.js -->
 
-  <!-- Work Spotlight: scroll reveal + card click → open player -->
-  <script>
-  (function() {
-    var section = document.getElementById('work-spotlight');
-    if (!section) return;
+  <!-- About section script moved to js/about-reveal.js -->
 
-    // Scroll reveal + count-up together
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top 82%',
-      once: true,
-      onEnter: function() {
-        section.classList.add('is-visible');
-
-        section.querySelectorAll('.spotlight__metric-num[data-count]').forEach(function(el) {
-          var target   = parseFloat(el.dataset.count);
-          var suffix   = el.dataset.suffix || '';
-          var decimals = parseInt(el.dataset.decimals || '0', 10);
-          var duration = 1400;
-          var startTime = performance.now();
-          function step(now) {
-            var p = Math.min((now - startTime) / duration, 1);
-            var e = 1 - Math.pow(1 - p, 3); // ease out cubic
-            var val = e * target;
-            el.textContent = (decimals ? val.toFixed(decimals) : Math.floor(val)) + suffix;
-            if (p < 1) requestAnimationFrame(step);
-            else el.textContent = (decimals ? target.toFixed(decimals) : target) + suffix;
-          }
-          requestAnimationFrame(step);
-        });
-      }
-    });
-
-    // Logo swap — dark logo + frosted glass on beige sections
-    var siteLogo = document.getElementById('site-logo');
-    var logoGlass = document.getElementById('site-logo-glass');
-    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
-    var menuBtn = document.getElementById('menu-btn');
-    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
-
-    function toBeige() {
-      if (logoGlass) logoGlass.classList.add('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { l.style.background = 'rgba(26,26,26,0.75)'; });
-    }
-    function toDark() {
-      if (logoGlass) logoGlass.classList.remove('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { l.style.background = ''; });
-    }
-
-    // Swap when work-spotlight top reaches viewport top; revert when scrolling back above it
-    var journeyIntro = document.getElementById('journey-intro');
-    var beigeEnd = journeyIntro || section;
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: 'bottom top',
-      onEnter: toBeige,
-      onLeaveBack: toDark
-    });
-    // Journey intro section — stay in beige mode
-    if (journeyIntro) {
-      ScrollTrigger.create({
-        trigger: journeyIntro,
-        start: 'top top',
-        end: 'bottom top',
-        onEnter: toBeige,
-        onLeaveBack: toBeige
-      });
-    }
-
-    // Mesh grid animation — deferred until all scripts (incl. main.js) are loaded
-    window.addEventListener('load', function() {
-      var canvas = document.getElementById('spotlight-mesh');
-      if (!canvas || window.innerWidth <= 768) return;
-      var ctx = canvas.getContext('2d');
-      var dpr = Math.min(window.devicePixelRatio || 1, 2);
-      var ROWS = 26;
-      var waves = [
-        { cx: 0.3,  cy: 0.4,  amp: 50, freq: 0.0028, speed:  0.7 },
-        { cx: 0.72, cy: 0.55, amp: 32, freq: 0.0032, speed: -0.55 },
-        { cx: 0.5,  cy: 0.25, amp: 22, freq: 0.0045, speed:  1.0 },
-      ];
-      var maxH = waves.reduce(function(s, w) { return s + w.amp; }, 0);
-      var coolColor = window.TashBrand && window.TashBrand.coolColor;
-      if (!coolColor) return;
-
-      var meshTime = 0, animId = null, isVisible = false;
-
-      function getH(x, y, t, W, H) {
-        var h = 0;
-        for (var i = 0; i < waves.length; i++) {
-          var w = waves[i];
-          var dx = x - w.cx * W, dy = y - w.cy * H;
-          h += w.amp * Math.sin(Math.sqrt(dx * dx + dy * dy) * w.freq + t * w.speed);
-        }
-        return h;
-      }
-
-      // Fade all four edges — large top fade pushes grid below the heading
-      function edgeAlpha(cx, cy) {
-        var fSide = 0.10, fTop = 0.62, fBot = 0.10;
-        var ax = cx < fSide ? cx / fSide : cx > 1 - fSide ? (1 - cx) / fSide : 1;
-        var ay = cy < fTop  ? cy / fTop  : cy > 1 - fBot  ? (1 - cy) / fBot  : 1;
-        return ax * ay;
-      }
-
-      function sizeCanvas() {
-        var W = section.offsetWidth, H = section.offsetHeight;
-        canvas.width = W * dpr; canvas.height = H * dpr;
-        canvas.style.width = W + 'px'; canvas.style.height = H + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-      }
-
-      function draw() {
-        if (!isVisible) { animId = null; return; }
-        var W = canvas.width / dpr, H = canvas.height / dpr;
-        ctx.clearRect(0, 0, W, H);
-        meshTime += 0.012;
-
-        var cellSize = H / ROWS;
-        var COLS = Math.round(W / cellSize);
-        var pts = [], ags = [], hts = [];
-
-        for (var r = 0; r <= ROWS; r++) {
-          var rp = [], ra = [], rh = [];
-          for (var c = 0; c <= COLS; c++) {
-            var x = (c / COLS) * W, y = (r / ROWS) * H;
-            var z = getH(x, y, meshTime, W, H);
-            rp.push({ x: x, y: y + z * 0.35 });
-            ra.push(edgeAlpha(c / COLS, r / ROWS));
-            rh.push((z + maxH) / (2 * maxH));
-          }
-          pts.push(rp); ags.push(ra); hts.push(rh);
-        }
-
-        var breath = (0.45 + 0.2 * Math.sin(meshTime * 0.8)) * 0.55;
-        ctx.lineWidth = 1.0;
-
-        // Horizontal lines
-        for (var r = 0; r <= ROWS; r++) {
-          for (var c = 0; c < COLS; c++) {
-            var a = Math.min(ags[r][c], ags[r][c + 1]);
-            if (a < 0.01) continue;
-            var col = coolColor((hts[r][c] + hts[r][c + 1]) / 2);
-            ctx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath).toFixed(3) + ')';
-            ctx.beginPath(); ctx.moveTo(pts[r][c].x, pts[r][c].y); ctx.lineTo(pts[r][c + 1].x, pts[r][c + 1].y); ctx.stroke();
-          }
-        }
-
-        // Vertical lines
-        for (var c = 0; c <= COLS; c++) {
-          for (var r = 0; r < ROWS; r++) {
-            var a = Math.min(ags[r][c], ags[r + 1][c]);
-            if (a < 0.01) continue;
-            var col = coolColor((hts[r][c] + hts[r + 1][c]) / 2);
-            ctx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath).toFixed(3) + ')';
-            ctx.beginPath(); ctx.moveTo(pts[r][c].x, pts[r][c].y); ctx.lineTo(pts[r + 1][c].x, pts[r + 1][c].y); ctx.stroke();
-          }
-        }
-
-        animId = requestAnimationFrame(draw);
-      }
-
-      sizeCanvas();
-      var meshObs = new IntersectionObserver(function(entries) {
-        isVisible = entries[0].isIntersecting;
-        if (isVisible && !animId) draw();
-      }, { threshold: 0.01 });
-      meshObs.observe(section);
-      window.addEventListener('resize', sizeCanvas);
-    });
-
-    // Card clicks → expand player to that case study
-    section.querySelectorAll('.spotlight__card').forEach(function(card) {
-      card.addEventListener('click', function(e) {
-        e.preventDefault();
-        var csId = card.dataset.cs;
-        if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
-          // Remember where we came from so X returns here
-          window.TashBrand._fromSpotlight = true;
-          window.TashBrand._spotlightScrollY = window.pageYOffset;
-          // Mark the player so the back button stays hidden
-          var playerEl = document.getElementById('morph-player');
-          if (playerEl) playerEl.classList.add('spotlight-entry');
-          // Hide grid immediately — we're going straight to case study detail, not selection screen
-          var gridCanvas = document.getElementById('cs-grid-canvas');
-          if (gridCanvas) gridCanvas.style.display = 'none';
-          if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
-          // Expand player, then fire the matching inner card click
-          window.TashBrand.togglePlayerExpanded();
-          setTimeout(function() {
-            var inner = document.querySelector('.morph__cs-card[data-cs="' + csId + '"]');
-            if (inner) inner.click();
-          }, 700);
-        }
-      });
-    });
-  })();
-  </script>
-
-  <!-- About section: timeline animation + logo swap -->
-  <script>
-  (function() {
-    var about = document.getElementById('about');
-    if (!about) return;
-
-    var timelineRun = false;
-    var items = Array.from(about.querySelectorAll('.about__tl-item'));
-    var itemsReversed = items.slice().reverse();
-
-    itemsReversed.forEach(function(item) { gsap.set(item, { opacity: 0, y: 10 }); });
-
-    function runTimeline() {
-      if (timelineRun) return;
-      timelineRun = true;
-      about.classList.add('is-visible');
-
-      var STEP = 0.14, ACCENT_HOLD = 0.3, FADE_OUT = 0.45;
-
-      itemsReversed.forEach(function(item, i) {
-        var delay = i * STEP;
-        var year = item.querySelector('.about__tl-year');
-        var role = item.querySelector('.about__tl-role');
-
-        if (year) gsap.set(year, { color: '#FF6B35' });
-        if (role) gsap.set(role, { color: '#FF6B35' });
-
-        gsap.to(item, { opacity: 1, y: 0, duration: 0.28, delay: delay, ease: 'power2.out' });
-
-        var fadeDelay = delay + 0.28 + ACCENT_HOLD;
-        if (year) gsap.to(year, { color: 'rgba(26,26,26,0.35)', duration: FADE_OUT, delay: fadeDelay, ease: 'power1.inOut' });
-        if (role) gsap.to(role, { color: 'rgba(26,26,26,0.88)', duration: FADE_OUT, delay: fadeDelay, ease: 'power1.inOut' });
-      });
-    }
-
-    function checkVisible() {
-      var rect = about.getBoundingClientRect();
-      if (rect.top < window.innerHeight && rect.bottom > 0) {
-        runTimeline();
-        window.removeEventListener('scroll', checkVisible);
-      }
-    }
-
-    if ('IntersectionObserver' in window) {
-      var io = new IntersectionObserver(function(entries) {
-        if (entries[0].isIntersecting) { runTimeline(); io.disconnect(); }
-      }, { threshold: 0 });
-      io.observe(about);
-    }
-
-    window.addEventListener('scroll', checkVisible, { passive: true });
-    function rafCheck() {
-      if (timelineRun) return;
-      checkVisible();
-      requestAnimationFrame(rafCheck);
-    }
-    requestAnimationFrame(rafCheck);
-
-    // Logo dark/light swap
-    var siteLogo = document.getElementById('site-logo');
-    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
-    var logoGlass = document.getElementById('site-logo-glass');
-    var menuBtn = document.getElementById('menu-btn');
-    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
-    var isDark = false;
-
-    function setDark() {
-      if (isDark) return; isDark = true;
-      if (logoGlass) logoGlass.classList.add('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (menuBtn) {
-        gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 });
-        menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 }); });
-      }
-    }
-    function setLight() {
-      if (!isDark) return; isDark = false;
-      if (logoGlass) logoGlass.classList.remove('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (menuBtn) {
-        gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.3 });
-        menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.3 }); });
-      }
-    }
-
-    var intro = document.getElementById('hscroll-intro');
-    window.addEventListener('scroll', function() {
-      var trigger = intro || about;
-      var rect = trigger.getBoundingClientRect();
-      if (rect.bottom < 80) { setDark(); } else { setLight(); }
-    }, { passive: true });
-  })();
-  </script>
-
-  <!-- Journey Intro: scroll reveal -->
-  <script>
-  (function() {
-    var el = document.getElementById('journey-intro');
-    if (!el) return;
-    ScrollTrigger.create({
-      trigger: el,
-      start: 'top 82%',
-      once: true,
-      onEnter: function() { el.classList.add('is-visible'); }
-    });
-  })();
-  </script>
-
-  <script src="js/main.js"></script>
+  <!-- Journey intro script moved to js/journey-reveal.js -->
   <!-- Asset lightbox modal -->
   <div class="cs-lightbox" id="cs-lightbox">
     <button class="cs-lightbox__close" id="cs-lightbox-close">&times;</button>
@@ -1597,9 +1309,5 @@
     <span class="morph__scroll-hint-label">Scroll to explore</span>
   </div>
 
-  <script src="js/face-morph.js?v=9"></script>
-  <script src="js/zoom-out.js"></script>
-  <script src="js/horizontal.js"></script>
-  <script src="js/video-expand.js"></script>
 </body>
 </html>
