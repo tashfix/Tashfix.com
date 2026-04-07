@@ -296,7 +296,7 @@
   // ═══════════════════════════════════════════════════════════
   var audio = new Audio('assets/audio/track.flac');
   audio.preload = 'auto';
-  audio.volume = 0.7;
+  audio.volume = 0.4;
 
   var playBtn = document.getElementById('morph-play-btn');
   var playIcon = document.getElementById('morph-play-icon');
