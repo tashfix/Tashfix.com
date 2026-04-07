@@ -1870,13 +1870,12 @@ body.player-expanded .morph__menu-btn {
 }
 
 .morph__cs-detail-content h3 {
-  font-family: 'Share Tech Mono', 'Consolas', monospace;
-  font-size: 12px;
-  font-weight: 400;
-  letter-spacing: 3px;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.4);
-  margin: 28px 0 12px;
+  font-family: 'Inter', -apple-system, sans-serif;
+  font-size: clamp(1.05rem, 1.9vw, 1.35rem);
+  font-weight: 600;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.75);
+  margin: 36px 0 12px;
 }
 
 .morph__cs-detail-content p {
