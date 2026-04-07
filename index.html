@@ -1061,40 +1061,54 @@
                     <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976fc23c85a6cc3b9215c34_thumbnail.png" alt="MSN reading experience — cover" / loading="lazy">
                   </div>
 
-                  <p>I worked directly on Edge, MSN, and Bing monetization surfaces, designing ad experiences embedded within content feeds and article pages used by millions of users. The challenge was to improve readability on MSN article pages by optimizing banner ad placement &mdash; doing so while maintaining advertiser value without disrupting content consumption.</p>
+                  <p>I worked directly on Edge, MSN, and Bing monetization surfaces, designing ad experiences embedded within content feeds and article pages used by millions of users. The challenge was to improve readability on MSN article pages by optimising banner ad placement &mdash; doing so while maintaining advertiser value without disrupting content consumption.</p>
 
-                  <h2>Exploration &amp; Patterns</h2>
-                  <p>I identified viable banner placement patterns and evaluated questioning to identify user sentiment across readability, distraction, and perceived quality.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f1a0e64a222537466771_questions.png" alt="User sentiment evaluation — readability and distraction questions" / loading="lazy">
-                  </div>
+                  <h2>The tension</h2>
+                  <p>MSN article pages reach millions of readers daily. Banner ads fund the content they&rsquo;re reading &mdash; but place them wrong and you erode the experience that makes the platform worth advertising on. The brief was to find where the line sits.</p>
 
-                  <h2>Prototypes</h2>
-                  <p>I built interactive prototypes to accurately simulate reading flow and banner behaviour, ensuring feedback reflected real consumption patterns rather than static mockups.</p>
+                  <h2>I evaluated 8 banner placement patterns and tested them against three user sentiment signals: readability, distraction, and perceived quality</h2>
+                  <p>MSN article pages serve millions of readers daily, and banner ad placement was creating friction between users and content. I mapped 8 viable placement patterns across the article layout, then designed a structured evaluation using UX Labs to measure how each one affected the reading experience. Users were surveyed on their ability to recall article content versus ad details, and directly questioned on which placements felt less disruptive.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f3bdc85a6cc3b920ae60_mockups.png" alt="Mid-fidelity prototypes — banner placement simulations" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f1a0e64a222537466771_questions.png" alt="UX Labs survey instrument — readability, distraction, and perceived quality questions" / loading="lazy">
                   </div>
 
-                  <h2>Outcomes</h2>
-                  <p>Banner placements that preserve content flow and image hierarchy are perceived as significantly less distracting while maintaining ad visibility. Long-term effects such as banner blindness require continued measurement. I synthesized findings into a clear recommendation aligned across design, product, and engineering, determining whether to iterate further or move forward with development.</p>
+                  <h2>Interactive prototypes simulated real reading flow &mdash; static mockups wouldn&rsquo;t capture how banners actually behave during scrolling</h2>
+                  <p>I built mid-fidelity interactive prototypes that replicated the full article reading experience, including scroll behaviour and banner rendering timing. This was a deliberate choice &mdash; testing static screens would have masked the exact friction points we were trying to measure. Feedback from participants reflected real consumption patterns, not reactions to design presentations.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f4f38ec4e4a809e7a268_results.png" alt="Research outcomes — banner placement findings" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f3bdc85a6cc3b920ae60_mockups.png" alt="8 mid-fidelity prototype variants — banner placement patterns evaluated across the article layout" / loading="lazy">
                   </div>
 
-                  <h2>Motion &amp; Fit-and-Finish</h2>
-                  <p>With a similar methodology I arrived at this animation for the loading state. This animation signals that the space is &ldquo;not done loading&rdquo; so when the content loads it doesn&rsquo;t disrupt the layout or feel as jarring as other motion design concepts with varying durations and b&eacute;zier curves.</p>
+                  <h2>Above-the-title placement shipped: users noticed the ad, but it stayed out of their reading path &mdash; a tradeoff that satisfied both readers and advertisers</h2>
+                  <p>Of the 8 patterns tested, above-the-title banner placement emerged as the recommendation. Users were still aware of the ad &mdash; banner blindness was an acknowledged risk we tracked &mdash; but placing it before the content began meant readers could engage with the article without interruption. It also landed first on the page, making it commercially viable for advertisers. I synthesised findings into a clear recommendation aligned across design, product, and engineering, and the pattern moved forward to development.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f69fccf24cf86b369ad0_Adobe%20Express%20-%20Screen%20Recording%202026-01-24%20at%209.55.32%E2%80%AFPM.gif" alt="Loading state animation" / loading="lazy">
-                  </div>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f812296144f6c5a16db2_animation%20tests.png" alt="Motion design concepts — duration and bézier curve tests" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f4f38ec4e4a809e7a268_results.png" alt="Outcomes — findings across 8 patterns with the winning above-the-title placement highlighted" / loading="lazy">
                   </div>
 
-                  <h2>Applying the Pattern</h2>
-                  <p>Using the same evaluation framework, I applied these principles to intra-article native ads, where preserving reading flow and layout stability is even more critical. The resulting design integrates naturally within the article, maintains image hierarchy, and clearly communicates sponsorship &mdash; reducing disruption while supporting visibility and trust.</p>
+                  <h2>Page load and ad fetch almost never happen at the same time &mdash; a pulsing loading state was designed to brace users for the incoming banner</h2>
+                  <p>Because the page and the ad server operate on different timelines, a banner appearing mid-read without warning created a jarring layout shift. I designed a pulsating loading state to occupy the banner space during the fetch delay &mdash; signalling to users that something is coming, so when it arrives it feels like resolution rather than disruption. I evaluated multiple motion concepts across varying durations and b&eacute;zier curves before landing on the pulsing approach as the least intrusive.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f87ec18b0fcf27117f2f_native%20ads.png" alt="Native ads — intra-article integration" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f812296144f6c5a16db2_animation%20tests.png" alt="Motion concepts evaluated — varying durations and bézier curves" / loading="lazy">
                   </div>
+                  <div class="morph__cs-detail-asset">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f69fccf24cf86b369ad0_Adobe%20Express%20-%20Screen%20Recording%202026-01-24%20at%209.55.32%E2%80%AFPM.gif" alt="Final pulsing loading animation — banner space in loading state before ad resolves" / loading="lazy">
+                  </div>
+
+                  <h2>The same evaluation framework extended to intra-article native ads, where layout stability mid-read is even harder to get right</h2>
+                  <p>With the banner placement framework validated, I applied the same evaluation methodology to native ads embedded within article bodies. The constraints here were tighter &mdash; any layout instability mid-article directly breaks reading flow. The resulting design integrates within the content structure, preserves image hierarchy, and surfaces sponsorship labelling clearly, reducing disruption while maintaining the visibility and trust signals advertisers require.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6976f87ec18b0fcf27117f2f_native%20ads.png" alt="Intra-article native ad — sponsorship labelling, image hierarchy, and content flow" / loading="lazy">
+                  </div>
+
+                  <h2>Good ad design isn&rsquo;t about making ads invisible &mdash; it&rsquo;s about making them earn their place</h2>
+                  <p>This project sat at one of the hardest intersections in product design: user experience and advertiser value pulling in opposite directions. The answer wasn&rsquo;t to hide the ad or minimise it into irrelevance &mdash; it was to find the placement where both sides of that equation could coexist. Above the title won because it respected the reading path while still delivering first-position visibility. The pulsing load state solved a technical seam that most users would never consciously notice &mdash; which was exactly the point. Working within Microsoft&rsquo;s scale meant every decision had to be defensible across design, product, and engineering simultaneously. That constraint made the process more rigorous and the outcome more durable.</p>
+
+                  <h2>What I&rsquo;d carry forward</h2>
+                  <ul>
+                    <li>Banner blindness is a long-term variable, not a solved problem &mdash; the above-the-title placement warrants ongoing measurement as user patterns shift</li>
+                    <li>Testing with interactive prototypes versus static screens changed the quality of feedback significantly &mdash; the medium of the test matters as much as the questions asked</li>
+                    <li>Motion design at this scale has to justify its existence functionally, not aesthetically &mdash; the pulsing state works because it solves a real timing problem, not because it looks good</li>
+                    <li>The same evaluation framework transferred cleanly to a second ad format &mdash; building reusable methodology is as valuable as the individual finding</li>
+                  </ul>
                 </div>
 
                 <!-- Marine Ecosystem Dashboard and App -->
