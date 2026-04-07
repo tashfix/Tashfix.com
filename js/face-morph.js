@@ -1188,6 +1188,25 @@
     });
   })();
 
+  // ─── Chrome bar proximity reveal ───────────────────────────────────────────
+  // Reveals media controls when cursor comes within PROXIMITY px of the bottom
+  // of the expanded fullscreen player, so users don't need to hover the thin strip.
+  (function() {
+    var player = document.getElementById('morph-player');
+    if (!player) return;
+    var PROXIMITY = 100; // px from bottom of viewport
+    document.addEventListener('mousemove', function(e) {
+      if (!player.classList.contains('expanded')) {
+        player.classList.remove('chrome-near');
+        return;
+      }
+      player.classList.toggle('chrome-near', e.clientY >= window.innerHeight - PROXIMITY);
+    });
+    document.addEventListener('mouseleave', function() {
+      player.classList.remove('chrome-near');
+    });
+  })();
+
   // ═══════════════════════════════════════════════════════════
   // CASE STUDY SELECTION — animated breathing grid background
   // ═══════════════════════════════════════════════════════════

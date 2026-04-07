@@ -1357,8 +1357,9 @@ body.player-expanded .morph__menu-btn {
   background: linear-gradient(172deg, #c8c8c8 0%, #c0c0c0 30%, #b8b8b8 60%, #b0b0b0 100%);
 }
 
-/* Hover reveals full controls */
-.morph__player.expanded .morph__chrome-bar:hover {
+/* Hover or proximity (JS adds .chrome-near) reveals full controls */
+.morph__player.expanded .morph__chrome-bar:hover,
+.morph__player.expanded.chrome-near .morph__chrome-bar {
   max-height: 100px;
 }
 
