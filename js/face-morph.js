@@ -145,20 +145,16 @@
       lastMouse.x = mouse.x;
       lastMouse.y = mouse.y;
       mouse.moved = false;
-      idleTimer = 0;
-      isIdle = false;
     } else {
       // Fade-back — only when NOT actively erasing
       ctx.globalCompositeOperation = 'source-over';
       ctx.globalAlpha = FADE_BACK_ALPHA;
       ctx.drawImage(portraitImg, 0, 0, canvasW, canvasH);
       ctx.globalAlpha = 1;
-      idleTimer += dt;
-      if (idleTimer > IDLE_DELAY) isIdle = true;
     }
 
-    // Idle strokes
-    if (isIdle) {
+    // Idle strokes — always run, even while user is brushing
+    {
       lastStrokeSpawn += dt;
       if (lastStrokeSpawn > STROKE_SPAWN_INTERVAL && strokes.length < MAX_STROKES) {
         strokes.push(new IdleStroke(canvasW, canvasH));
