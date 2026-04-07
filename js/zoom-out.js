@@ -53,7 +53,7 @@
     });
 
     // Hero text + aura: fade out during the first half of scroll
-    mobileTl.to(morphOverlay, { opacity: 0, duration: 0.45, ease: 'power1.in' }, 0);
+    mobileTl.to(morphOverlay, { autoAlpha: 0, duration: 0.45, ease: 'power1.in' }, 0);
     mobileTl.fromTo(morphAura, { opacity: 1 }, { opacity: 0, duration: 0.3, ease: 'none' }, 0);
 
     // Portrait: no animation — scrolls off-screen like a static image.
@@ -138,8 +138,10 @@
   }, 0.05);
 
   // Phase 4: Fade out all face morph UI
+  // autoAlpha sets visibility:hidden at opacity:0, preventing invisible
+  // overlay children from intercepting pointer events on sections below
   tl.to(morphOverlay, {
-    opacity: 0,
+    autoAlpha: 0,
     duration: 0.2,
     ease: 'power1.in',
   }, 0);
