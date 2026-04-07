@@ -1023,34 +1023,55 @@
                     <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69604ce658f4ebc888b0eaa1_design%20system%20image.png" alt="Samsung Knox design system — cover" / loading="lazy">
                   </div>
 
-                  <p>At Samsung, I worked on internal operational tools within the Knox Enterprise Suite, helping teams manage and monitor large fleets of devices through a unified platform. My work focused on improving how operational teams access system status, identify issues, and take action in real time, supporting day-to-day operations through clear information architecture, dashboards, and consistent design patterns.</p>
+                  <p>At Samsung, I worked on internal operational tools within the Knox Enterprise Suite &mdash; a platform used by IT and security teams to manage and monitor large fleets of devices across organisations. My work spanned two parallel tracks: shipping a new operational dashboard and leading a significant unification effort across the Knox Design System.</p>
+
+                  <h2>Enterprise IT teams managing thousands of devices need to act fast &mdash; and the interface has to make that possible</h2>
+                  <p>The Knox platform serves operational teams making real-time decisions about device fleets &mdash; security alerts, system health, policy enforcement. When information is buried, ambiguous, or inconsistently presented across tools, teams slow down. The cost of that friction isn&rsquo;t a usability score &mdash; it&rsquo;s missed incidents and longer response times. My work on both the dashboard and the design system was oriented around the same goal: reduce the effort required to find, understand, and act on critical information.</p>
+
+                  <h2>I designed shipped dashboard cards that surface system status and security signals at a glance</h2>
+                  <p>The operational dashboard needed to give teams an immediate read on fleet health without requiring them to dig into individual device records. I designed asset security dashboard cards, data visualisations, and information hierarchy that prioritised actionable signals over raw data density. The key design challenge was deciding what belongs at the glance level versus what lives one click deeper &mdash; every card had to earn its position by answering a question an operator would actually ask in the first 10 seconds.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b0122e5115c7b2c3eb6e_me.png" alt="Knox operational dashboard context" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/69604ce658f4ebc888b0eaa1_design%20system%20image.png" alt="Knox dashboard — card-based layout and information hierarchy" / loading="lazy">
+                  </div>
+                  <div class="morph__cs-detail-asset">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b0122e5115c7b2c3eb6e_me.png" alt="Knox operational dashboard — contextual shot" / loading="lazy">
                   </div>
 
-                  <h2>Operational Visibility at a Glance</h2>
-                  <p>I designed asset security dashboard cards, data visualizations, and information hierarchy to help operational teams quickly assess system status and identify issues in real time. The goal was to surface critical information at a glance, prioritize actionable signals, and reduce the time required to understand system health and respond to incidents.</p>
+                  <h2>Operational platforms like Intune, Salesforce, and VMware informed how we structured navigation and data density</h2>
+                  <p>Before committing to a dashboard architecture, I defined a structured competitive research approach to evaluate how large-scale operational platforms handle data organisation, navigation, and complex system concepts. I reviewed seven platforms in depth: Microsoft Intune, VMware, Ivanti, Salesforce, MaaS360, Hexnode, and SOTI. The research helped clarify which structural models best support operational tasks at scale, reduce cognitive load, and allow teams to locate and act on critical information efficiently &mdash; without being distracted by data that doesn&rsquo;t require immediate attention.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b3dd57e6f497f69cad12_Only%20has%20KAI.png" alt="Knox dashboard — KAI status cards" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b3dd57e6f497f69cad12_Only%20has%20KAI.png" alt="Competitive research findings — platform comparison" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b41ea8b2ed6e642d5027_Security%20center.png" alt="Knox security center dashboard" / loading="lazy">
-                  </div>
-
-                  <h2>Knox Design System</h2>
-                  <p>I helped scale the Knox Design System as the product suite expanded across teams and use cases. I audited and unified roughly 65% of the system, aligning foundations such as typography, color, tokens, and documentation to support consistency at scale. I rebuilt core components into flexible, variant-based patterns and introduced new system solutions, including a nested table pattern for complex data. This work reduced one-off designs, improved handoff with engineering, and supported the unification of Knox into a single, cohesive platform used by operational teams.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7311340c8145a0aac1e_design%20sys.png" alt="Knox design system — component library" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b41ea8b2ed6e642d5027_Security%20center.png" alt="Security-focused view — how competing platforms handle security status" / loading="lazy">
                   </div>
 
-                  <h2>Competitive Research &amp; Strategic Recommendations</h2>
-                  <p>I defined a structured research approach to evaluate how large-scale operational platforms organize data, structure navigation, and communicate complex system concepts. This work helped clarify which system models best support operational tasks, reduce cognitive load, and enable teams to find and act on critical information more efficiently.</p>
+                  <h2>I audited and unified 65% of the Knox Design System &mdash; every component I touched cascaded into the ones below it</h2>
+                  <p>Design systems at enterprise scale accumulate technical debt quietly. Components diverge. Tokens drift. Documentation falls behind. When I joined, Knox was expanding across multiple teams and use cases, and inconsistency was beginning to create friction at the engineering handoff level. I audited the system and took ownership of 65% of the component library &mdash; not an arbitrary number, but the full set of components I touched, plus every trickle-down dependency they affected. The remaining 35% were newer, siloed components or already-completed work that had no shared sub-component dependencies with my scope.</p>
+                  <p>For each component I touched, I aligned foundations &mdash; typography, colour, tokens, documentation &mdash; rebuilt them into flexible variant-based patterns, and updated best practices to ensure the changes propagated smoothly without disrupting work already in progress across teams.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b787d3df64effddf56a9_comp.png" alt="Competitive research — operational platform analysis" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7311340c8145a0aac1e_design%20sys.png" alt="Knox Design System — component structure, tokens, and variant architecture" / loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7a02844752583a0df1a_plan.png" alt="Strategic recommendations — planning framework" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b787d3df64effddf56a9_comp.png" alt="Component-level detail — variant-based pattern approach" / loading="lazy">
                   </div>
+
+                  <h2>The nested table pattern solved a problem no existing component could handle: representing hierarchy with dependencies</h2>
+                  <p>One of the new system solutions I introduced was a nested table pattern designed specifically for representing hierarchical data with dependency relationships. In Knox, this surfaces in privilege structures &mdash; an admin account with cascading permissions to sub-accounts, where deleting a parent node has defined consequences for the branches below it. No existing table component handled this cleanly. I designed the pattern from scratch to communicate hierarchy, show dependency relationships clearly, and behave predictably when nodes are modified or removed.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/6977b7a02844752583a0df1a_plan.png" alt="Nested table pattern — hierarchical structure and dependency relationships" / loading="lazy">
+                  </div>
+
+                  <h2>Design system work at this scale is change management as much as it is design</h2>
+                  <p>Rebuilding 65% of a live design system used by multiple teams is not a design exercise &mdash; it&rsquo;s a coordination exercise. Every change had to be scoped, communicated, and landed without breaking what was already in production or in active design work. I updated documentation, version notes, and best practices in parallel with every component change, ensuring teams could adopt updates without guesswork. Reducing one-off designs and improving engineering handoff quality were the direct outputs of that discipline.</p>
+
+                  <h2>What I&rsquo;d carry forward</h2>
+                  <ul>
+                    <li>The hardest part of design system work isn&rsquo;t the components &mdash; it&rsquo;s managing the blast radius of changes across teams who are building in parallel</li>
+                    <li>Competitive research at the start of a dashboard project is high-leverage: the right structural model saves weeks of IA iteration later</li>
+                    <li>The nested table pattern revealed a class of data relationship problems that flat table components can&rsquo;t solve &mdash; hierarchical data with dependency logic needs its own pattern language</li>
+                    <li>Variant-based components are only as useful as their documentation &mdash; rebuilding components without updating guidance just moves the inconsistency problem from Figma to handoff</li>
+                  </ul>
                 </div>
 
                 <!-- MSN Reading Experience -->
