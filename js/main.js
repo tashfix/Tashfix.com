@@ -114,7 +114,7 @@ window.TashBrand = {
       var siteLogo = document.getElementById('site-logo');
       var menuBtn = document.getElementById('menu-btn');
       var heroIntro = document.getElementById('morph-hero-intro');
-      if (siteLogo) siteLogo.classList.add('revealed');
+      // Logo reveal is scroll-driven in zoom-out.js — skip here
       if (menuBtn) menuBtn.classList.add('revealed');
       if (aura) aura.classList.add('revealed');
       setTimeout(function() {

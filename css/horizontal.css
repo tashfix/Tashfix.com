@@ -337,7 +337,25 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   object-fit: cover;
   display: block;
   box-shadow: 0 4px 24px rgba(0, 0, 0, 0.08);
-  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  transition: transform 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94),
+              filter 0.8s ease,
+              opacity 0.8s ease;
+  filter: grayscale(100%);
+  opacity: 0.25;
+}
+
+/* Last item — always full color, no desaturation (zoom-in sequence) */
+.hscroll__item:last-child img,
+.hscroll__item:last-child video {
+  filter: grayscale(0%) !important;
+  opacity: 1 !important;
+}
+
+/* When gallery enters horizontal scroll — breathe color back in */
+#hscroll-gallery.color-active .hscroll__item img,
+#hscroll-gallery.color-active .hscroll__item video {
+  filter: grayscale(0%);
+  opacity: 1;
 }
 
 .hscroll__item video {
@@ -349,18 +367,18 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   transform: scale(1.05);
 }
 
-/* Caption — overlays bottom of each item */
+/* Caption — overlays top of each item */
 .hscroll__caption {
   position: absolute;
-  bottom: 0;
+  top: 0;
   left: 0;
   right: 0;
-  padding: 28px 16px 14px;
+  padding: 14px 16px 28px;
   z-index: 2;
   text-align: center;
   display: flex;
   justify-content: center;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.5));
+  background: linear-gradient(rgba(0, 0, 0, 0.5), transparent);
   pointer-events: none;
   font-size: clamp(0.7rem, 0.9vw, 0.85rem);
   font-weight: 500;

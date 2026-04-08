@@ -149,6 +149,7 @@
       if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
       if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
       setMenuDark();
+      if (section) section.classList.add('color-active');
     }
     function leaveHScrollForward() {
       if (logoGlass) logoGlass.classList.remove('visible');
@@ -160,6 +161,7 @@
       if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
       if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
       setMenuLight();
+      if (section) section.classList.remove('color-active');
     }
 
     if (siteLogo) {

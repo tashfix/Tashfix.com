@@ -105,6 +105,10 @@
       anticipatePin: 1,
       onUpdate: function(self) {
         window.TashBrand.zoomProgress = self.progress;
+        // Reveal logo on first scroll (CSS transition handles the fade-in)
+        if (siteLogo && self.progress > 0.02 && !siteLogo.classList.contains('revealed')) {
+          siteLogo.classList.add('revealed');
+        }
       },
     }
   });
