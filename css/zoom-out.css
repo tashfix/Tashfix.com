@@ -40,7 +40,7 @@
 .zoomout__marquee-track {
   display: flex;
   white-space: nowrap;
-  animation: zoomout-marquee-scroll 60s linear infinite;
+  animation: zoomout-marquee-scroll-reverse 60s linear infinite;
   width: max-content;
 }
 
@@ -70,17 +70,16 @@
 
 .zoomout__marquee-layer--reverse .zoomout__marquee-track span {
   font-size: clamp(7rem, 18vw, 17rem);
-}
-
-.zoomout__marquee-track--reverse {
-  animation: zoomout-marquee-scroll-reverse 60s linear infinite;
-}
-
-.zoomout__marquee-layer--reverse .zoomout__marquee-track span {
   color: var(--color-cobalt);
   -webkit-text-stroke: 4px #6B85A8;
   paint-order: stroke fill;
+  text-shadow: 0 12px 40px rgba(0, 0, 0, 0.28);
 }
+
+.zoomout__marquee-track--reverse {
+  animation: zoomout-marquee-scroll 60s linear infinite;
+}
+
 
 @keyframes zoomout-marquee-scroll-reverse {
   from { transform: translateX(-50%); }
