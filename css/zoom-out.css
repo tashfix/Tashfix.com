@@ -61,6 +61,33 @@
   to   { transform: translateX(-50%); }
 }
 
+/* ── Second marquee — reverse direction, overlaps bottom of portrait ── */
+.zoomout__marquee-layer--reverse {
+  top: 63%;
+  transform: none;
+  z-index: 4; /* above portrait container (z-index: 3) */
+}
+
+.zoomout__marquee-layer--reverse .zoomout__marquee-track span {
+  font-size: clamp(7rem, 18vw, 17rem);
+}
+
+.zoomout__marquee-track--reverse {
+  animation: zoomout-marquee-scroll-reverse 60s linear infinite;
+}
+
+.zoomout__marquee-layer--reverse .zoomout__marquee-track span {
+  color: var(--color-cobalt);
+  -webkit-text-stroke: 4px #6B85A8;
+  paint-order: stroke fill;
+}
+
+@keyframes zoomout-marquee-scroll-reverse {
+  from { transform: translateX(-50%); }
+  to   { transform: translateX(0); }
+}
+
+
 /* ── Portrait Container ── */
 .zoomout__portrait-container {
   position: absolute;

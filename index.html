@@ -125,6 +125,20 @@
         </div>
       </div>
 
+      <!-- Second marquee — reverse direction, overlaps bottom of portrait -->
+      <div class="zoomout__marquee-layer zoomout__marquee-layer--reverse" id="zoomout-marquee-2">
+        <div class="zoomout__marquee-track zoomout__marquee-track--reverse">
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+          <span>CRAFTED. NOT GENERATED.</span>
+        </div>
+      </div>
+
       <!-- Portrait container: face morph canvas replaces static portrait -->
       <div class="zoomout__portrait-container" id="zoomout-portrait-ctn">
         <div class="zoomout__portrait-clip">
@@ -132,7 +146,8 @@
           <canvas class="morph__canvas" id="morph-canvas"></canvas>
           <picture><source srcset="assets/images/portrait.webp" type="image/webp"><img class="zoomout__portrait-static" id="zoomout-portrait-static" src="assets/images/portrait.png" alt=""></picture>
         </div>
-        <svg class="zoomout__signature" id="zoomout-signature"
+
+<svg class="zoomout__signature" id="zoomout-signature"
              xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 295 278">
           <style>
             .pen { fill: none; stroke-linecap: round; stroke-linejoin: round; }

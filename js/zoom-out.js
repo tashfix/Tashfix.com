@@ -6,6 +6,7 @@
   var heroBg        = document.getElementById('zoomout-bg');
   var portraitCtn   = document.getElementById('zoomout-portrait-ctn');
   var marqueeLayer  = document.getElementById('zoomout-marquee');
+  var marqueeLayer2 = document.getElementById('zoomout-marquee-2');
   var sigSvg        = document.getElementById('zoomout-signature');
   var morphOverlay  = document.getElementById('morph-overlay');
   var morphAura     = document.getElementById('morph-aura');
@@ -185,12 +186,19 @@
     0
   );
 
-  // Phase 5: Marquee Reveal
+  // Phase 5: Marquee Reveal (both tracks simultaneously)
   tl.fromTo(marqueeLayer,
     { opacity: 0, y: 20 },
     { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' },
     0.2
   );
+  if (marqueeLayer2) {
+    tl.fromTo(marqueeLayer2,
+      { opacity: 0, y: -20 },
+      { opacity: 1, y: 0, duration: 0.18, ease: 'power2.out' },
+      0.2
+    );
+  }
 
   // Phase 6: Signature Draw-On
   gsap.set(tStrokes,  { opacity: 0, strokeDashoffset: 1000 });
