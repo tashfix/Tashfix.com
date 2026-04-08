@@ -49,7 +49,7 @@
   font-weight: 900;
   text-transform: uppercase;
   color: var(--color-cobalt);
-  -webkit-text-stroke: 4px var(--color-tangerine);
+  -webkit-text-stroke: 4px #6B85A8;
   paint-order: stroke fill;
   letter-spacing: 0.02em;
   flex-shrink: 0;
