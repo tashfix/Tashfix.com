@@ -2,6 +2,7 @@
     var section = document.getElementById('work-spotlight');
     if (!section) return;
 
+
     // Scroll reveal + count-up together
     ScrollTrigger.create({
       trigger: section,
