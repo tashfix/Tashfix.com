@@ -59,6 +59,9 @@
   <script src="js/zoom-out.js" defer></script>
   <script src="js/horizontal.js" defer></script>
   <script src="js/video-expand.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js" defer></script>
+  <script src="js/vanta-init.js" defer></script>
 </head>
 <body>
 
@@ -216,15 +219,7 @@
 
   <!-- ====== SECTION 3: HORIZONTAL SCROLL INTRO ====== -->
   <section id="hscroll-intro" class="hscroll__intro">
-    <svg class="hscroll__aura" id="hscroll-aura" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" fill="none">
-      <path id="hscroll-aura-0" stroke="rgba(255,180,120,0.50)" stroke-width="2.5" />
-      <path id="hscroll-aura-1" stroke="rgba(255,200,150,0.40)" stroke-width="2.0" />
-      <path id="hscroll-aura-2" stroke="rgba(255,160,100,0.55)" stroke-width="3.0" />
-      <path id="hscroll-aura-3" stroke="rgba(255,210,170,0.30)" stroke-width="1.8" />
-      <path id="hscroll-aura-4" stroke="rgba(255,180,120,0.45)" stroke-width="2.2" />
-      <path id="hscroll-aura-5" stroke="rgba(255,200,150,0.35)" stroke-width="2.0" />
-      <path id="hscroll-aura-6" stroke="rgba(255,160,100,0.50)" stroke-width="2.8" />
-    </svg>
+    <div id="vanta-globe" class="hscroll__vanta-bg"></div>
     <div class="hscroll__emblem">
       <div class="hscroll__laurel-wrap">
         <picture><source srcset="assets/images/laurel.webp" type="image/webp"><img class="hscroll__laurel-img" src="assets/images/laurel.png" alt="Laurel wreath" loading="lazy"></picture>

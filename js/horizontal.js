@@ -60,6 +60,24 @@
   // ── Intro spacer reference ──
   var introSpacer = document.getElementById('hscroll-intro');
 
+  // ── Intro hero text + wreath: reveal on scroll ──
+  var emblem   = introSpacer ? introSpacer.querySelector('.hscroll__emblem')   : null;
+  var heroText = introSpacer ? introSpacer.querySelector('.hscroll__hero-text') : null;
+
+  if (emblem && heroText) {
+    gsap.set([emblem, heroText], { autoAlpha: 0, y: 28 });
+
+    gsap.timeline({
+      scrollTrigger: {
+        trigger: introSpacer,
+        start: 'center 85%',
+        once: true,
+      }
+    })
+    .to(emblem,   { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0)
+    .to(heroText, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.2);
+  }
+
   // ── Horizontal scroll (desktop) ──
   var mm = gsap.matchMedia();
 
@@ -582,57 +600,5 @@
   // Defer initial sizing — track width is set asynchronously by GSAP matchMedia
   requestAnimationFrame(function() { sizeMeshCanvas(); });
   window.addEventListener('resize', function() { sizeMeshCanvas(); });
-
-  // ═══════════════════════════════════════════════════════════
-  // AURA LINES (horizontal scroll intro)
-  // ═══════════════════════════════════════════════════════════
-  var NUM_LINES = 7;
-  var auraLines = [];
-  for (var i = 0; i < NUM_LINES; i++) {
-    auraLines.push({
-      el: document.getElementById('hscroll-aura-' + i),
-      baseY: 100 + i * 100 + (Math.random() - 0.5) * 60,
-      amplitude: 40 + Math.random() * 80,
-      frequency: 0.002 + Math.random() * 0.003,
-      speed: 0.0003 + Math.random() * 0.0004,
-      phase: Math.random() * Math.PI * 2,
-      xOffset: (Math.random() - 0.5) * 100,
-    });
-  }
-
-  var auraAnimId = null;
-
-  function animateAura() {
-    var t = Date.now();
-    for (var i = 0; i < auraLines.length; i++) {
-      var line = auraLines[i];
-      if (!line.el) continue;
-      var pts = [];
-      var numPts = 8;
-      for (var j = 0; j <= numPts; j++) {
-        var x = line.xOffset + (j / numPts) * 1440;
-        var wave1 = Math.sin(x * line.frequency + t * line.speed + line.phase);
-        var wave2 = Math.sin(x * line.frequency * 1.5 + t * line.speed * 0.7 + line.phase + 1.3);
-        var y = line.baseY + line.amplitude * wave1 + line.amplitude * 0.4 * wave2;
-        pts.push({ x: x, y: y });
-      }
-      var d = 'M ' + pts[0].x + ' ' + pts[0].y;
-      for (var j = 0; j < pts.length - 1; j++) {
-        var p0 = pts[Math.max(0, j - 1)];
-        var p1 = pts[j];
-        var p2 = pts[j + 1];
-        var p3 = pts[Math.min(pts.length - 1, j + 2)];
-        d += ' C ' + (p1.x + (p2.x - p0.x) / 6) + ' ' + (p1.y + (p2.y - p0.y) / 6) +
-             ', ' + (p2.x - (p3.x - p1.x) / 6) + ' ' + (p2.y - (p3.y - p1.y) / 6) +
-             ', ' + p2.x + ' ' + p2.y;
-      }
-      line.el.setAttribute('d', d);
-    }
-    auraAnimId = requestAnimationFrame(animateAura);
-  }
-
-  // Always animate aura (lightweight SVG, no observer needed)
-  animateAura();
-
 
 })();
