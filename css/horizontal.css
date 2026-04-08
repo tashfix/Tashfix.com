@@ -505,6 +505,17 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
     padding: 3rem 1.25rem 4rem;
   }
 
+  /* Reset inactive state effects on mobile */
+  .hscroll__item img,
+  .hscroll__item video {
+    filter: none !important;
+    opacity: 1 !important;
+  }
+
+  .hscroll__item::after {
+    display: none !important;
+  }
+
   .hscroll__item {
     position: relative !important;
     transform: none !important;
