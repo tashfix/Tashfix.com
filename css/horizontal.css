@@ -344,11 +344,32 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   opacity: 0.25;
 }
 
+/* Orange hue overlay — visible in inactive state, fades out on color-active */
+.hscroll__item::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 26, 74, 0.65);
+  mix-blend-mode: color;
+  pointer-events: none;
+  transition: opacity 0.8s ease;
+  opacity: 1;
+  z-index: 2;
+}
+
+#hscroll-gallery.color-active .hscroll__item::after {
+  opacity: 0;
+}
+
 /* Last item — always full color, no desaturation (zoom-in sequence) */
 .hscroll__item:last-child img,
 .hscroll__item:last-child video {
   filter: grayscale(0%) !important;
   opacity: 1 !important;
+}
+
+.hscroll__item:last-child::after {
+  display: none;
 }
 
 /* When gallery enters horizontal scroll — breathe color back in */
