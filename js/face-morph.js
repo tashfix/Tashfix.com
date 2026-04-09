@@ -1777,4 +1777,39 @@
     sectionEls.forEach(function(s) { observer.observe(s.el); });
   })();
 
+  /* ── 3D globe cursor — hscroll-intro ── */
+  (function() {
+    var globeSection = document.getElementById('hscroll-intro');
+    var cursor3d    = document.getElementById('hscroll-3d-cursor');
+    if (!globeSection || !cursor3d) return;
+
+    var active = false;
+
+    function onMove(e) {
+      cursor3d.style.transform =
+        'translate(calc(' + e.clientX + 'px - 50%), calc(' + e.clientY + 'px - 50%))';
+    }
+
+    globeSection.addEventListener('mouseenter', function() {
+      active = true;
+      cursor3d.classList.add('visible');
+      document.addEventListener('mousemove', onMove);
+    });
+
+    globeSection.addEventListener('mouseleave', function() {
+      active = false;
+      cursor3d.classList.remove('visible', 'dragging');
+      document.removeEventListener('mousemove', onMove);
+    });
+
+    globeSection.addEventListener('mousedown', function() {
+      if (active) cursor3d.classList.add('dragging');
+    });
+
+    // Release drag on document so mouseup outside section is caught
+    document.addEventListener('mouseup', function() {
+      cursor3d.classList.remove('dragging');
+    });
+  })();
+
 })();

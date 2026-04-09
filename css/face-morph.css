@@ -2584,3 +2584,80 @@ body.player-expanded .morph__menu-btn {
 .morph__cursor.visible {
   opacity: 1;
 }
+
+/* ═══════════════════════════════════════════════════════════
+   3D GLOBE CURSOR — hscroll-intro section
+   ═══════════════════════════════════════════════════════════ */
+
+/* Hide OS cursor inside the globe section */
+#hscroll-intro { cursor: none; }
+
+#hscroll-3d-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  will-change: transform;
+}
+
+#hscroll-3d-cursor.visible {
+  opacity: 1;
+}
+
+.hscroll__cursor-3d-svg {
+  width: 60px;
+  height: 60px;
+  display: block;
+  transition: transform 0.15s ease;
+}
+
+#hscroll-3d-cursor.dragging .hscroll__cursor-3d-svg {
+  transform: scale(1.18);
+}
+
+/* Sphere outer boundary — static white ring */
+.hscroll__cursor-3d-boundary {
+  stroke: rgba(190, 215, 255, 0.7);
+  stroke-width: 1.5;
+}
+
+/* Latitude ellipse — slow clockwise spin */
+.hscroll__cursor-3d-lat {
+  stroke: rgba(190, 215, 255, 0.45);
+  stroke-width: 1;
+  transform-origin: 32px 32px;
+  animation: cursor3dLat 7s linear infinite;
+}
+
+/* Longitude ellipse — slightly faster counter-clockwise, orange tint (Vanta accent) */
+.hscroll__cursor-3d-lng {
+  stroke: rgba(255, 107, 53, 0.65);
+  stroke-width: 1;
+  transform-origin: 32px 32px;
+  animation: cursor3dLng 5s linear infinite;
+}
+
+/* Crosshair guides */
+.hscroll__cursor-3d-cross {
+  stroke: rgba(190, 215, 255, 0.2);
+  stroke-width: 0.75;
+}
+
+/* Center dot */
+.hscroll__cursor-3d-dot {
+  fill: rgba(190, 215, 255, 0.95);
+}
+
+@keyframes cursor3dLat {
+  from { transform: rotate(0deg) scaleY(1); }
+  to   { transform: rotate(360deg) scaleY(1); }
+}
+
+@keyframes cursor3dLng {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
