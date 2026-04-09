@@ -115,6 +115,7 @@
     function returnToTrack() {
       if (isReparented) {
         lastItem.classList.remove('hscroll__item--expanding');
+        lastItem.classList.remove('is-zooming');
         lastItem.style.left = '';
         lastItem.style.top = '';
         lastItem.style.width = '';
@@ -160,9 +161,15 @@
 
         // If scrolled all the way back, return item to track
         if (p <= 0.001) {
+          lastItem.classList.remove('is-zooming');
+          // Force glint animation to restart from opacity:0
+          lastItem.classList.add('glint-reset');
+          requestAnimationFrame(function() { lastItem.classList.remove('glint-reset'); });
           returnToTrack();
           return;
         }
+
+        lastItem.classList.add('is-zooming');
 
         // On first frame: compute item's film-strip size and derive the centred
         // viewport position from it, rather than trusting getBoundingClientRect()

@@ -616,6 +616,46 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   cursor: default !important;
 }
 
+/* ═══ GLINT — last gallery item ═══ */
+@keyframes glint-sweep {
+  0%        { transform: translateX(-160%) skewX(-18deg); opacity: 0; }
+  3%        { opacity: 1; }
+  22%       { opacity: 1; }
+  25%       { transform: translateX(380%)  skewX(-18deg); opacity: 0; }
+  100%      { transform: translateX(380%)  skewX(-18deg); opacity: 0; }
+}
+
+#hscroll-last-item::before {
+  content: '';
+  position: absolute;
+  top: -10%;
+  left: 0;
+  width: 70%;
+  height: 120%;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(255, 255, 255, 0.04) 20%,
+    rgba(255, 255, 255, 0.14) 45%,
+    rgba(255, 255, 255, 0.28) 50%,
+    rgba(255, 255, 255, 0.14) 55%,
+    rgba(255, 255, 255, 0.04) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+  z-index: 4;
+  opacity: 0;
+  animation: glint-sweep 6s ease-in-out infinite;
+  animation-delay: 2s;
+}
+
+/* Kill animation entirely during zoom — opacity:0 base style takes over instantly */
+#hscroll-last-item.is-zooming::before,
+#hscroll-last-item.glint-reset::before {
+  animation: none;
+  opacity: 0;
+}
+
 /* ═══ ZOOM-IN HINT (inside last gallery item) ═══ */
 .zoom-in-hint {
   position: absolute;
