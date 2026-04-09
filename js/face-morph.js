@@ -1587,36 +1587,41 @@
     var label = hint.querySelector('.morph__scroll-hint-label');
     var zoomSection = document.getElementById('zoom-out');
 
-    // ── Initial show on page load (with the 1.8s CSS delay) ──
-    hint.classList.add('visible');
+    // ── Initial show on page load ──
+    // Use setTimeout to fire AFTER ScrollTrigger finishes its initialization pass.
+    // ScrollTrigger fires onLeaveBack during init if scrollY=0 is "before" the
+    // trigger start — that immediately removes any visible class added synchronously.
+    // Delaying 50ms sidesteps that, then the CSS 0.8s-delay transition takes over.
+    setTimeout(function() {
+      hint.classList.add('visible');
+    }, 50);
 
-    // ── Persistent re-show: use ScrollTrigger to detect when user is in the
-    //    zoom-out section and drive text + opacity from scroll progress ──
+    // ── Persistent re-show: ScrollTrigger drives text + opacity from scroll progress ──
     if (typeof ScrollTrigger !== 'undefined' && zoomSection) {
       ScrollTrigger.create({
         trigger: zoomSection,
         start: 'top top',
         end: 'bottom bottom',
         onEnter: function() {
-          // Re-entering from top: snap off delay class, reset text, show
+          // Entering from top: remove delay, reset text, show
           hint.classList.add('no-delay');
           if (label) label.textContent = 'Scroll to explore';
           hint.classList.add('visible');
         },
         onLeave: function() {
-          // Scrolled past the section entirely — hide
+          // Scrolled past section entirely — hide
           hint.classList.remove('visible');
         },
         onEnterBack: function() {
-          // Scrolled back up into section from below — show with new text
+          // Scrolled back up into section from below — show
           hint.classList.add('no-delay');
           if (label) label.textContent = 'Scroll to explore';
           hint.classList.add('visible');
         },
-        onLeaveBack: function() {
-          // Scrolled above section (shouldn't normally happen but handle it)
-          hint.classList.remove('visible');
-        },
+        // No onLeaveBack — the face morph section is the hero; there is nothing
+        // meaningfully "above" it in normal scrolling. Keeping this handler caused
+        // GSAP to fire it during initialization (when scrollY=0 is considered
+        // "before" the trigger start), removing visible before the user ever scrolls.
         onUpdate: function(self) {
           var p = self.progress;
 
@@ -1625,9 +1630,8 @@
             hint.classList.remove('visible');
           } else {
             // Phases 1 & 2: always visible inside the section.
-            // Must explicitly add here too — onEnterBack fires at p≈1 which triggers
-            // phase 3 removal, so re-adding in onUpdate as p drops back below 0.55
-            // is what keeps the hint alive when scrolling back up.
+            // onEnterBack fires at p≈1 → phase 3 removes visible; as user scrolls
+            // back up through p<0.55, this else branch re-adds it each frame.
             hint.classList.add('visible');
             if (label) label.textContent = p <= 0.22 ? 'Scroll to explore' : 'Keep scrolling to zoom out';
           }
