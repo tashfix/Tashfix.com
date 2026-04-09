@@ -660,7 +660,21 @@
 
   <!-- ====== PERSISTENT MUSIC PLAYER ====== -->
   <div class="morph__player" id="morph-player">
+
+    <!-- L1: Frosted glass base — sibling of player-body, outside overflow:hidden,
+         so backdrop-filter correctly samples real page content behind the player -->
+    <div class="morph__env-glass" aria-hidden="true"></div>
+
     <div class="morph__player-body">
+
+      <!-- L2: Metallic surface — 72% opaque so glass bleeds through 28% in the bezel ring -->
+      <div class="morph__bezel-surface" aria-hidden="true"></div>
+
+      <!-- L3: Shadows — dark gradient, multiply blend restores metallic depth -->
+      <div class="morph__bezel-shadow" aria-hidden="true"></div>
+
+      <!-- L4: Highlights — specular gradient, screen blend restores metallic sheen -->
+      <div class="morph__bezel-highlight" aria-hidden="true"></div>
 
       <!-- Animated grid background (case study selection screen) -->
       <canvas class="cs-grid-canvas" id="cs-grid-canvas"></canvas>

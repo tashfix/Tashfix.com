@@ -816,9 +816,9 @@ body.player-expanded .morph__scroll-hint {
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
-  filter:
-    drop-shadow(0 12px 40px rgba(0,0,0,0.15))
-    drop-shadow(0 4px 12px rgba(0,0,0,0.08));
+  /* filter removed — any filter on a fixed ancestor creates an isolated compositing layer
+     that prevents backdrop-filter on morph__env-glass from sampling real page content.
+     Outer depth shadow lives on .morph__player-body instead. */
   opacity: 0;
   transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
 }
@@ -836,14 +836,15 @@ body.player-expanded .morph__scroll-hint {
   position: relative;
   width: 100%; height: 100%;
   border-radius: 88px;
-  background: linear-gradient(168deg,
-    #ffffff 0%, #fafafa 3%, #efefef 6%, #e0e0e0 9%, #cdcdcd 13%,
-    #b8b8b8 17%, #a8a8a8 21%, #bdbdbd 25%, #d6d6d6 29%, #ededed 33%,
-    #f8f8f8 37%, #ebebeb 41%, #d4d4d4 46%, #bcbcbc 51%, #a6a6a6 56%,
-    #949494 61%, #8a8a8a 65%, #969696 70%, #aaa 75%, #bfbfbf 80%,
-    #d0d0d0 85%, #c4c4c4 90%, #b4b4b4 95%, #c8c8c8 100%);
+  /* Transparent — glass layer (morph__env-glass) shows through in the bezel ring.
+     Inner panel covers the center completely so no glass bleed there. */
+  background: transparent;
+  /* z-index:2 places this above morph__env-glass (z:1) in the same stacking context */
+  z-index: 2;
   box-shadow:
-    0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.08),
+    /* Outer depth — replaces filter:drop-shadow that was on .morph__player */
+    0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08),
+    /* Rim inset highlights / shadows for 3-D edge depth */
     inset 0 3px 0 rgba(255,255,255,1), inset 0 5px 2px rgba(255,255,255,0.5),
     inset 0 -3px 0 rgba(0,0,0,0.08), inset 0 -5px 8px rgba(0,0,0,0.04),
     inset 3px 0 1px rgba(255,255,255,0.2), inset -3px 0 1px rgba(0,0,0,0.03);
@@ -869,6 +870,100 @@ body.player-expanded .morph__scroll-hint {
   border-right-color: rgba(0,0,0,0.06); border-bottom-color: rgba(0,0,0,0.12);
   pointer-events: none; z-index: 21;
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   BEZEL ENVIRONMENT REFLECTION — 4-layer sandwich
+   ══════════════════════════════════════════════════════════════════
+
+   Layer 1 (morph__env-glass): Sibling of player-body, outside overflow:hidden.
+     backdrop-filter samples actual page content (portraits, cobalt bg, gallery).
+     Glass is at z:1 in morph-player's context; player-body is at z:2 (transparent),
+     so the blurred backdrop shows through the bezel ring — 28% by default.
+
+   Layer 2 (morph__bezel-surface): Inside player-body, no z-index (auto / DOM order).
+     The full metallic gradient at 72% opacity. This is the base metallic character.
+     The 28% transparency lets L1's glass tint bleed through in the bezel ring only —
+     the inner panel (z:2, opaque) covers the center completely.
+
+   Layer 3 (morph__bezel-shadow): multiply blend.
+     Restores shadow depth lost from reduced opacity on bezel-surface.
+
+   Layer 4 (morph__bezel-highlight): screen blend.
+     Restores the bright specular streak at the top edge.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* L1 — Frosted glass base */
+.morph__env-glass {
+  position: absolute;
+  inset: 0;
+  z-index: 1;                  /* behind player-body (z:2) in morph-player context */
+  border-radius: 88px;
+  backdrop-filter: blur(18px) saturate(1.5);
+  -webkit-backdrop-filter: blur(18px) saturate(1.5);
+  pointer-events: none;
+  will-change: backdrop-filter;
+}
+
+/* L2 — Metallic surface at 72% opacity (28% glass bleeds through) */
+.morph__bezel-surface {
+  position: absolute;
+  inset: 0;
+  border-radius: 88px;
+  background: linear-gradient(168deg,
+    #ffffff 0%, #fafafa 3%, #efefef 6%, #e0e0e0 9%, #cdcdcd 13%,
+    #b8b8b8 17%, #a8a8a8 21%, #bdbdbd 25%, #d6d6d6 29%, #ededed 33%,
+    #f8f8f8 37%, #ebebeb 41%, #d4d4d4 46%, #bcbcbc 51%, #a6a6a6 56%,
+    #949494 61%, #8a8a8a 65%, #969696 70%, #aaa 75%, #bfbfbf 80%,
+    #d0d0d0 85%, #c4c4c4 90%, #b4b4b4 95%, #c8c8c8 100%);
+  opacity: 0.72;
+  pointer-events: none;
+  /* No z-index — DOM order ensures it's below bezel-shadow/highlight (z:1)
+     and below inner-panel (z:2) */
+}
+
+/* L3 — Shadow restoration */
+.morph__bezel-shadow {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 88px;
+  background: linear-gradient(168deg,
+    transparent 0%,
+    rgba(0,0,0,0.04) 20%,
+    rgba(0,0,0,0.14) 50%,
+    rgba(0,0,0,0.20) 62%,
+    rgba(0,0,0,0.12) 78%,
+    rgba(0,0,0,0.04) 90%,
+    transparent 100%);
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+/* L4 — Highlight restoration */
+.morph__bezel-highlight {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: 88px;
+  background: linear-gradient(168deg,
+    rgba(255,255,255,0.60) 0%,
+    rgba(255,255,255,0.30) 6%,
+    rgba(255,255,255,0.08) 14%,
+    transparent 24%,
+    transparent 72%,
+    rgba(255,255,255,0.06) 85%,
+    rgba(255,255,255,0.12) 100%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+}
+
+/* Expanded state — hide all bezel-reflection layers; restore solid bg for case studies */
+.morph__player.expanded .morph__env-glass,
+.morph__player.expanded .morph__bezel-surface,
+.morph__player.expanded .morph__bezel-shadow,
+.morph__player.expanded .morph__bezel-highlight { display: none; }
+
+.morph__player.expanded .morph__player-body { background: #111; }
 
 .morph__env-reflection {
   position: absolute; inset: 0; border-radius: 88px;
@@ -2102,6 +2197,21 @@ body.player-expanded .morph__menu-btn {
   /* Hide "Scroll to explore" hint on mobile */
   .morph__scroll-hint {
     display: none !important;
+  }
+
+  /* No bezel reflection layers on mobile — no performance cost */
+  .morph__env-glass,
+  .morph__bezel-surface,
+  .morph__bezel-shadow,
+  .morph__bezel-highlight { display: none; }
+  /* Restore opaque metallic background for mobile player */
+  .morph__player-body {
+    background: linear-gradient(168deg,
+      #ffffff 0%, #fafafa 3%, #efefef 6%, #e0e0e0 9%, #cdcdcd 13%,
+      #b8b8b8 17%, #a8a8a8 21%, #bdbdbd 25%, #d6d6d6 29%, #ededed 33%,
+      #f8f8f8 37%, #ebebeb 41%, #d4d4d4 46%, #bcbcbc 51%, #a6a6a6 56%,
+      #949494 61%, #8a8a8a 65%, #969696 70%, #aaa 75%, #bfbfbf 80%,
+      #d0d0d0 85%, #c4c4c4 90%, #b4b4b4 95%, #c8c8c8 100%);
   }
 
   /* Hide player during normal browsing — only show during fullscreen expansion */
