@@ -705,10 +705,14 @@
 
         <!-- 1. LCD Screen -->
         <div class="morph__lcd-screen">
+          <!-- Backlight glow — fades in on hover to simulate LCD panel illumination -->
+          <div class="morph__lcd-backlight" aria-hidden="true"></div>
+          <!-- Hover CTA label — replaces marquee text on hover, static and centered -->
+          <div class="morph__lcd-hover-label" aria-hidden="true">VIEW CASE STUDIES</div>
           <div class="morph__lcd-text-container">
             <div class="morph__lcd-track">
-              <span class="morph__lcd-text" id="morph-lcd-text">Claro Intelecto &mdash; When The Time Is Right</span>
-              <span class="morph__lcd-text" aria-hidden="true">Claro Intelecto &mdash; When The Time Is Right</span>
+              <span class="morph__lcd-text" id="morph-lcd-text">DESIGNER BY CRAFT &middot; ENGINEER BY TRAINING &middot; CREATIVE BY NATURE</span>
+              <span class="morph__lcd-text" aria-hidden="true">DESIGNER BY CRAFT &middot; ENGINEER BY TRAINING &middot; CREATIVE BY NATURE</span>
             </div>
           </div>
           <div class="morph__lcd-status" id="morph-lcd-status"><span class="morph__status-dot"></span>READY</div>
@@ -1372,8 +1376,6 @@
   <!-- Audio tooltip — fixed, escapes player overflow:hidden -->
   <div class="morph__audio-tooltip" id="morph-audio-tooltip">Control audio here</div>
 
-  <!-- LCD tooltip — fixed, escapes player overflow:hidden -->
-  <div class="morph__audio-tooltip" id="morph-lcd-tooltip">View all case studies</div>
 
 
   <div class="morph__hscroll-hint" id="morph-hscroll-hint">

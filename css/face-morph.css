@@ -1043,7 +1043,6 @@ body.player-expanded .morph__scroll-hint {
     0 2px 0 rgba(255,255,255,0.6), 0 3px 1px rgba(255,255,255,0.2), 0 -0.5px 0 rgba(0,0,0,0.15);
   overflow: hidden; position: relative;
   border: 3px solid; border-color: #525252 #626262 #8e8e8e #606060;
-  transition: flex 0.6s cubic-bezier(0.22, 1, 0.36, 1), height 0.6s cubic-bezier(0.22, 1, 0.36, 1), border-radius 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .morph__lcd-screen::before {
@@ -1057,6 +1056,90 @@ body.player-expanded .morph__scroll-hint {
   content: ''; position: absolute; inset: 0; border-radius: 11px;
   background: radial-gradient(ellipse at 50% 50%, rgba(255,140,0,0.07) 0%, rgba(255,100,0,0.025) 40%, transparent 65%);
   pointer-events: none; z-index: 4;
+}
+
+/* ── LCD backlight illumination — fades in on hover ── */
+.morph__lcd-backlight {
+  position: absolute; inset: 0;
+  z-index: 1; /* behind all content layers */
+  pointer-events: none;
+  /* Warm-white bloom from center + cooler edge bleed — simulates LED backlight spreading
+     behind the panel glass. Two radial layers: centre hotspot + wider diffuse halo. */
+  background:
+    radial-gradient(ellipse 70% 80% at 50% 50%,
+      rgba(255, 230, 180, 0.22) 0%,
+      rgba(255, 200, 120, 0.10) 40%,
+      transparent 70%),
+    radial-gradient(ellipse 100% 100% at 50% 50%,
+      rgba(200, 180, 140, 0.08) 0%,
+      transparent 65%);
+  opacity: 0;
+  transition: opacity 0.35s ease;
+}
+
+/* ── LCD hover CTA label ── */
+.morph__lcd-hover-label {
+  position: absolute; inset: 0;
+  display: flex; align-items: center; justify-content: center;
+  white-space: nowrap;
+  font-family: var(--font-mono);
+  font-size: 16px; font-weight: 400; letter-spacing: 2.5px; color: #ff8c00;
+  text-shadow:
+    0 0 2px rgba(255,140,0,1), 0 0 5px rgba(255,140,0,0.9),
+    0 0 10px rgba(255,120,0,0.65), 0 0 20px rgba(255,100,0,0.4),
+    0 0 35px rgba(255,80,0,0.2);
+  pointer-events: none;
+  z-index: 6; /* above morph__lcd-text-container (z:5) */
+  opacity: 0;
+  /* Unhover: fade out quickly so marquee can fade back in */
+  transition: opacity 0.2s ease;
+}
+
+.morph__lcd-screen:hover .morph__lcd-hover-label {
+  opacity: 1;
+  /* Hover: wait 0.15s for marquee to fade out first, then appear */
+  transition: opacity 0.25s ease 0.15s;
+}
+
+/* Marquee text container fade — base state = unhover (fades back in after label clears) */
+.morph__lcd-text-container {
+  opacity: 1;
+  transition: opacity 0.3s ease 0.1s;
+}
+
+.morph__lcd-screen:hover .morph__lcd-text-container {
+  opacity: 0;
+  /* Fade out first, no delay */
+  transition: opacity 0.2s ease;
+}
+
+/* Pause the marquee scroll while hovering so it resumes from the same position */
+.morph__lcd-screen:hover .morph__lcd-track {
+  animation-play-state: paused;
+}
+
+/* Outer glow on the screen bezel edge — light bleeding out from behind the glass */
+.morph__lcd-screen {
+  transition:
+    flex 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    height 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    border-radius 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    box-shadow 0.35s ease;
+}
+
+.morph__lcd-screen:hover .morph__lcd-backlight {
+  opacity: 1;
+}
+
+.morph__lcd-screen:hover {
+  box-shadow:
+    inset 0 5px 14px rgba(0,0,0,0.98), inset 0 2px 4px rgba(0,0,0,0.8),
+    inset 0 -2px 6px rgba(0,0,0,0.5), inset 4px 0 10px rgba(0,0,0,0.5),
+    inset -4px 0 10px rgba(0,0,0,0.5), inset 0 1px 1px rgba(0,0,0,1),
+    0 2px 0 rgba(255,255,255,0.6), 0 3px 1px rgba(255,255,255,0.2), 0 -0.5px 0 rgba(0,0,0,0.15),
+    /* Outer amber-warm edge glow — backlight bleeding past the bezel */
+    0 0 18px rgba(255, 180, 60, 0.18),
+    0 0 40px rgba(255, 150, 30, 0.09);
 }
 
 .morph__lcd-text-container {
@@ -1372,6 +1455,12 @@ body.player-expanded .morph__menu-btn {
   transition: border-radius 0.6s cubic-bezier(0.22, 1, 0.36, 1), top 0.6s cubic-bezier(0.22, 1, 0.36, 1), left 0.6s cubic-bezier(0.22, 1, 0.36, 1), right 0.6s cubic-bezier(0.22, 1, 0.36, 1), bottom 0.6s cubic-bezier(0.22, 1, 0.36, 1), padding 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .morph__player.expanded .morph__inner-panel::after { display: none; }
+
+/* Suppress backlight + hover label in expanded mode */
+.morph__player.expanded .morph__lcd-backlight,
+.morph__player.expanded .morph__lcd-hover-label { display: none; }
+.morph__player.expanded .morph__lcd-screen:hover { box-shadow: none; }
+/* morph__lcd-text-container in expanded state is handled below (opacity:0) — no override needed */
 
 /* LCD becomes the main viewport display */
 .morph__player.expanded .morph__lcd-screen {

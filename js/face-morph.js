@@ -619,38 +619,14 @@
     document.addEventListener('touchend', onDragEnd);
   }
 
-  // LCD screen — tooltip on hover + click to open fullscreen player
+  // LCD screen — click to open fullscreen player
   (function() {
-    var lcdScreen  = document.querySelector('.morph__lcd-screen');
-    var lcdTooltip = document.getElementById('morph-lcd-tooltip');
-    var lcdPlayer  = document.getElementById('morph-player');
-    if (!lcdScreen || !lcdTooltip) return;
-
-    var hideTimer = null;
-
-    function positionTooltip() {
-      var rect = lcdScreen.getBoundingClientRect();
-      lcdTooltip.style.left = (rect.left + rect.width / 2) + 'px';
-      lcdTooltip.style.top  = (rect.top - 14) + 'px';
-      lcdTooltip.style.transform = 'translateX(-50%) translateY(-100%)';
-    }
-
-    lcdScreen.addEventListener('mouseenter', function() {
-      if (lcdPlayer && lcdPlayer.classList.contains('expanded')) return;
-      clearTimeout(hideTimer);
-      positionTooltip();
-      lcdTooltip.classList.add('visible');
-    });
-
-    lcdScreen.addEventListener('mouseleave', function() {
-      hideTimer = setTimeout(function() {
-        lcdTooltip.classList.remove('visible');
-      }, 200);
-    });
+    var lcdScreen = document.querySelector('.morph__lcd-screen');
+    var lcdPlayer = document.getElementById('morph-player');
+    if (!lcdScreen) return;
 
     lcdScreen.addEventListener('click', function() {
       if (lcdPlayer && lcdPlayer.classList.contains('expanded')) return;
-      lcdTooltip.classList.remove('visible');
       if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
         window.TashBrand.togglePlayerExpanded();
       }
@@ -1689,6 +1665,97 @@
     }
 
     window.addEventListener('scroll', checkSection, { passive: true });
+  })();
+
+  /* ── Context-aware LCD scrolling text ────────────────────────────────────
+     Zones map page sections to strings. IntersectionObserver watches a narrow
+     10% center-band (rootMargin '-45% 0px -45% 0px') so even very tall sections
+     like hscroll-gallery register correctly when the viewport centre enters them.
+     Text only swaps at the natural animationiteration boundary — the exact frame
+     the marquee track resets to position 0 — so the change is always invisible.
+     pendingZone holds at most one queued string; fast scroll overwrites it so the
+     user always ends up with the zone they landed in. ── */
+  (function() {
+    var track = document.querySelector('.morph__lcd-track');
+    var spans = track ? Array.prototype.slice.call(track.querySelectorAll('.morph__lcd-text')) : [];
+    if (!track || spans.length < 2) return;
+
+    var STRINGS = {
+      hero:      'DESIGNER BY CRAFT \u00B7 ENGINEER BY TRAINING \u00B7 CREATIVE BY NATURE',
+      spotlight: 'REAL PROBLEMS \u00B7 REAL PRODUCTS \u00B7 REAL PEOPLE',
+      journey:   'DRAGON\u2019S DEN \u00B7 CES \u00B7 MICROSOFT \u00B7 SAMSUNG \u00B7 AND COUNTING',
+      endzone:   'WHAT ARE WE BUILDING NEXT \u00B7 LET\u2019S TALK \u00B7 INFO@TASHFIX.COM'
+    };
+
+    var SECTIONS = [
+      { id: 'zoom-out',        zone: 'hero' },
+      { id: 'hscroll-intro',   zone: 'hero' },
+      { id: 'work-spotlight',  zone: 'spotlight' },
+      { id: 'journey-intro',   zone: 'journey' },
+      { id: 'hscroll-gallery', zone: 'journey' },
+      // video-quotes is position:fixed — IntersectionObserver sees it as always
+      // intersecting the viewport root, causing a spurious endzone trigger on load.
+      // site-footer (a normal flow element) reliably covers the endzone instead.
+      { id: 'site-footer',     zone: 'endzone' }
+    ];
+
+    var currentZone = 'hero';
+    var pendingZone = null;
+
+    // Swap text and restart animation cleanly from position 0.
+    // Simply changing textContent mid-animation causes a visual snap because
+    // translate3d(-50%) now resolves to a different pixel value (new text width ≠ old).
+    // Restarting the animation at the swap moment means -50% is always calculated
+    // against the fresh text width, from a clean position 0 start — invisible to the eye.
+    function swapNow(zone) {
+      currentZone = zone;
+      pendingZone = null;
+      spans[0].textContent = STRINGS[zone];
+      spans[1].textContent = STRINGS[zone];
+      // Restart animation: remove name (snaps to transform:none = 0), reflow, restore.
+      // This fires at animationiteration so the track is already at position 0 anyway.
+      track.style.animationName = 'none';
+      // eslint-disable-next-line no-unused-expressions
+      track.offsetWidth; // force reflow so browser registers the reset
+      track.style.animationName = '';
+    }
+
+    // Swap at the natural loop seam — animationiteration fires exactly when the
+    // track resets to position 0 (start of next iteration). Restart there is seamless.
+    track.addEventListener('animationiteration', function() {
+      if (pendingZone && pendingZone !== currentZone) {
+        swapNow(pendingZone);
+      }
+    });
+
+    // Build observed-section list, filtering out any IDs not found in DOM
+    var sectionEls = SECTIONS.map(function(s) {
+      return { zone: s.zone, el: document.getElementById(s.id) };
+    }).filter(function(s) { return !!s.el; });
+
+    // Center-band observer: rootMargin crops to 10% of viewport height at center.
+    // Only one section can be "active" (intersecting this band) at a time.
+    var observer = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (!entry.isIntersecting) return;
+        for (var i = 0; i < sectionEls.length; i++) {
+          if (sectionEls[i].el === entry.target) {
+            var zone = sectionEls[i].zone;
+            if (zone !== currentZone) {
+              pendingZone = zone;   // queue for next loop boundary
+            } else {
+              pendingZone = null;   // already current — clear any stale pending
+            }
+            break;
+          }
+        }
+      });
+    }, {
+      rootMargin: '-45% 0px -45% 0px',
+      threshold: 0
+    });
+
+    sectionEls.forEach(function(s) { observer.observe(s.el); });
   })();
 
 })();
