@@ -1579,46 +1579,61 @@
     }
   })();
 
-  // Scroll hint — fade in after hero reveals, fade out after 2 scroll gestures
+  // Scroll hint — persistent, context-aware across zoom-out sequence
   (function() {
     var hint = document.getElementById('morph-scroll-hint');
     if (!hint) return;
 
-    var heroIntro = document.getElementById('morph-hero-intro');
-    var cta = document.querySelector('.morph__hero-cta');
+    var label = hint.querySelector('.morph__scroll-hint-label');
+    var zoomSection = document.getElementById('zoom-out');
 
-    function alignWithCta() {
-      if (!cta) return;
-      var rect = cta.getBoundingClientRect();
-      var ctaMidY = rect.top + rect.height / 2;
-      var offset = window.innerHeight * 0.03;
-      hint.style.top = (ctaMidY - hint.offsetHeight / 2 - offset) + 'px';
-      hint.style.bottom = 'auto';
-    }
-
-    alignWithCta();
+    // ── Initial show on page load (with the 1.8s CSS delay) ──
     hint.classList.add('visible');
-    shown = true;
-    window.addEventListener('resize', alignWithCta);
 
-    var lastScrollY = window.scrollY;
-    function onWheel(e) {
-      if (e.deltaY > 0) {
-        hint.classList.remove('visible');
-        window.removeEventListener('wheel', onWheel);
-        window.removeEventListener('scroll', onScroll);
-      }
+    // ── Persistent re-show: use ScrollTrigger to detect when user is in the
+    //    zoom-out section and drive text + opacity from scroll progress ──
+    if (typeof ScrollTrigger !== 'undefined' && zoomSection) {
+      ScrollTrigger.create({
+        trigger: zoomSection,
+        start: 'top top',
+        end: 'bottom bottom',
+        onEnter: function() {
+          // Re-entering from top: snap off delay class, reset text, show
+          hint.classList.add('no-delay');
+          if (label) label.textContent = 'Scroll to explore';
+          hint.classList.add('visible');
+        },
+        onLeave: function() {
+          // Scrolled past the section entirely — hide
+          hint.classList.remove('visible');
+        },
+        onEnterBack: function() {
+          // Scrolled back up into section from below — show with new text
+          hint.classList.add('no-delay');
+          if (label) label.textContent = 'Scroll to explore';
+          hint.classList.add('visible');
+        },
+        onLeaveBack: function() {
+          // Scrolled above section (shouldn't normally happen but handle it)
+          hint.classList.remove('visible');
+        },
+        onUpdate: function(self) {
+          var p = self.progress;
+
+          // Phase 3 (0.55+): Fade out — approaching signature sequence
+          if (p >= 0.55) {
+            hint.classList.remove('visible');
+          } else {
+            // Phases 1 & 2: always visible inside the section.
+            // Must explicitly add here too — onEnterBack fires at p≈1 which triggers
+            // phase 3 removal, so re-adding in onUpdate as p drops back below 0.55
+            // is what keeps the hint alive when scrolling back up.
+            hint.classList.add('visible');
+            if (label) label.textContent = p <= 0.22 ? 'Scroll to explore' : 'Keep scrolling to zoom out';
+          }
+        }
+      });
     }
-    function onScroll() {
-      if (window.scrollY > lastScrollY) {
-        hint.classList.remove('visible');
-        window.removeEventListener('wheel', onWheel);
-        window.removeEventListener('scroll', onScroll);
-      }
-      lastScrollY = window.scrollY;
-    }
-    window.addEventListener('wheel', onWheel, { passive: true });
-    window.addEventListener('scroll', onScroll, { passive: true });
   })();
 
   // Horizontal scroll hint — shows once when hscroll section begins

@@ -121,6 +121,7 @@
         lastItem.style.width = '';
         lastItem.style.height = '';
         lastMedia.style.borderRadius = '';
+        lastItem.style.filter = '';
         if (lastCaption) lastCaption.style.opacity = '';
         if (progressEl) progressEl.style.opacity = '';
         if (heroVideo) {
@@ -204,6 +205,22 @@
         lastItem.style.width  = curWidth  + 'px';
         lastItem.style.height = curHeight + 'px';
         lastMedia.style.borderRadius = (6 * (1 - p)) + 'px';
+
+        // Lift shadow — grows with p to simulate tile rising off the surface.
+        // Three layers: tight contact shadow (darkest), mid ambient spread, wide soft halo.
+        // All fade to 0 as p approaches 1 (full viewport = no shadow needed).
+        var shadowFade = p < 0.85 ? 1 : (1 - (p - 0.85) / 0.15); // hold full until 85%, then fade out
+        var offset  = Math.round(p * 28  * shadowFade);  // vertical offset grows with height
+        var blur1   = Math.round(p * 20  * shadowFade);  // tight shadow
+        var blur2   = Math.round(p * 60  * shadowFade);  // ambient spread
+        var blur3   = Math.round(p * 120 * shadowFade);  // wide halo
+        var a1 = (0.55 * p * shadowFade).toFixed(3);
+        var a2 = (0.30 * p * shadowFade).toFixed(3);
+        var a3 = (0.12 * p * shadowFade).toFixed(3);
+        lastItem.style.filter =
+          'drop-shadow(0 ' + offset + 'px ' + blur1 + 'px rgba(0,0,0,' + a1 + ')) ' +
+          'drop-shadow(0 ' + Math.round(offset * 0.6) + 'px ' + blur2 + 'px rgba(0,0,0,' + a2 + ')) ' +
+          'drop-shadow(0 ' + Math.round(offset * 0.3) + 'px ' + blur3 + 'px rgba(0,0,0,' + a3 + '))';
 
         // Start video from beginning once nearly fully expanded
         if (heroVideo && !videoStarted && p > 0.9) {

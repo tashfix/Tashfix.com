@@ -595,7 +595,6 @@
   letter-spacing: -0.025em;
 }
 
-
 .morph__hero-cta {
   display: inline-flex;
   align-items: center;
@@ -670,6 +669,11 @@
 
 .morph__scroll-hint.visible {
   opacity: 1;
+}
+
+/* No delay when re-showing mid-session (after first load) */
+.morph__scroll-hint.no-delay {
+  transition: opacity 0.6s ease;
 }
 
 body.player-expanded .morph__scroll-hint {
