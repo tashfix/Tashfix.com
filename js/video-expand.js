@@ -56,8 +56,6 @@
       caseStudyCta.addEventListener('click', function(e) {
         e.preventDefault();
         if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
-          // Opened from testimonials end-screen — closing should return to face-morph hero
-          window.TashBrand._returnToTop = true;
           window.TashBrand.togglePlayerExpanded();
         }
       });
@@ -276,8 +274,6 @@
       caseStudyCtaMobile.addEventListener('click', function(e) {
         e.preventDefault();
         if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
-          // Opened from testimonials end-screen — closing should return to face-morph hero
-          window.TashBrand._returnToTop = true;
           window.TashBrand.togglePlayerExpanded();
         }
       });
