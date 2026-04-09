@@ -35,7 +35,6 @@
   overflow: hidden;
   z-index: 2;
   opacity: 0;
-  pointer-events: none;
 }
 
 .zoomout__marquee-track {
@@ -55,8 +54,6 @@
   letter-spacing: 0.02em;
   flex-shrink: 0;
   padding-right: 0.5em;
-  user-select: none;
-  -webkit-user-select: none;
 }
 
 @keyframes zoomout-marquee-scroll {
