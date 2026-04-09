@@ -41,6 +41,14 @@
 
     var videoQuotes = document.getElementById('video-quotes');
     var quotesShown = false;
+    var zoomInHint  = document.getElementById('zoom-in-hint');
+    if (zoomInHint) {
+      zoomInHint.addEventListener('click', function() {
+        // Scroll to end of spacer so p reaches 1 (full zoom + video plays)
+        var target = zoomSpacer.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
+        window.scrollTo({ top: target, behavior: 'smooth' });
+      });
+    }
 
     // Case Studies CTA — triggers player fullscreen expand
     var caseStudyCta = document.getElementById('view-case-studies-cta');
@@ -125,6 +133,7 @@
           videoQuotes.classList.remove('visible');
           quotesShown = false;
         }
+        if (zoomInHint) zoomInHint.style.opacity = '';
         originalParent.appendChild(lastItem);
         isReparented = false;
         startRect = null;
@@ -194,6 +203,7 @@
           heroVideo.currentTime = 0;
           heroVideo.play();
           videoStarted = true;
+          if (zoomInHint) zoomInHint.style.opacity = '0';
         }
 
         // Swap logo + hamburger to white once video is near fullscreen

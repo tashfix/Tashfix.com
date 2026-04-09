@@ -501,6 +501,15 @@
         <source src="assets/video/Hero%20Video%20Final%20(kling).webm" type="video/webm">
         <source src="assets/video/Hero%20Video%20Final%20(kling).mp4" type="video/mp4"></video>
         <p class="hscroll__caption"><span class="hscroll__typewriter-text">And here we are</span></p>
+        <div class="zoom-in-hint" id="zoom-in-hint">
+          <svg width="16" height="16" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <line x1="9" y1="6" x2="9" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="6" y1="9" x2="12" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <span class="zoom-in-hint__label">Scroll to zoom in</span>
+        </div>
       </div>
     </div>
 
@@ -1363,14 +1372,6 @@
   <!-- Audio tooltip — fixed, escapes player overflow:hidden -->
   <div class="morph__audio-tooltip" id="morph-audio-tooltip">Control audio here</div>
 
-  <!-- Horizontal scroll hint — appears when hscroll section begins, above progress bar -->
-  <div class="morph__hscroll-hint" id="morph-hscroll-keepscrolling">
-    <svg width="16" height="26" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect x="1" y="1" width="20" height="34" rx="10" stroke="currentColor" stroke-width="1.5"/>
-      <rect x="9" y="7" width="4" height="7" rx="2" fill="currentColor" id="morph-keepscroll-wheel"/>
-    </svg>
-    <span class="morph__hscroll-hint-label">Keep scrolling, you're almost there</span>
-  </div>
 
   <div class="morph__hscroll-hint" id="morph-hscroll-hint">
     <svg width="16" height="26" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg">

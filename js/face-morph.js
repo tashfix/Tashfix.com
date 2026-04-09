@@ -1602,44 +1602,6 @@
     window.addEventListener('scroll', onScroll, { passive: true });
   })();
 
-  // Keep-scrolling hint — shows once when gallery nears the last slide
-  (function() {
-    var hint = document.getElementById('morph-hscroll-keepscrolling');
-    if (!hint) return;
-
-    var shown = false, dismissed = false, timer = null;
-
-    function show() {
-      if (dismissed || shown) return;
-      // Dismiss the journey hint if still visible
-      var journeyHint = document.getElementById('morph-hscroll-hint');
-      if (journeyHint) journeyHint.classList.remove('visible');
-      shown = true;
-      hint.classList.add('visible');
-      timer = setTimeout(dismiss, 5000);
-    }
-
-    function dismiss() {
-      if (dismissed) return;
-      dismissed = true;
-      hint.classList.remove('visible');
-      if (timer) { clearTimeout(timer); timer = null; }
-    }
-
-    function check() {
-      if (dismissed) return;
-      var ht = window.TashBrand && window.TashBrand.horizontalTween;
-      if (!ht || !ht.scrollTrigger) return;
-      var st = ht.scrollTrigger;
-      // Show when 90 % through the gallery
-      if (st.progress >= 0.82) show();
-      // Dismiss once past the gallery end (entering video-expand zone)
-      if (window.scrollY > st.end) dismiss();
-    }
-
-    window.addEventListener('scroll', check, { passive: true });
-  })();
-
   // Horizontal scroll hint — shows once when hscroll section begins
   (function() {
     var hHint = document.getElementById('morph-hscroll-hint');
@@ -1654,9 +1616,6 @@
 
     function showHint() {
       if (hintDismissed || hintShown) return;
-      // Dismiss the keep-scrolling hint if somehow already visible
-      var keepHint = document.getElementById('morph-hscroll-keepscrolling');
-      if (keepHint) keepHint.classList.remove('visible');
       hintShown = true;
       hHint.classList.add('visible');
       // Auto-dismiss after 4 seconds
