@@ -56,6 +56,7 @@
       caseStudyCta.addEventListener('click', function(e) {
         e.preventDefault();
         if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
+          window.TashBrand._returnToTop = true;
           window.TashBrand.togglePlayerExpanded();
         }
       });
@@ -274,6 +275,7 @@
       caseStudyCtaMobile.addEventListener('click', function(e) {
         e.preventDefault();
         if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
+          window.TashBrand._returnToTop = true;
           window.TashBrand.togglePlayerExpanded();
         }
       });

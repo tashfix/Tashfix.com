@@ -730,8 +730,9 @@
           document.body.style.position = '';
           document.body.style.width = '';
           document.body.style.top = '';
-          // Scroll: return to spotlight origin if opened from there, else top
-          var _mobileTarget = window.TashBrand._savedScrollY || 0;
+          // Scroll: return to face-morph hero if opened from testimonials CTA, else savedScrollY
+          var _mobileTarget = window.TashBrand._returnToTop ? 0 : (window.TashBrand._savedScrollY || 0);
+          window.TashBrand._returnToTop = false;
           window.TashBrand._savedScrollY = 0;
           window.TashBrand._fromSpotlight = false;
           window.TashBrand._spotlightScrollY = 0;
@@ -757,8 +758,10 @@
           return;
         }
 
-        // Scroll: return to spotlight origin if opened from there, else top
-        var _desktopTarget = window.TashBrand._savedScrollY || 0;
+        // Scroll: return to face-morph hero if opened from testimonials CTA, else savedScrollY.
+        // Fires immediately so the landing page is already visible when the collapse animation plays.
+        var _desktopTarget = window.TashBrand._returnToTop ? 0 : (window.TashBrand._savedScrollY || 0);
+        window.TashBrand._returnToTop = false;
         window.TashBrand._savedScrollY = 0;
         window.TashBrand._fromSpotlight = false;
         window.TashBrand._spotlightScrollY = 0;

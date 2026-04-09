@@ -820,9 +820,13 @@ body.player-expanded .morph__scroll-hint {
   user-select: none;
   -webkit-user-select: none;
   cursor: grab;
-  /* filter removed — any filter on a fixed ancestor creates an isolated compositing layer
-     that prevents backdrop-filter on morph__env-glass from sampling real page content.
-     Outer depth shadow lives on .morph__player-body instead. */
+  /* Outer depth shadow — lives here (not on player-body) so overflow:hidden
+     doesn't clip it. An element's own box-shadow is not affected by its overflow. */
+  box-shadow: 0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08);
+  /* Clip everything inside to the bezel footprint — hides Safari backdrop-filter
+     and mix-blend-mode artifacts that bleed outside the rounded shape. */
+  overflow: hidden;
+  border-radius: 88px;
   opacity: 0;
   transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.5s ease;
 }
@@ -846,9 +850,8 @@ body.player-expanded .morph__scroll-hint {
   /* z-index:2 places this above morph__env-glass (z:1) in the same stacking context */
   z-index: 2;
   box-shadow:
-    /* Outer depth — replaces filter:drop-shadow that was on .morph__player */
-    0 12px 40px rgba(0,0,0,0.15), 0 4px 12px rgba(0,0,0,0.08),
-    /* Rim inset highlights / shadows for 3-D edge depth */
+    /* Rim inset highlights / shadows for 3-D edge depth
+       (outer depth shadow now lives on .morph__player to avoid overflow:hidden clipping) */
     inset 0 3px 0 rgba(255,255,255,1), inset 0 5px 2px rgba(255,255,255,0.5),
     inset 0 -3px 0 rgba(0,0,0,0.08), inset 0 -5px 8px rgba(0,0,0,0.04),
     inset 3px 0 1px rgba(255,255,255,0.2), inset -3px 0 1px rgba(0,0,0,0.03);
@@ -905,7 +908,6 @@ body.player-expanded .morph__scroll-hint {
   backdrop-filter: blur(18px) saturate(1.5);
   -webkit-backdrop-filter: blur(18px) saturate(1.5);
   pointer-events: none;
-  will-change: backdrop-filter;
 }
 
 /* L2 — Metallic surface at 72% opacity (28% glass bleeds through) */
@@ -1369,6 +1371,9 @@ body.player-expanded .morph__scroll-hint {
   transform: none !important;
   cursor: default;
   filter: none;
+  overflow: visible;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 /* Lock scroll when player is fullscreen */
@@ -1437,6 +1442,7 @@ body.player-expanded .morph__menu-btn {
 
 .morph__player.expanded .morph__player-body {
   border-radius: 0;
+  overflow: visible; /* release fixed cs-detail from clipping */
   transition: border-radius 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .morph__player.expanded .morph__player-body::before,
@@ -1452,7 +1458,7 @@ body.player-expanded .morph__menu-btn {
 
 .morph__player.expanded .morph__inner-panel {
   border-radius: 0 0 6px 6px;
-  top: 0; left: 0; right: 0; bottom: 8px;
+  top: 0; left: 0; right: 0; bottom: 0;
   padding: 0;
   box-shadow: none;
   background: radial-gradient(ellipse at 50% 40%, #1e1508 0%, #130f07 30%, #0d0a05 60%, #080604 100%);
@@ -1545,6 +1551,7 @@ body.player-expanded .morph__menu-btn {
 .morph__player.expanded .morph__chrome-bar {
   border-radius: 0 0 6px 6px;
   overflow: hidden;
+  z-index: 10; /* above cs-detail (z:8) so controls stay accessible */
   max-height: 30px; /* show only progress section (~29px) */
   transition: max-height 0.28s cubic-bezier(0.22, 1, 0.36, 1);
   background: linear-gradient(172deg, #c8c8c8 0%, #c0c0c0 30%, #b8b8b8 60%, #b0b0b0 100%);
@@ -1867,7 +1874,7 @@ body.player-expanded .morph__menu-btn {
    ═══════════════════════════════════════════════════════════ */
 .morph__cs-detail {
   position: fixed;
-  top: 0; left: 0; right: 0; bottom: 94px;
+  top: 0; left: 0; right: 0; bottom: 0;
   z-index: 8;
   display: none;
   overflow-y: auto;
