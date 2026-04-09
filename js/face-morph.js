@@ -730,8 +730,10 @@
           document.body.style.position = '';
           document.body.style.width = '';
           document.body.style.top = '';
-          // Scroll: return to spotlight origin if opened from there, else top
-          var _mobileTarget = window.TashBrand._savedScrollY || 0;
+          // Scroll: return to face-morph hero if opened from testimonials/LCD, else savedScrollY
+          // Mobile has no animation steps so scroll can fire immediately either way
+          var _mobileTarget = window.TashBrand._returnToTop ? 0 : (window.TashBrand._savedScrollY || 0);
+          window.TashBrand._returnToTop = false;
           window.TashBrand._savedScrollY = 0;
           window.TashBrand._fromSpotlight = false;
           window.TashBrand._spotlightScrollY = 0;
@@ -757,8 +759,12 @@
           return;
         }
 
-        // Scroll: return to spotlight origin if opened from there, else top
-        var _desktopTarget = window.TashBrand._savedScrollY || 0;
+        // Scroll: fire immediately in all cases so the page is already in the right
+        // position when the collapse animation begins. For returnToTop the player
+        // then animates back into its landing-page position (face-morph screen).
+        var _shouldReturnToTop = !!window.TashBrand._returnToTop;
+        var _desktopTarget = _shouldReturnToTop ? 0 : (window.TashBrand._savedScrollY || 0);
+        window.TashBrand._returnToTop = false;
         window.TashBrand._savedScrollY = 0;
         window.TashBrand._fromSpotlight = false;
         window.TashBrand._spotlightScrollY = 0;
@@ -768,6 +774,14 @@
         if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
 
         // Step 1: Collapse from fullscreen back to compact (centered)
+        // Clear any open case study detail BEFORE removing 'expanded'.
+        // While 'expanded' is still set, player-body has background:#111 (dark).
+        // Removing 'expanded' drops that background to transparent — if the detail
+        // view is still active at that moment its light background flashes through.
+        // Pre-clearing here keeps the dark background visible during the collapse.
+        var _csDetailPre = document.getElementById('cs-detail');
+        if (_csDetailPre) _csDetailPre.classList.remove('active');
+
         // Restore scale before removing expanded (so transition animates smoothly)
         player.style.transform = savedScale < 0.99 ? 'scale(' + savedScale + ')' : 'none';
         player.style.transformOrigin = 'top left';
