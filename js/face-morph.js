@@ -602,7 +602,8 @@
     }
 
     playerEl.addEventListener('mousedown', function(e) {
-      if (e.target.closest('.morph__play-btn') || e.target.closest('.morph__volume-slider-track') || e.target.closest('.morph__expand-close-btn') || e.target.closest('.morph__cs-card')) return;
+      // Only drag from the bezel — anything inside the inner panel is off-limits
+      if (e.target.closest('.morph__inner-panel')) return;
       onDragStart(e.clientX, e.clientY);
       e.preventDefault();
     });
@@ -611,12 +612,50 @@
 
     // Touch support
     playerEl.addEventListener('touchstart', function(e) {
-      if (e.target.closest('.morph__play-btn') || e.target.closest('.morph__volume-slider-track') || e.target.closest('.morph__expand-close-btn') || e.target.closest('.morph__cs-card')) return;
+      if (e.target.closest('.morph__inner-panel')) return;
       onDragStart(e.touches[0].clientX, e.touches[0].clientY);
     }, { passive: true });
     document.addEventListener('touchmove', function(e) { if (dragState) onDragMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
     document.addEventListener('touchend', onDragEnd);
   }
+
+  // LCD screen — tooltip on hover + click to open fullscreen player
+  (function() {
+    var lcdScreen  = document.querySelector('.morph__lcd-screen');
+    var lcdTooltip = document.getElementById('morph-lcd-tooltip');
+    var lcdPlayer  = document.getElementById('morph-player');
+    if (!lcdScreen || !lcdTooltip) return;
+
+    var hideTimer = null;
+
+    function positionTooltip() {
+      var rect = lcdScreen.getBoundingClientRect();
+      lcdTooltip.style.left = (rect.left + rect.width / 2) + 'px';
+      lcdTooltip.style.top  = (rect.top - 14) + 'px';
+      lcdTooltip.style.transform = 'translateX(-50%) translateY(-100%)';
+    }
+
+    lcdScreen.addEventListener('mouseenter', function() {
+      if (lcdPlayer && lcdPlayer.classList.contains('expanded')) return;
+      clearTimeout(hideTimer);
+      positionTooltip();
+      lcdTooltip.classList.add('visible');
+    });
+
+    lcdScreen.addEventListener('mouseleave', function() {
+      hideTimer = setTimeout(function() {
+        lcdTooltip.classList.remove('visible');
+      }, 200);
+    });
+
+    lcdScreen.addEventListener('click', function() {
+      if (lcdPlayer && lcdPlayer.classList.contains('expanded')) return;
+      lcdTooltip.classList.remove('visible');
+      if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
+        window.TashBrand.togglePlayerExpanded();
+      }
+    });
+  })();
 
   // ═══════════════════════════════════════════════════════════
   // PLAYER — EXPANDED FULLSCREEN TOGGLE (X key debug)
@@ -641,6 +680,8 @@
       expandFlash.classList.add('active');
 
       if (!isExpanded) {
+        // Always save scroll position so close can return here
+        window.TashBrand._savedScrollY = window.scrollY;
         isTransitioning = true;
         document.body.classList.add('player-expanded');
         // Add transitioning early so player becomes visible on mobile
@@ -714,7 +755,8 @@
           document.body.style.width = '';
           document.body.style.top = '';
           // Scroll: return to spotlight origin if opened from there, else top
-          var _mobileTarget = window.TashBrand._fromSpotlight ? (window.TashBrand._spotlightScrollY || 0) : 0;
+          var _mobileTarget = window.TashBrand._savedScrollY || 0;
+          window.TashBrand._savedScrollY = 0;
           window.TashBrand._fromSpotlight = false;
           window.TashBrand._spotlightScrollY = 0;
           window.scrollTo({ top: _mobileTarget, behavior: 'instant' });
@@ -740,7 +782,8 @@
         }
 
         // Scroll: return to spotlight origin if opened from there, else top
-        var _desktopTarget = window.TashBrand._fromSpotlight ? (window.TashBrand._spotlightScrollY || 0) : 0;
+        var _desktopTarget = window.TashBrand._savedScrollY || 0;
+        window.TashBrand._savedScrollY = 0;
         window.TashBrand._fromSpotlight = false;
         window.TashBrand._spotlightScrollY = 0;
         window.scrollTo({ top: _desktopTarget, behavior: 'instant' });
