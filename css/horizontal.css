@@ -577,7 +577,7 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
 
 /* ═══ VIDEO EXPANSION SECTION ═══ */
 .video-expand {
-  height: 50vh;
+  height: 30vh;
   position: relative;
   background: var(--color-offwhite);
 }

@@ -90,7 +90,7 @@
       var lastItem = items[items.length - 1];
       // End scroll when last item's center reaches viewport center
       var lastCenter = lastItem.offsetLeft + lastItem.offsetWidth * 0.5;
-      track.style.width = (lastCenter + window.innerWidth * 0.5) + 'px';
+      track.style.width = (lastCenter + window.innerWidth * 0.5) + 'px'; // original
     }
     setTrackWidth();
 
