@@ -757,6 +757,11 @@
         // Stop animated grid
         if (window.TashBrand.csGridStop) window.TashBrand.csGridStop();
 
+        // Pre-clear case study detail before removing expanded so its light
+        // background doesn't flash through the transparent player body
+        var csDetailPre = document.getElementById('cs-detail');
+        if (csDetailPre) csDetailPre.classList.remove('active');
+
         // Step 1: Collapse from fullscreen back to compact (centered)
         // Restore scale before removing expanded (so transition animates smoothly)
         player.style.transform = savedScale < 0.99 ? 'scale(' + savedScale + ')' : 'none';
