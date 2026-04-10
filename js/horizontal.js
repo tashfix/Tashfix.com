@@ -139,9 +139,25 @@
 
         if (widthDelta > 50 && savedScrollY >= galleryStart) {
           if (zoomWasDone) {
-            // Zoom-in complete (video playing, testimonials) — stay in place,
-            // just resync all triggers at current scroll position
+            // Zoom-in complete — stay in place and block reverse scroll.
+            // Gallery dimensions are stale for the new viewport; user can
+            // still navigate via logo or hamburger menu.
             ScrollTrigger.update();
+            var _wheelLock = function(e) { if (e.deltaY < 0) e.preventDefault(); };
+            var _keyLock   = function(e) {
+              if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'Home') e.preventDefault();
+            };
+            window.addEventListener('wheel',   _wheelLock, { passive: false });
+            window.addEventListener('keydown', _keyLock);
+            // Auto-release once they navigate above the gallery (e.g. logo click)
+            var _unlockCheck = function() {
+              if (window.scrollY < 10) {
+                window.removeEventListener('wheel',   _wheelLock, { passive: false });
+                window.removeEventListener('keydown', _keyLock);
+                window.removeEventListener('scroll',  _unlockCheck);
+              }
+            };
+            window.addEventListener('scroll', _unlockCheck, { passive: true });
           } else {
             // In gallery or mid zoom-in — teleport to gallery start to
             // prevent any misalignment or out-of-bounds state
