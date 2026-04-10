@@ -95,11 +95,46 @@
     setTrackWidth();
 
     var resizeTimer;
+    var preResizeScrollY = null;
+    var preResizeWidth = window.innerWidth;
+
     window.addEventListener('resize', function() {
+      // Snapshot scroll + width on the very first resize event, before
+      // GSAP's own auto-refresh fires and corrupts these values
+      if (preResizeScrollY === null) {
+        preResizeScrollY = window.scrollY;
+        preResizeWidth = window.innerWidth;
+      }
+
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function() {
+        // Never run while player is animating
+        var playerEl = document.querySelector('.morph__player');
+        if (playerEl && (playerEl.classList.contains('expanded') || playerEl.classList.contains('transitioning'))) {
+          preResizeScrollY = null;
+          return;
+        }
+
+        var savedScrollY = preResizeScrollY;
+        var savedWidth   = preResizeWidth;
+        preResizeScrollY = null;
+
+        var widthDelta = Math.abs(window.innerWidth - savedWidth);
+
+        // Capture gallery start before refresh (in case it shifts slightly)
+        var st = horizontalTween.scrollTrigger;
+        var galleryStart = st ? st.start : Infinity;
+
         setTrackWidth();
         ScrollTrigger.refresh();
+
+        // Significant width change (>50px) AND user was in gallery or zoom-in zone
+        // → teleport to gallery start so nothing can be misaligned or out of bounds
+        if (widthDelta > 50 && savedScrollY >= galleryStart) {
+          window.scrollTo({ top: Math.round(st.start), behavior: 'instant' });
+          ScrollTrigger.update();
+        }
+
         recalcProgress();
       }, 200);
     });
