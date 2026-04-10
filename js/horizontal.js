@@ -95,15 +95,22 @@
     setTrackWidth();
 
     var resizeTimer;
-    var preResizeScrollY = null;
-    var preResizeWidth = window.innerWidth;
+    var preResizeScrollY  = null;
+    var preResizeWidth    = window.innerWidth;
+    var preResizeZoomDone = false;
 
     window.addEventListener('resize', function() {
-      // Snapshot scroll + width on the very first resize event, before
-      // GSAP's own auto-refresh fires and corrupts these values
+      // Snapshot state on the very first resize event, before GSAP's
+      // own auto-refresh fires and corrupts scroll/progress values
       if (preResizeScrollY === null) {
-        preResizeScrollY = window.scrollY;
-        preResizeWidth = window.innerWidth;
+        preResizeScrollY  = window.scrollY;
+        preResizeWidth    = window.innerWidth;
+        // Capture whether zoom-in sequence was already fully complete
+        var zoomSpacerSnap  = document.getElementById('video-expand');
+        var zoomTriggerSnap = zoomSpacerSnap
+          ? ScrollTrigger.getAll().find(function(t) { return t.trigger === zoomSpacerSnap; })
+          : null;
+        preResizeZoomDone = zoomTriggerSnap ? zoomTriggerSnap.progress >= 0.98 : false;
       }
 
       clearTimeout(resizeTimer);
@@ -115,24 +122,32 @@
           return;
         }
 
-        var savedScrollY = preResizeScrollY;
-        var savedWidth   = preResizeWidth;
-        preResizeScrollY = null;
+        var savedScrollY  = preResizeScrollY;
+        var savedWidth    = preResizeWidth;
+        var zoomWasDone   = preResizeZoomDone;
+        preResizeScrollY  = null;
+        preResizeZoomDone = false;
 
         var widthDelta = Math.abs(window.innerWidth - savedWidth);
 
-        // Capture gallery start before refresh (in case it shifts slightly)
+        // Capture gallery start before refresh (it may shift slightly after)
         var st = horizontalTween.scrollTrigger;
         var galleryStart = st ? st.start : Infinity;
 
         setTrackWidth();
         ScrollTrigger.refresh();
 
-        // Significant width change (>50px) AND user was in gallery or zoom-in zone
-        // → teleport to gallery start so nothing can be misaligned or out of bounds
         if (widthDelta > 50 && savedScrollY >= galleryStart) {
-          window.scrollTo({ top: Math.round(st.start), behavior: 'instant' });
-          ScrollTrigger.update();
+          if (zoomWasDone) {
+            // Zoom-in complete (video playing, testimonials) — stay in place,
+            // just resync all triggers at current scroll position
+            ScrollTrigger.update();
+          } else {
+            // In gallery or mid zoom-in — teleport to gallery start to
+            // prevent any misalignment or out-of-bounds state
+            window.scrollTo({ top: Math.round(st.start), behavior: 'instant' });
+            ScrollTrigger.update();
+          }
         }
 
         recalcProgress();
