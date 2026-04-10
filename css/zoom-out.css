@@ -35,6 +35,9 @@
   overflow: hidden;
   z-index: 2;
   opacity: 0;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
 }
 
 .zoomout__marquee-track {
