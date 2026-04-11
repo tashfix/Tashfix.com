@@ -25,6 +25,7 @@
   var siteLogo = document.getElementById('site-logo');
   var menuBtn   = document.getElementById('menu-btn');
 
+
   // ══════════════════════════════════════════════════════════════
   // MOBILE PATH — simple crossfade, no pin, no zoom animation
   // ══════════════════════════════════════════════════════════════
@@ -78,6 +79,7 @@
   // DESKTOP PATH — full pin + zoom animation
   // ══════════════════════════════════════════════════════════════
   var nameHidden = false;
+  var logoSmall = false;
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: hero,
@@ -89,18 +91,21 @@
       onUpdate: function(self) {
         window.TashBrand.zoomProgress = self.progress;
         var sig = document.getElementById('ta-sig');
-        if (self.progress > 0.05 && !nameHidden) {
-          nameHidden = true;
-          if (sig) sig.setAttribute('show-name', 'false');
-        } else if (self.progress <= 0.05 && nameHidden) {
-          nameHidden = false;
-          if (sig) sig.setAttribute('show-name', 'true');
+        var logo = document.getElementById('site-logo');
+        if (self.progress > 0.05) {
+          if (!nameHidden) { nameHidden = true; if (sig) sig.setAttribute('show-name', 'false'); }
+          if (!logoSmall)  { logoSmall = true;  if (logo) logo.classList.add('small'); }
+        } else {
+          if (nameHidden)  { nameHidden = false; if (sig) sig.setAttribute('show-name', 'true'); }
+          if (logoSmall)   { logoSmall = false;  if (logo) logo.classList.remove('small'); }
         }
       },
       onLeaveBack: function() {
         var sig = document.getElementById('ta-sig');
-        nameHidden = false;
+        var logo = document.getElementById('site-logo');
+        nameHidden = false; logoSmall = false;
         if (sig) sig.setAttribute('show-name', 'true');
+        if (logo) logo.classList.remove('small');
       },
     }
   });
