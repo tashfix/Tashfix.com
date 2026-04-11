@@ -63,13 +63,6 @@ ta-signature#ta-sig {
 }
 
 /* Favicon logo — mobile only */
-.site-logo__favicon {
-  display: none;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: 14px;
-}
 
 
 /* Hide logo when nav overlay is open */
@@ -2297,21 +2290,24 @@ body.player-expanded .morph__menu-btn {
     left: 14px;
     mix-blend-mode: normal;
     border-radius: 16px;
-    background: transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    box-shadow: none;
-    display: block;
+    background: rgba(255, 255, 255, 0.55);
+    backdrop-filter: blur(12px) saturate(1.3);
+    -webkit-backdrop-filter: blur(12px) saturate(1.3);
+    box-shadow:
+      0 4px 12px rgba(0,0,0,0.08),
+      0 1px 3px rgba(0,0,0,0.06),
+      inset 0 1px 0 rgba(255,255,255,0.7),
+      inset 0 -1px 0 rgba(0,0,0,0.04);
+    display: flex;
+    align-items: center;
+    justify-content: center;
     overflow: hidden;
-    padding: 0;
-  }
-
-  .site-logo__favicon {
-    display: block;
+    padding: 3px;
   }
 
   ta-signature#ta-sig {
-    display: none;
+    --c: rgba(30, 30, 30, 0.75);
+    width: 100%;
   }
 
   /* Logo marquee on mobile — scale down slightly */
