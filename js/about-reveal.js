@@ -54,30 +54,4 @@
     }
     requestAnimationFrame(rafCheck);
 
-    // Logo dark/light swap
-    var menuBtn = document.getElementById('menu-btn');
-    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
-    var isDark = false;
-
-    function setDark() {
-      if (isDark) return; isDark = true;
-      if (menuBtn) {
-        gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 });
-        menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 }); });
-      }
-    }
-    function setLight() {
-      if (!isDark) return; isDark = false;
-      if (menuBtn) {
-        gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.3 });
-        menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.3 }); });
-      }
-    }
-
-    var intro = document.getElementById('hscroll-intro');
-    window.addEventListener('scroll', function() {
-      var trigger = intro || about;
-      var rect = trigger.getBoundingClientRect();
-      if (rect.bottom < 80) { setDark(); } else if (rect.top < window.innerHeight) { setLight(); }
-    }, { passive: true });
   })();

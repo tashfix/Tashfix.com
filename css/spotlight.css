@@ -120,7 +120,7 @@
 
 /* View Case Studies — dark pill */
 .video-quotes__cta[data-glow] {
-  --radius: 100;
+  --radius: 0;
   --border: 1;
   --size:   180;
   --border-spot-opacity:  1;

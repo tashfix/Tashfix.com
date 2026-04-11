@@ -51,7 +51,7 @@
   user-select: none;
   pointer-events: auto;
   cursor: pointer;
-  opacity: 1;
+  opacity: 0.85;
   transform-origin: top left;
 }
 
@@ -77,16 +77,10 @@ ta-signature#ta-sig {
   z-index: 9002;
   width: 60px;
   height: 60px;
-  border: none;
-  border-radius: 16px;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(12px) saturate(1.3);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
-  box-shadow:
-    0 4px 12px rgba(0,0,0,0.08),
-    0 1px 3px rgba(0,0,0,0.06),
-    inset 0 1px 0 rgba(255,255,255,0.7),
-    inset 0 -1px 0 rgba(0,0,0,0.04);
+  border: 1.3px solid rgba(255, 255, 255, 0.45);
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.08);
+  mix-blend-mode: difference;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -96,61 +90,22 @@ ta-signature#ta-sig {
   opacity: 0;
   transform: translateY(24px);
   transform-origin: top right;
-  transition: opacity 0.7s ease, transform 0.7s ease, background 0.2s ease, box-shadow 0.2s ease;
+  transition: opacity 0.7s ease, transform 0.7s ease;
 }
 
 .morph__menu-btn.revealed {
-  opacity: 1;
+  opacity: 0.85;
   transform: translateY(0) scale(1);
-}
-
-.morph__menu-btn:hover {
-  background: rgba(255, 255, 255, 0.65);
-  box-shadow:
-    0 6px 16px rgba(0,0,0,0.1),
-    0 2px 4px rgba(0,0,0,0.08),
-    inset 0 1px 0 rgba(255,255,255,0.8),
-    inset 0 -1px 0 rgba(0,0,0,0.05);
-}
-
-.morph__menu-btn:active {
-  background: rgba(255, 255, 255, 0.45);
-  box-shadow:
-    0 2px 6px rgba(0,0,0,0.06),
-    inset 0 1px 2px rgba(0,0,0,0.06);
 }
 
 .morph__menu-line {
   display: block;
   width: 20px;
   height: 3px;
-  background: rgba(30, 30, 30, 0.75);
+  background: #ffffff;
   border-radius: 2px;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease, width 0.3s ease, height 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
   transform-origin: center;
-}
-
-/* Open state — frosted glass X button */
-.morph__menu-btn.open {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(12px) saturate(1.3);
-  -webkit-backdrop-filter: blur(12px) saturate(1.3);
-  box-shadow:
-    0 4px 12px rgba(0,0,0,0.15),
-    0 1px 3px rgba(0,0,0,0.1),
-    inset 0 1px 0 rgba(255,255,255,0.2),
-    inset 0 -1px 0 rgba(0,0,0,0.1);
-}
-
-.morph__menu-btn.open:hover {
-  background: rgba(255, 255, 255, 0.22);
-}
-
-.morph__menu-btn.open .morph__menu-line {
-  background: rgba(255, 255, 255, 0.85);
-  width: 20px;
-  height: 3px;
-  border-radius: 2px;
 }
 
 /* Two-line X: top line rotates +45, bottom line rotates -45, both meet in center */
@@ -553,29 +508,27 @@ ta-signature#ta-sig {
   align-items: center;
   gap: 8px;
   position: relative;
-  z-index: 200;
   font-family: 'Inter', sans-serif;
   font-size: clamp(10px, 0.85vw, 15px);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  color: rgba(26, 26, 26, 0.7);
+  color: #1a1a1a;
   padding: clamp(10px, 1vw, 16px) clamp(18px, 1.8vw, 32px);
-  border-radius: 100px;
-  border: 1px solid rgba(26, 26, 26, 0.12);
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(8px) saturate(1.2);
-  -webkit-backdrop-filter: blur(8px) saturate(1.2);
-  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+  border-radius: 0;
+  border: 1.3px solid #1a1a1a;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(40px) saturate(160%);
+  -webkit-backdrop-filter: blur(40px) saturate(160%);
+  opacity: 0.85;
+  transition: opacity 0.2s ease;
   cursor: pointer !important;
   pointer-events: auto !important;
 }
 
 .morph__hero-cta:hover {
-  background: rgba(255, 255, 255, 0.75);
-  border-color: rgba(26, 26, 26, 0.25);
-  color: rgba(26, 26, 26, 0.9);
+  opacity: 1;
 }
 
 .morph__hero-cta svg {

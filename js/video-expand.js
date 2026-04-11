@@ -113,23 +113,9 @@
       });
     }
     var siteLogo    = document.getElementById('site-logo');
-    var menuBtn     = document.getElementById('menu-btn');
-    var menuLines   = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
     var startRect   = null;
     var isReparented = false;
     var videoStarted = false;
-
-
-    function setMenuLight() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.4, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.4, ease: 'power2.out' }); });
-    }
-    function setMenuDark() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' }); });
-    }
 
     // Track whether expansion is fully complete (scroll progress ≥ 0.98)
     var isFullyExpanded = false;
@@ -255,8 +241,6 @@
         originalParent.appendChild(lastItem);
         isReparented = false;
         startRect = null;
-        // Restore hamburger to dark mode
-        setMenuDark();
       }
     }
 

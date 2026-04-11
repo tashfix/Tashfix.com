@@ -30,39 +30,6 @@
       }
     });
 
-    // Logo swap — dark logo on beige sections
-    var siteLogo = document.getElementById('site-logo');
-    var menuBtn = document.getElementById('menu-btn');
-    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
-
-    function toBeige() {
-      menuLines.forEach(function(l) { l.style.background = 'rgba(26,26,26,0.75)'; });
-    }
-    function toDark() {
-      menuLines.forEach(function(l) { l.style.background = ''; });
-    }
-
-    // Swap when work-spotlight top reaches viewport top; revert when scrolling back above it
-    var journeyIntro = document.getElementById('journey-intro');
-    var beigeEnd = journeyIntro || section;
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: 'bottom top',
-      onEnter: toBeige,
-      onLeaveBack: toDark
-    });
-    // Journey intro section — stay in beige mode
-    if (journeyIntro) {
-      ScrollTrigger.create({
-        trigger: journeyIntro,
-        start: 'top top',
-        end: 'bottom top',
-        onEnter: toBeige,
-        onLeaveBack: toBeige
-      });
-    }
-
     // Mesh grid animation — deferred until all scripts (incl. main.js) are loaded
     window.addEventListener('load', function() {
       var canvas = document.getElementById('spotlight-mesh');

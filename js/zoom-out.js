@@ -79,23 +79,6 @@
       ease: 'power1.inOut',
     }, 0.5);
 
-    // Menu button: crossfade to light (logo color handled by onUpdate)
-    if (menuBtn) {
-      var menuLines = menuBtn.querySelectorAll('.morph__menu-line');
-      mobileTl.to(menuBtn, {
-        borderColor: 'rgba(255,255,255,0.45)',
-        duration: 0.25,
-        ease: 'power2.inOut',
-      }, 0.4);
-      menuLines.forEach(function(line) {
-        mobileTl.to(line, {
-          backgroundColor: 'rgba(255,255,255,0.85)',
-          duration: 0.25,
-          ease: 'power2.inOut',
-        }, 0.4);
-      });
-    }
-
     return; // skip desktop animation
   }
 
@@ -176,22 +159,13 @@
     }, 0.05);
   }
 
-  // Phase 4c: Hamburger button shrinks + crossfades to light mode
+  // Phase 4c: Hamburger button shrinks into corner
   if (menuBtn) {
-    var menuLines = menuBtn.querySelectorAll('.morph__menu-line');
     tl.to(menuBtn, {
       scale: 0.75,
-      borderColor: 'rgba(255, 255, 255, 0.45)',
       duration: 0.25,
       ease: 'power2.inOut',
     }, 0.05);
-    menuLines.forEach(function(line) {
-      tl.to(line, {
-        backgroundColor: 'rgba(255, 255, 255, 0.85)',
-        duration: 0.2,
-        ease: 'power2.inOut',
-      }, 0.05);
-    });
   }
 
   tl.fromTo(morphAura,

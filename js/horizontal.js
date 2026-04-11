@@ -191,31 +191,16 @@
     window.TashBrand = window.TashBrand || {};
     window.TashBrand.horizontalTween = horizontalTween;
 
-    // Logo + hamburger: swap modes during horizontal scroll
+    // Logo + hamburger: track section state for color-active class
     var siteLogo = document.getElementById('site-logo');
-    var menuBtn = document.getElementById('menu-btn');
-    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
-
-    function setMenuDark() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' }); });
-    }
-    function setMenuLight() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.3, ease: 'power2.out' }); });
-    }
 
     function enterHScroll() {
-      setMenuDark();
       if (section) section.classList.add('color-active');
     }
     function leaveHScrollForward() {
-      // Keep black — video-expand.js handles the white swap
+      // video-expand.js handles transition out
     }
     function leaveHScrollBack() {
-      setMenuLight();
       if (section) section.classList.remove('color-active');
     }
 
