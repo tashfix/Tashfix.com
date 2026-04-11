@@ -321,7 +321,7 @@ body.hscroll-dragging * { cursor: grabbing !important; user-select: none !import
   flex-shrink: 0;
   height: 78vh;
   overflow: hidden;
-  border-radius: 6px;
+  border-radius: 0;
   opacity: 0;
   will-change: transform, opacity;
   z-index: 1;

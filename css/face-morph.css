@@ -62,6 +62,7 @@ ta-signature#ta-sig {
   transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
+
 /* Hide logo when nav overlay is open */
 .site-logo.nav-open {
   opacity: 0 !important;
@@ -77,10 +78,16 @@ ta-signature#ta-sig {
   z-index: 9002;
   width: 60px;
   height: 60px;
-  border: 1.3px solid rgba(255, 255, 255, 0.45);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.08);
-  mix-blend-mode: difference;
+  border: none;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.55);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.08),
+    0 1px 3px rgba(0,0,0,0.06),
+    inset 0 1px 0 rgba(255,255,255,0.7),
+    inset 0 -1px 0 rgba(0,0,0,0.04);
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -90,22 +97,54 @@ ta-signature#ta-sig {
   opacity: 0;
   transform: translateY(24px);
   transform-origin: top right;
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  transition: opacity 0.7s ease, transform 0.7s ease, background 0.2s ease, box-shadow 0.2s ease;
 }
 
 .morph__menu-btn.revealed {
-  opacity: 0.85;
+  opacity: 1;
   transform: translateY(0) scale(1);
+}
+
+.morph__menu-btn:hover {
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0 6px 16px rgba(0,0,0,0.1),
+    0 2px 4px rgba(0,0,0,0.08),
+    inset 0 1px 0 rgba(255,255,255,0.8),
+    inset 0 -1px 0 rgba(0,0,0,0.05);
+}
+
+.morph__menu-btn:active {
+  background: rgba(255, 255, 255, 0.45);
+  box-shadow:
+    0 2px 6px rgba(0,0,0,0.06),
+    inset 0 1px 2px rgba(0,0,0,0.06);
 }
 
 .morph__menu-line {
   display: block;
   width: 20px;
   height: 3px;
-  background: #ffffff;
+  background: rgba(30, 30, 30, 0.75);
   border-radius: 2px;
-  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), background 0.3s ease;
   transform-origin: center;
+}
+
+/* Open state — frosted glass X button */
+.morph__menu-btn.open {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px) saturate(1.3);
+  -webkit-backdrop-filter: blur(12px) saturate(1.3);
+  box-shadow:
+    0 4px 12px rgba(0,0,0,0.15),
+    0 1px 3px rgba(0,0,0,0.1),
+    inset 0 1px 0 rgba(255,255,255,0.2),
+    inset 0 -1px 0 rgba(0,0,0,0.1);
+}
+
+.morph__menu-btn.open:hover {
+  background: rgba(255, 255, 255, 0.22);
 }
 
 /* Two-line X: top line rotates +45, bottom line rotates -45, both meet in center */
@@ -506,29 +545,30 @@ ta-signature#ta-sig {
 .morph__hero-cta {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   position: relative;
   font-family: 'Inter', sans-serif;
-  font-size: clamp(10px, 0.85vw, 15px);
+  font-size: clamp(13px, 1.1vw, 20px);
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   text-decoration: none;
-  color: #1a1a1a;
-  padding: clamp(10px, 1vw, 16px) clamp(18px, 1.8vw, 32px);
+  color: rgba(26, 26, 26, 0.7);
+  padding: clamp(13px, 1.3vw, 21px) clamp(23px, 2.3vw, 42px);
   border-radius: 0;
-  border: 1.3px solid #1a1a1a;
-  background: rgba(255, 255, 255, 0.55);
-  backdrop-filter: blur(40px) saturate(160%);
-  -webkit-backdrop-filter: blur(40px) saturate(160%);
-  opacity: 0.85;
-  transition: opacity 0.2s ease;
+  border: 1px solid rgba(26, 26, 26, 0.12);
+  background: rgba(255, 255, 255, 0.5);
+  backdrop-filter: blur(8px) saturate(1.2);
+  -webkit-backdrop-filter: blur(8px) saturate(1.2);
+  transition: background 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   cursor: pointer !important;
   pointer-events: auto !important;
 }
 
 .morph__hero-cta:hover {
-  opacity: 1;
+  background: rgba(255, 255, 255, 0.75);
+  border-color: rgba(26, 26, 26, 0.25);
+  color: rgba(26, 26, 26, 0.9);
 }
 
 .morph__hero-cta svg {

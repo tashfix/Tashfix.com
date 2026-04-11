@@ -137,8 +137,6 @@ class TASignature extends HTMLElement {
         [data-part="fill"] {
           fill: var(--c);
           fill-opacity: 0.08;
-          backdrop-filter: blur(10px) saturate(1.6);
-          -webkit-backdrop-filter: blur(10px) saturate(1.6);
           opacity: 0;
         }
 
