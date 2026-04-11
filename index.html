@@ -570,7 +570,11 @@
     <div class="video-quotes__cta-row">
       <a href="#" class="video-quotes__cta" id="view-case-studies-cta">
         View Case Studies
-        <svg class="video-quotes__cta-arrow" viewBox="0 0 24 24" width="16" height="16"><path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <svg class="video-quotes__cta-arrow" viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+      </a>
+      <a href="#" class="video-quotes__cta video-quotes__cta--ghost" id="vq-return-top">
+        <svg viewBox="0 0 24 24" width="16" height="16"><path d="M12 19V5M5 12l7-7 7 7" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        Return to Top
       </a>
     </div>
     <div class="video-quotes__footer">
@@ -649,6 +653,14 @@
             vqTip.textContent = 'Copy email';
           }, 2500);
         });
+      });
+    }
+    // Return to top button
+    var vqReturnTop = document.getElementById('vq-return-top');
+    if (vqReturnTop) {
+      vqReturnTop.addEventListener('click', function(e) {
+        e.preventDefault();
+        window.scrollTo({ top: 0, behavior: 'instant' });
       });
     }
   })();
@@ -1410,6 +1422,18 @@
       <!-- Center dot -->
       <circle cx="32" cy="32" r="2.5" class="hscroll__cursor-3d-dot"/>
     </svg>
+  </div>
+
+  <!-- Hero text reveal — scramble-animates after zoom-in completes (desktop only) -->
+  <div id="vq-hero-text" class="vq-hero-text" aria-hidden="true">
+    <h1 class="vq-hero-heading" id="vq-hero-heading"></h1>
+    <div class="vq-hero-email-row" id="vq-hero-email-row">
+      <a href="#" class="vq-hero-email" id="vq-hero-email-btn" data-email="info@tashfix.com">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M22 4L12 13 2 4"/></svg>
+        <span id="vq-hero-email-text"></span>
+        <span class="vq-hero-tooltip" id="vq-hero-tooltip">Copy email</span>
+      </a>
+    </div>
   </div>
 
 </body>

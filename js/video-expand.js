@@ -26,6 +26,57 @@
   document.addEventListener('touchstart', unlockSafariVideos, { once: true, capture: true });
   document.addEventListener('scroll', unlockSafariVideos, { once: true, capture: true });
 
+  // ── Text scramble effect (CodePen qkevinto/WQVNWO, ES5 port) ──
+  function TextScramble(el) {
+    this.el = el;
+    this.chars = '!<>-_\\/[]{}—=+*^?#';
+    this.frameRequest = null;
+    this.resolve = null;
+    this.queue = [];
+    this.frame = 0;
+    var self = this;
+    this.update = function() { self._update(); };
+  }
+  TextScramble.prototype.setText = function(newText) {
+    var self = this;
+    var promise = new Promise(function(resolve) { self.resolve = resolve; });
+    self.queue = [];
+    for (var i = 0; i < newText.length; i++) {
+      var start = Math.floor(Math.random() * 30);
+      var end = start + Math.floor(Math.random() * 30) + 10;
+      self.queue.push({ to: newText[i], start: start, end: end, char: '' });
+    }
+    cancelAnimationFrame(self.frameRequest);
+    self.frame = 0;
+    self.update();
+    return promise;
+  };
+  TextScramble.prototype._update = function() {
+    var output = '';
+    var complete = 0;
+    for (var i = 0; i < this.queue.length; i++) {
+      var item = this.queue[i];
+      if (this.frame >= item.end) {
+        complete++;
+        output += item.to;
+      } else if (this.frame >= item.start) {
+        if (!item.char || Math.random() < 0.28) {
+          item.char = this.chars[Math.floor(Math.random() * this.chars.length)];
+        }
+        output += '<span class="vq-dud">' + item.char + '</span>';
+      } else {
+        output += item.to === ' ' ? ' ' : '&nbsp;';
+      }
+    }
+    this.el.innerHTML = output;
+    if (complete === this.queue.length) {
+      this.resolve();
+    } else {
+      this.frameRequest = requestAnimationFrame(this.update);
+      this.frame++;
+    }
+  };
+
   var mm = gsap.matchMedia();
 
   mm.add('(min-width: 769px)', function() {
@@ -85,6 +136,71 @@
     // Track whether expansion is fully complete (scroll progress ≥ 0.98)
     var isFullyExpanded = false;
 
+    // ── Hero text reveal ──
+    var heroTextShown  = false;
+    var heroGlitchTimer = null;
+    var heroTextEl    = document.getElementById('vq-hero-text');
+    var heroHeadingEl = document.getElementById('vq-hero-heading');
+    var heroEmailRow  = document.getElementById('vq-hero-email-row');
+    var heroEmailBtn  = document.getElementById('vq-hero-email-btn');
+    var heroEmailText = document.getElementById('vq-hero-email-text');
+    var heroTooltip   = document.getElementById('vq-hero-tooltip');
+    var headingFx     = heroHeadingEl ? new TextScramble(heroHeadingEl) : null;
+    var emailFx       = heroEmailText ? new TextScramble(heroEmailText) : null;
+
+    function showHeroText() {
+      if (!heroTextEl || !headingFx || !emailFx) return;
+      heroTextEl.classList.add('visible');
+      headingFx.setText('CRAFTED. NOT GENERATED.').then(function() {
+        setTimeout(function() {
+          heroEmailRow.classList.add('visible');
+          emailFx.setText('info@tashfix.com').then(function() {
+            if (heroEmailBtn) heroEmailBtn.classList.add('ready');
+          });
+        }, 300);
+
+        // Glitch the heading every ~6s (±1.5s random jitter so it feels organic)
+        function scheduleGlitch() {
+          var delay = 6000 + (Math.random() * 3000) - 1500; // 4.5s–7.5s
+          heroGlitchTimer = setTimeout(function() {
+            if (headingFx && heroTextShown) {
+              headingFx.setText('CRAFTED. NOT GENERATED.').then(function() {
+                scheduleGlitch(); // re-schedule after each glitch completes
+              });
+            }
+          }, delay);
+        }
+        scheduleGlitch();
+      });
+    }
+
+    function hideHeroText() {
+      if (!heroTextEl) return;
+      heroTextEl.classList.remove('visible');
+      if (heroEmailRow) heroEmailRow.classList.remove('visible');
+      if (heroEmailBtn) heroEmailBtn.classList.remove('ready');
+      if (heroHeadingEl) heroHeadingEl.innerHTML = '';
+      if (heroEmailText) heroEmailText.innerHTML = '';
+      if (heroGlitchTimer) { clearTimeout(heroGlitchTimer); heroGlitchTimer = null; }
+      heroTextShown = false;
+    }
+
+    // Copy-to-clipboard for hero email
+    if (heroEmailBtn && heroTooltip) {
+      heroEmailBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        if (!heroEmailBtn.classList.contains('ready')) return;
+        navigator.clipboard.writeText(heroEmailBtn.dataset.email).then(function() {
+          heroTooltip.textContent = 'Copied!';
+          heroTooltip.classList.add('visible');
+          setTimeout(function() {
+            heroTooltip.classList.remove('visible');
+            heroTooltip.textContent = 'Copy email';
+          }, 2500);
+        });
+      });
+    }
+
     // Fade to black & white + fade in testimonial quotes at 1/3 of video
     if (heroVideo) {
       heroVideo.addEventListener('timeupdate', function() {
@@ -137,6 +253,7 @@
           quotesShown = false;
         }
         if (zoomInHint) zoomInHint.style.opacity = '';
+        hideHeroText();
         originalParent.appendChild(lastItem);
         isReparented = false;
         startRect = null;
@@ -248,10 +365,19 @@
         // Track full expansion state for quotes gating
         isFullyExpanded = (p >= 0.98);
 
-        // Hide quotes immediately when scrolling back
+        // Trigger hero text scramble on first frame of full expansion
+        if (isFullyExpanded && !heroTextShown) {
+          heroTextShown = true;
+          showHeroText();
+        }
+
+        // Hide quotes + hero text immediately when scrolling back
         if (!isFullyExpanded && quotesShown && videoQuotes) {
           videoQuotes.classList.remove('visible');
           quotesShown = false;
+        }
+        if (!isFullyExpanded && heroTextShown) {
+          hideHeroText();
         }
 
         // Fade caption quickly
