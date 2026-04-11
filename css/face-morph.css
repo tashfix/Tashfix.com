@@ -116,6 +116,7 @@ ta-signature#ta-sig {
   z-index: 9002;
   width: 60px;
   height: 60px;
+  transform-origin: top right;
   border: none;
   border-radius: 16px;
   background: rgba(255, 255, 255, 0.28);
