@@ -68,7 +68,7 @@ ta-signature#ta-sig {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  border-radius: 14px;
+  border-radius: 10px;
 }
 
 
@@ -2296,7 +2296,8 @@ body.player-expanded .morph__menu-btn {
     top: 12px;
     left: 14px;
     mix-blend-mode: normal;
-    border-radius: 16px;
+    border-radius: 10px;
+    border: 1.5px solid #0A1A4A;
     background: transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
@@ -2324,6 +2325,7 @@ body.player-expanded .morph__menu-btn {
     height: 48px;
     top: 12px;
     right: 14px;
+    border-radius: 10px;
   }
 
   /* ── Fullscreen: plain black background with case studies only ── */
