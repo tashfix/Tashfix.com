@@ -66,10 +66,10 @@ ta-signature#ta-sig {
 .site-logo__initials {
   display: none;
   font-family: 'Inter', -apple-system, sans-serif;
-  font-weight: 800;
-  font-size: 17px;
-  letter-spacing: -0.02em;
-  color: rgba(26, 26, 26, 0.82);
+  font-weight: 900;
+  font-size: 22px;
+  letter-spacing: -0.03em;
+  color: #1a1a1a;
   line-height: 1;
   user-select: none;
 }
