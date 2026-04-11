@@ -1974,7 +1974,7 @@ body.player-expanded .morph__menu-btn {
 .morph__cs-detail-scroll {
   max-width: 780px;
   margin: 0 auto;
-  padding: 80px clamp(24px, 4vw, 48px) 120px;
+  padding: 80px clamp(24px, 4vw, 48px) max(200px, 40vh);
   position: relative;
 }
 

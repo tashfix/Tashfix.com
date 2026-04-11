@@ -959,11 +959,17 @@
 
       if (tocScrollHandler) csDetail.removeEventListener('scroll', tocScrollHandler);
       tocScrollHandler = function() {
-        var scrollTop = csDetail.scrollTop;
+        // Use getBoundingClientRect so the threshold is viewport-relative and
+        // stays correct even as lazy-loaded images shift the layout.
+        var threshold = csDetail.clientHeight * 0.35;
         var activeIdx = 0;
         sectionEls.forEach(function(sec, i) {
-          if (sec.offsetTop - 110 <= scrollTop) activeIdx = i;
+          if (sec.getBoundingClientRect().top <= threshold) activeIdx = i;
         });
+        // Force last section active when within 40px of the bottom
+        if (csDetail.scrollTop + csDetail.clientHeight >= csDetail.scrollHeight - 40) {
+          activeIdx = sectionEls.length - 1;
+        }
         tocLinks.forEach(function(a, i) {
           a.parentElement.classList.toggle('morph__cs-toc-item--active', i === activeIdx);
         });
