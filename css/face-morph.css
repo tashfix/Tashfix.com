@@ -2299,6 +2299,8 @@ body.player-expanded .morph__menu-btn {
     top: 12px;
     left: 14px;
     mix-blend-mode: normal;
+    opacity: 1;
+    z-index: 9002;
     border-radius: 10px;
     border: none;
     background: rgba(255, 255, 255, 0.55);
