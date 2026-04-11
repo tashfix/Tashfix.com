@@ -30,24 +30,20 @@
       }
     });
 
-    // Logo swap — dark logo + frosted glass on beige sections
+    // Logo swap — dark logo on beige sections
     var siteLogo = document.getElementById('site-logo');
-    var logoGlass = document.getElementById('site-logo-glass');
-    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
     var menuBtn = document.getElementById('menu-btn');
     var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
 
     function toBeige() {
-      if (logoGlass) logoGlass.classList.add('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      window.TashBrand.setLogoColor('black');
       menuLines.forEach(function(l) { l.style.background = 'rgba(26,26,26,0.75)'; });
     }
     function toDark() {
-      if (logoGlass) logoGlass.classList.remove('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      // Only swap to white if still in cobalt zone — skip if teleporting to face morph
+      if (window.scrollY > 100) {
+        window.TashBrand.setLogoColor('white');
+      }
       menuLines.forEach(function(l) { l.style.background = ''; });
     }
 

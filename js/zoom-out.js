@@ -19,10 +19,10 @@
   // Initialize scroll progress tracker
   window.TashBrand.zoomProgress = 0;
 
+  // ta-signature draw/reveal is triggered from main.js after portrait appears
+
   // ── Shared logo references ──────────────────────────────────
   var siteLogo = document.getElementById('site-logo');
-  var logoDark  = siteLogo ? siteLogo.querySelector('.site-logo__dark')  : null;
-  var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
   var menuBtn   = document.getElementById('menu-btn');
 
   // ══════════════════════════════════════════════════════════════
@@ -32,6 +32,7 @@
     // Silence signature strokes so they never flash on mobile
     gsap.set([tStrokes, aStrokes, xbStrokes], { opacity: 0 });
 
+    var mobileLogoIsWhite = false;
     var mobileTl = gsap.timeline({
       scrollTrigger: {
         trigger: hero,
@@ -43,12 +44,26 @@
           if (mobileGradient) {
             mobileGradient.style.opacity = Math.max(0, 1 - self.progress * 5);
           }
+          if (self.progress > 0.4 && !mobileLogoIsWhite) {
+            mobileLogoIsWhite = true;
+            window.TashBrand.setLogoColor('white');
+            document.getElementById('ta-sig').setAttribute('show-name', 'false');
+          } else if (self.progress <= 0.4 && mobileLogoIsWhite) {
+            mobileLogoIsWhite = false;
+            window.TashBrand.setLogoColor('black');
+            document.getElementById('ta-sig').setAttribute('show-name', 'true');
+          }
         },
         onLeave: function() {
           if (mobileGradient) mobileGradient.style.opacity = '0';
         },
         onEnterBack: function() {
           if (mobileGradient) mobileGradient.style.opacity = '1';
+        },
+        onLeaveBack: function() {
+          mobileLogoIsWhite = false;
+          window.TashBrand.setLogoColor('black');
+          document.getElementById('ta-sig').setAttribute('show-name', 'true');
         }
       }
     });
@@ -67,13 +82,7 @@
       ease: 'power1.inOut',
     }, 0.5);
 
-    // Logo: dark → light swap at ~40% scroll
-    if (logoDark && logoLight) {
-      mobileTl.to(logoDark,  { opacity: 0, duration: 0.25, ease: 'power2.inOut' }, 0.4);
-      mobileTl.to(logoLight, { opacity: 1, duration: 0.25, ease: 'power2.inOut' }, 0.4);
-    }
-
-    // Menu button: crossfade to light
+    // Menu button: crossfade to light (logo color handled by onUpdate)
     if (menuBtn) {
       var menuLines = menuBtn.querySelectorAll('.morph__menu-line');
       mobileTl.to(menuBtn, {
@@ -96,6 +105,7 @@
   // ══════════════════════════════════════════════════════════════
   // DESKTOP PATH — full pin + zoom animation
   // ══════════════════════════════════════════════════════════════
+  var logoIsWhite = false;
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: hero,
@@ -106,10 +116,27 @@
       anticipatePin: 1,
       onUpdate: function(self) {
         window.TashBrand.zoomProgress = self.progress;
-        // Reveal logo on first scroll (CSS transition handles the fade-in)
-        if (siteLogo && self.progress > 0.02 && !siteLogo.classList.contains('revealed')) {
-          siteLogo.classList.add('revealed');
+        var sig = document.getElementById('ta-sig');
+        if (self.progress > 0.05 && !logoIsWhite) {
+          logoIsWhite = true;
+          window.TashBrand.setLogoColor('white');
+          if (sig) sig.setAttribute('show-name', 'false');
+        } else if (self.progress <= 0.05) {
+          // Always restore black at face morph — catches teleport from any section
+          logoIsWhite = false;
+          if (sig && sig.getAttribute('color') !== 'black') {
+            window.TashBrand.setLogoColor('black');
+          }
+          if (sig && sig.getAttribute('show-name') === 'false') {
+            sig.setAttribute('show-name', 'true');
+          }
         }
+      },
+      onLeaveBack: function() {
+        var sig = document.getElementById('ta-sig');
+        logoIsWhite = false;
+        window.TashBrand.setLogoColor('black');
+        if (sig) sig.setAttribute('show-name', 'true');
       },
     }
   });
@@ -151,12 +178,10 @@
     ease: 'power1.in',
   }, 0);
 
-  // Phase 4b: Logo crossfade (dark → light) and shrink into corner
-  if (siteLogo && logoDark && logoLight) {
-    tl.to(logoDark,  { opacity: 0, duration: 0.2, ease: 'power2.inOut' }, 0.05);
-    tl.to(logoLight, { opacity: 1, duration: 0.2, ease: 'power2.inOut' }, 0.05);
+  // Phase 4b: Logo shrinks into corner (color handled by onUpdate)
+  if (siteLogo) {
     tl.to(siteLogo, {
-      scale: 0.55,
+      scale: 0.54,
       duration: 0.25,
       ease: 'power2.inOut',
     }, 0.05);

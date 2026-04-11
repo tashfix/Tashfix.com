@@ -46,67 +46,19 @@
   top: 20px;
   left: 24px;
   z-index: 8998; /* sits below player (9000) so expanded player covers it naturally */
+  width: clamp(140px, 19.25vw, 220px);
   user-select: none;
   pointer-events: auto;
   cursor: pointer;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.7s ease, transform 0.7s ease;
+  opacity: 1;
   transform-origin: top left;
 }
 
-.site-logo.revealed {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Frosted glass backing — hidden by default, revealed during horizontal scroll */
-.site-logo__glass {
-  position: absolute;
-  inset: -12px -18px;
-  border-radius: 12px;
-  backdrop-filter: blur(14px) saturate(0.85);
-  -webkit-backdrop-filter: blur(14px) saturate(0.85);
-  background: rgba(232, 230, 226, 0.6);
-  border: 1px solid rgba(0, 0, 0, 0.04);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  opacity: 0;
-  transition: opacity 0.4s ease;
-  z-index: -1;
-}
-
-.site-logo__glass.visible {
-  opacity: 1;
-}
-
-
-.site-logo__dark,
-.site-logo__light {
-  height: clamp(77px, 10.7vw, 122px);
-  width: auto;
+/* Signature logo — width controls size (SVG scales to fill) */
+ta-signature#ta-sig {
+  width: clamp(140px, 19.25vw, 220px);
   display: block;
-  transition: height 0.4s ease, opacity 0.4s ease;
-}
-
-/* Dark version — cherry red paths (Vogue editorial) */
-.site-logo__dark {
-  opacity: 1;
-}
-.site-logo__dark .site-logo__path {
-  fill: rgba(26, 26, 26, 0.82);
-  transition: fill 0.4s ease, stroke 0.4s ease;
-}
-
-/* Light version — white paths */
-.site-logo__light {
-  position: absolute;
-  top: 0; left: 0;
-  opacity: 0;
-  transition: opacity 0.4s ease;
-}
-.site-logo__light .site-logo__path {
-  fill: white;
-  transition: fill 0.4s ease, stroke 0.4s ease, fill-opacity 0.4s ease;
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 /* Hide logo when nav overlay is open */
@@ -2332,8 +2284,11 @@ body.player-expanded .morph__menu-btn {
   }
 
   /* Smaller logo on mobile */
-  .site-logo__dark, .site-logo__light {
-    height: clamp(51px, 10.2vw, 77px);
+  ta-signature#ta-sig {
+    width: clamp(84px, 18.7vw, 123px);
+  }
+  .site-logo {
+    width: clamp(84px, 18.7vw, 123px);
   }
 
   /* Logo marquee on mobile — scale down slightly */

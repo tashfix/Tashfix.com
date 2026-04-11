@@ -113,8 +113,6 @@
       });
     }
     var siteLogo    = document.getElementById('site-logo');
-    var logoDark    = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight   = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
     var menuBtn     = document.getElementById('menu-btn');
     var menuLines   = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
     var startRect   = null;
@@ -259,8 +257,7 @@
         startRect = null;
         // Restore logo + hamburger to dark mode
         if (logoSwapped) {
-          if (logoDark) gsap.set(logoDark, { opacity: 1 });
-          if (logoLight) gsap.set(logoLight, { opacity: 0 });
+          window.TashBrand.setLogoColor('black');
           setMenuDark();
           logoSwapped = false;
         }
@@ -350,14 +347,12 @@
 
         // Swap logo + hamburger to white once video is near fullscreen
         if (!logoSwapped && p > 0.7) {
-          if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.4, ease: 'power2.out' });
-          if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.4, ease: 'power2.out' });
-          setMenuLight();
+          window.TashBrand.setLogoColor('white');
+          setMenuDark();
           logoSwapped = true;
         }
         if (logoSwapped && p < 0.7) {
-          if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-          if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+          window.TashBrand.setLogoColor('black');
           setMenuDark();
           logoSwapped = false;
         }

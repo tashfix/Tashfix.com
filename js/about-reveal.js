@@ -55,19 +55,13 @@
     requestAnimationFrame(rafCheck);
 
     // Logo dark/light swap
-    var siteLogo = document.getElementById('site-logo');
-    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
-    var logoGlass = document.getElementById('site-logo-glass');
     var menuBtn = document.getElementById('menu-btn');
     var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
     var isDark = false;
 
     function setDark() {
       if (isDark) return; isDark = true;
-      if (logoGlass) logoGlass.classList.add('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      window.TashBrand.setLogoColor('black');
       if (menuBtn) {
         gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 });
         menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 }); });
@@ -75,9 +69,7 @@
     }
     function setLight() {
       if (!isDark) return; isDark = false;
-      if (logoGlass) logoGlass.classList.remove('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
+      window.TashBrand.setLogoColor('white');
       if (menuBtn) {
         gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.3 });
         menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.3 }); });
@@ -88,6 +80,6 @@
     window.addEventListener('scroll', function() {
       var trigger = intro || about;
       var rect = trigger.getBoundingClientRect();
-      if (rect.bottom < 80) { setDark(); } else { setLight(); }
+      if (rect.bottom < 80) { setDark(); } else if (rect.top < window.innerHeight) { setLight(); }
     }, { passive: true });
   })();

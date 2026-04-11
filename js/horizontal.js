@@ -193,9 +193,6 @@
 
     // Logo + hamburger: swap modes during horizontal scroll
     var siteLogo = document.getElementById('site-logo');
-    var logoGlass = document.getElementById('site-logo-glass');
-    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
     var menuBtn = document.getElementById('menu-btn');
     var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
 
@@ -211,22 +208,20 @@
     }
 
     function enterHScroll() {
-      if (logoGlass) logoGlass.classList.add('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
+      window.TashBrand.setLogoColor('black');
       setMenuDark();
       if (section) section.classList.add('color-active');
     }
     function leaveHScrollForward() {
-      if (logoGlass) logoGlass.classList.remove('visible');
-      // Keep dark logo — video-expand.js handles the white swap
+      // Keep black — video-expand.js handles the white swap
     }
     function leaveHScrollBack() {
-      // Scrolling up into cobalt — swap to white for legibility
-      if (logoGlass) logoGlass.classList.remove('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      setMenuLight();
+      // Scrolling up into cobalt — swap to white for legibility.
+      // Skip if teleporting to face morph (scroll near top) — zoom-out.js owns that state.
+      if (window.scrollY > 100) {
+        window.TashBrand.setLogoColor('white');
+        setMenuLight();
+      }
       if (section) section.classList.remove('color-active');
     }
 
