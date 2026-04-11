@@ -651,16 +651,11 @@
         player.classList.add('transitioning');
 
         var menuBtnEl = document.getElementById('menu-btn');
-        var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
         var isMobile = window.innerWidth <= 768;
 
-        // Style hamburger for expanded (white lines) — CSS handles logo hide/show
+        // Reset hamburger position/scale for expanded state
         if (menuBtnEl) {
           gsap.set(menuBtnEl, { clearProps: 'top,right,scale' });
-          gsap.set(menuBtnEl, { borderColor: 'rgba(255,255,255,0.45)' });
-          menuLines.forEach(function(l) {
-            gsap.set(l, { backgroundColor: 'rgba(255,255,255,0.85)' });
-          });
         }
 
         // Save current position and scale before expanding
@@ -796,14 +791,12 @@
             player.style.height = '';
             player.classList.remove('spotlight-entry');
             var menuBtnEl = document.getElementById('menu-btn');
-            var menuLines = menuBtnEl ? menuBtnEl.querySelectorAll('.morph__menu-line') : [];
             document.body.classList.remove('player-expanded');
             // URL: clear hash when player collapses to landing
             if (!isRestoringFromHash) history.pushState({ view: 'landing' }, '', location.pathname);
-            // Restore hamburger lines to dark (page background is light after collapse)
+            // Restore hamburger position/scale after collapse
             if (menuBtnEl) {
-              gsap.set(menuBtnEl, { clearProps: 'top,right,scale,borderColor' });
-              menuLines.forEach(function(l) { gsap.set(l, { clearProps: 'backgroundColor' }); });
+              gsap.set(menuBtnEl, { clearProps: 'top,right,scale' });
             }
             // Stop any playing YouTube videos
             if (window.TashBrand.stopCaseStudyVideos) window.TashBrand.stopCaseStudyVideos();

@@ -113,25 +113,9 @@
       });
     }
     var siteLogo    = document.getElementById('site-logo');
-    var logoDark    = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight   = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
-    var menuBtn     = document.getElementById('menu-btn');
-    var menuLines   = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
     var startRect   = null;
     var isReparented = false;
     var videoStarted = false;
-    var logoSwapped  = false;
-
-    function setMenuLight() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.4, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.4, ease: 'power2.out' }); });
-    }
-    function setMenuDark() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' }); });
-    }
 
     // Track whether expansion is fully complete (scroll progress ≥ 0.98)
     var isFullyExpanded = false;
@@ -257,13 +241,6 @@
         originalParent.appendChild(lastItem);
         isReparented = false;
         startRect = null;
-        // Restore logo + hamburger to dark mode
-        if (logoSwapped) {
-          if (logoDark) gsap.set(logoDark, { opacity: 1 });
-          if (logoLight) gsap.set(logoLight, { opacity: 0 });
-          setMenuDark();
-          logoSwapped = false;
-        }
       }
     }
 
@@ -346,20 +323,6 @@
           heroVideo.play();
           videoStarted = true;
           if (zoomInHint) zoomInHint.style.opacity = '0';
-        }
-
-        // Swap logo + hamburger to white once video is near fullscreen
-        if (!logoSwapped && p > 0.7) {
-          if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.4, ease: 'power2.out' });
-          if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.4, ease: 'power2.out' });
-          setMenuLight();
-          logoSwapped = true;
-        }
-        if (logoSwapped && p < 0.7) {
-          if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-          if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-          setMenuDark();
-          logoSwapped = false;
         }
 
         // Track full expansion state for quotes gating

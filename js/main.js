@@ -125,6 +125,11 @@ window.TashBrand = {
       }, 400);
       setTimeout(function() { consent.style.display = 'none'; }, 900);
       window.removeEventListener('scroll', onScrollDismiss);
+      // Play signature draw animation once the portrait is visible (~600ms after reveal)
+      setTimeout(function() {
+        var sig = document.getElementById('ta-sig');
+        if (sig) sig.play();
+      }, 600);
     }
 
     function onScrollDismiss() {

@@ -191,42 +191,16 @@
     window.TashBrand = window.TashBrand || {};
     window.TashBrand.horizontalTween = horizontalTween;
 
-    // Logo + hamburger: swap modes during horizontal scroll
+    // Logo + hamburger: track section state for color-active class
     var siteLogo = document.getElementById('site-logo');
-    var logoGlass = document.getElementById('site-logo-glass');
-    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
-    var menuBtn = document.getElementById('menu-btn');
-    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
-
-    function setMenuDark() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3, ease: 'power2.out' }); });
-    }
-    function setMenuLight() {
-      if (!menuBtn) return;
-      gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.3, ease: 'power2.out' }); });
-    }
 
     function enterHScroll() {
-      if (logoGlass) logoGlass.classList.add('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      setMenuDark();
       if (section) section.classList.add('color-active');
     }
     function leaveHScrollForward() {
-      if (logoGlass) logoGlass.classList.remove('visible');
-      // Keep dark logo — video-expand.js handles the white swap
+      // video-expand.js handles transition out
     }
     function leaveHScrollBack() {
-      // Scrolling up into cobalt — swap to white for legibility
-      if (logoGlass) logoGlass.classList.remove('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      setMenuLight();
       if (section) section.classList.remove('color-active');
     }
 

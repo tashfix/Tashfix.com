@@ -30,48 +30,6 @@
       }
     });
 
-    // Logo swap — dark logo + frosted glass on beige sections
-    var siteLogo = document.getElementById('site-logo');
-    var logoGlass = document.getElementById('site-logo-glass');
-    var logoDark = siteLogo ? siteLogo.querySelector('.site-logo__dark') : null;
-    var logoLight = siteLogo ? siteLogo.querySelector('.site-logo__light') : null;
-    var menuBtn = document.getElementById('menu-btn');
-    var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
-
-    function toBeige() {
-      if (logoGlass) logoGlass.classList.add('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { l.style.background = 'rgba(26,26,26,0.75)'; });
-    }
-    function toDark() {
-      if (logoGlass) logoGlass.classList.remove('visible');
-      if (logoDark) gsap.to(logoDark, { opacity: 0, duration: 0.3, ease: 'power2.out' });
-      if (logoLight) gsap.to(logoLight, { opacity: 1, duration: 0.3, ease: 'power2.out' });
-      menuLines.forEach(function(l) { l.style.background = ''; });
-    }
-
-    // Swap when work-spotlight top reaches viewport top; revert when scrolling back above it
-    var journeyIntro = document.getElementById('journey-intro');
-    var beigeEnd = journeyIntro || section;
-    ScrollTrigger.create({
-      trigger: section,
-      start: 'top top',
-      end: 'bottom top',
-      onEnter: toBeige,
-      onLeaveBack: toDark
-    });
-    // Journey intro section — stay in beige mode
-    if (journeyIntro) {
-      ScrollTrigger.create({
-        trigger: journeyIntro,
-        start: 'top top',
-        end: 'bottom top',
-        onEnter: toBeige,
-        onLeaveBack: toBeige
-      });
-    }
-
     // Mesh grid animation — deferred until all scripts (incl. main.js) are loaded
     window.addEventListener('load', function() {
       var canvas = document.getElementById('spotlight-mesh');
