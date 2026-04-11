@@ -208,7 +208,6 @@
     }
 
     function enterHScroll() {
-      window.TashBrand.setLogoColor('black');
       setMenuDark();
       if (section) section.classList.add('color-active');
     }
@@ -216,12 +215,7 @@
       // Keep black — video-expand.js handles the white swap
     }
     function leaveHScrollBack() {
-      // Scrolling up into cobalt — swap to white for legibility.
-      // Skip if teleporting to face morph (scroll near top) — zoom-out.js owns that state.
-      if (window.scrollY > 100) {
-        window.TashBrand.setLogoColor('white');
-        setMenuLight();
-      }
+      setMenuLight();
       if (section) section.classList.remove('color-active');
     }
 

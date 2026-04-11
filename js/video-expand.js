@@ -118,7 +118,7 @@
     var startRect   = null;
     var isReparented = false;
     var videoStarted = false;
-    var logoSwapped  = false;
+
 
     function setMenuLight() {
       if (!menuBtn) return;
@@ -255,12 +255,8 @@
         originalParent.appendChild(lastItem);
         isReparented = false;
         startRect = null;
-        // Restore logo + hamburger to dark mode
-        if (logoSwapped) {
-          window.TashBrand.setLogoColor('black');
-          setMenuDark();
-          logoSwapped = false;
-        }
+        // Restore hamburger to dark mode
+        setMenuDark();
       }
     }
 
@@ -343,18 +339,6 @@
           heroVideo.play();
           videoStarted = true;
           if (zoomInHint) zoomInHint.style.opacity = '0';
-        }
-
-        // Swap logo + hamburger to white once video is near fullscreen
-        if (!logoSwapped && p > 0.7) {
-          window.TashBrand.setLogoColor('white');
-          setMenuDark();
-          logoSwapped = true;
-        }
-        if (logoSwapped && p < 0.7) {
-          window.TashBrand.setLogoColor('black');
-          setMenuDark();
-          logoSwapped = false;
         }
 
         // Track full expansion state for quotes gating

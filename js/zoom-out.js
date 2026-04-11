@@ -32,7 +32,7 @@
     // Silence signature strokes so they never flash on mobile
     gsap.set([tStrokes, aStrokes, xbStrokes], { opacity: 0 });
 
-    var mobileLogoIsWhite = false;
+    var mobileNameHidden = false;
     var mobileTl = gsap.timeline({
       scrollTrigger: {
         trigger: hero,
@@ -44,13 +44,11 @@
           if (mobileGradient) {
             mobileGradient.style.opacity = Math.max(0, 1 - self.progress * 5);
           }
-          if (self.progress > 0.4 && !mobileLogoIsWhite) {
-            mobileLogoIsWhite = true;
-            window.TashBrand.setLogoColor('white');
+          if (self.progress > 0.4 && !mobileNameHidden) {
+            mobileNameHidden = true;
             document.getElementById('ta-sig').setAttribute('show-name', 'false');
-          } else if (self.progress <= 0.4 && mobileLogoIsWhite) {
-            mobileLogoIsWhite = false;
-            window.TashBrand.setLogoColor('black');
+          } else if (self.progress <= 0.4 && mobileNameHidden) {
+            mobileNameHidden = false;
             document.getElementById('ta-sig').setAttribute('show-name', 'true');
           }
         },
@@ -61,8 +59,7 @@
           if (mobileGradient) mobileGradient.style.opacity = '1';
         },
         onLeaveBack: function() {
-          mobileLogoIsWhite = false;
-          window.TashBrand.setLogoColor('black');
+          mobileNameHidden = false;
           document.getElementById('ta-sig').setAttribute('show-name', 'true');
         }
       }
@@ -105,7 +102,7 @@
   // ══════════════════════════════════════════════════════════════
   // DESKTOP PATH — full pin + zoom animation
   // ══════════════════════════════════════════════════════════════
-  var logoIsWhite = false;
+  var nameHidden = false;
   var tl = gsap.timeline({
     scrollTrigger: {
       trigger: hero,
@@ -117,25 +114,17 @@
       onUpdate: function(self) {
         window.TashBrand.zoomProgress = self.progress;
         var sig = document.getElementById('ta-sig');
-        if (self.progress > 0.05 && !logoIsWhite) {
-          logoIsWhite = true;
-          window.TashBrand.setLogoColor('white');
+        if (self.progress > 0.05 && !nameHidden) {
+          nameHidden = true;
           if (sig) sig.setAttribute('show-name', 'false');
-        } else if (self.progress <= 0.05) {
-          // Always restore black at face morph — catches teleport from any section
-          logoIsWhite = false;
-          if (sig && sig.getAttribute('color') !== 'black') {
-            window.TashBrand.setLogoColor('black');
-          }
-          if (sig && sig.getAttribute('show-name') === 'false') {
-            sig.setAttribute('show-name', 'true');
-          }
+        } else if (self.progress <= 0.05 && nameHidden) {
+          nameHidden = false;
+          if (sig) sig.setAttribute('show-name', 'true');
         }
       },
       onLeaveBack: function() {
         var sig = document.getElementById('ta-sig');
-        logoIsWhite = false;
-        window.TashBrand.setLogoColor('black');
+        nameHidden = false;
         if (sig) sig.setAttribute('show-name', 'true');
       },
     }

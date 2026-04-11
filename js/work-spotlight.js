@@ -36,14 +36,9 @@
     var menuLines = menuBtn ? menuBtn.querySelectorAll('.morph__menu-line') : [];
 
     function toBeige() {
-      window.TashBrand.setLogoColor('black');
       menuLines.forEach(function(l) { l.style.background = 'rgba(26,26,26,0.75)'; });
     }
     function toDark() {
-      // Only swap to white if still in cobalt zone — skip if teleporting to face morph
-      if (window.scrollY > 100) {
-        window.TashBrand.setLogoColor('white');
-      }
       menuLines.forEach(function(l) { l.style.background = ''; });
     }
 

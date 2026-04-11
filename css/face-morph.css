@@ -47,6 +47,7 @@
   left: 24px;
   z-index: 8998; /* sits below player (9000) so expanded player covers it naturally */
   width: clamp(140px, 19.25vw, 220px);
+  mix-blend-mode: difference;
   user-select: none;
   pointer-events: auto;
   cursor: pointer;

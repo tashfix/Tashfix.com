@@ -61,7 +61,6 @@
 
     function setDark() {
       if (isDark) return; isDark = true;
-      window.TashBrand.setLogoColor('black');
       if (menuBtn) {
         gsap.to(menuBtn, { borderColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 });
         menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(26, 26, 26, 0.85)', duration: 0.3 }); });
@@ -69,7 +68,6 @@
     }
     function setLight() {
       if (!isDark) return; isDark = false;
-      window.TashBrand.setLogoColor('white');
       if (menuBtn) {
         gsap.to(menuBtn, { borderColor: 'rgba(255, 255, 255, 0.45)', duration: 0.3 });
         menuLines.forEach(function(l) { gsap.to(l, { backgroundColor: 'rgba(255, 255, 255, 0.85)', duration: 0.3 }); });

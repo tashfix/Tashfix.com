@@ -7,25 +7,6 @@ gsap.registerPlugin(ScrollTrigger);
 
 // Shared utilities namespace
 window.TashBrand = {
-  _pendingColor: null,
-  // Smooth logo color swap — dip opacity, swap attribute, fade back
-  setLogoColor: function(color) {
-    var sig = document.getElementById('ta-sig');
-    if (!sig) return;
-    if (sig.getAttribute('color') === color) return;
-    // Guard: if already animating to this color, don't restart
-    if (window.TashBrand._pendingColor === color) return;
-    window.TashBrand._pendingColor = color;
-    gsap.killTweensOf(sig);
-    gsap.to(sig, {
-      opacity: 0, duration: 0.12, ease: 'power2.in',
-      onComplete: function() {
-        sig.setAttribute('color', color);
-        window.TashBrand._pendingColor = null;
-        gsap.to(sig, { opacity: 1, duration: 0.18, ease: 'power2.out' });
-      }
-    });
-  },
   // Cool gradient: deep cobalt → blue → teal → cyan
   coolColor: function(t) {
     t = Math.max(0, Math.min(1, t));

@@ -10,7 +10,6 @@
  *
  * Attributes (reactive — update live)
  * ─────────────────────────────────────
- *   color       "white" (default) | "black"
  *   show-name   "true" (default)  | "false"
  *
  * Methods
@@ -34,7 +33,7 @@
 const GSAP_CDN = 'https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js';
 
 class TASignature extends HTMLElement {
-  static observedAttributes = ['color', 'show-name'];
+  static observedAttributes = ['show-name'];
 
   #root;
   #tl        = null;
@@ -62,7 +61,6 @@ class TASignature extends HTMLElement {
     // Guard — shadow DOM not yet rendered on first attribute pass
     if (!this.#root.firstElementChild) return;
 
-    if (name === 'color')     this.#applyColor();
     if (name === 'show-name') this.#syncName();
   }
 
@@ -97,10 +95,8 @@ class TASignature extends HTMLElement {
         :host {
           display: inline-block;
           line-height: 0;
-          /* ↓ swap via color attribute */
           --c: #ffffff;
         }
-        :host([color="black"]) { --c: #1a1a1a; }
 
         svg {
           display: block;
@@ -305,12 +301,6 @@ class TASignature extends HTMLElement {
   }
 
   // ─── Attribute handlers ───────────────────────────────────────────
-
-  #applyColor() {
-    // Color is handled entirely by the CSS custom property --c via :host([color]).
-    // No JS needed — the attribute change triggers the CSS selector automatically.
-    // This method exists as a hook if extra JS logic is ever needed.
-  }
 
   #syncName() {
     const name = this.#root.querySelector('[data-part="name"]');
