@@ -64,7 +64,7 @@ ta-signature#ta-sig {
 
 /* TA initials — mobile logo mark, hidden on desktop */
 .site-logo__initials {
-  display: none;
+  display: none !important;
   font-family: 'Inter', -apple-system, sans-serif;
   font-weight: 900;
   font-size: 22px;
@@ -2317,7 +2317,7 @@ body.player-expanded .morph__menu-btn {
   }
 
   .site-logo__initials {
-    display: block;
+    display: block !important;
   }
 
   ta-signature#ta-sig {
