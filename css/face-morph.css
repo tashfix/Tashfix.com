@@ -2283,6 +2283,8 @@ body.player-expanded .morph__menu-btn {
   }
   .site-logo {
     width: clamp(84px, 18.7vw, 123px);
+    top: 12px;
+    left: 14px;
   }
 
   /* Logo marquee on mobile — scale down slightly */
@@ -2294,8 +2296,8 @@ body.player-expanded .morph__menu-btn {
   .morph__menu-btn {
     width: 48px;
     height: 48px;
-    top: 16px;
-    right: 16px;
+    top: 12px;
+    right: 14px;
   }
 
   /* ── Fullscreen: plain black background with case studies only ── */
