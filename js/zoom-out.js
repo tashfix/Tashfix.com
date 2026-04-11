@@ -32,7 +32,10 @@
     // Silence signature strokes so they never flash on mobile
     gsap.set([tStrokes, aStrokes, xbStrokes], { opacity: 0 });
 
-    var mobileNameHidden = false;
+    // Name always hidden on mobile (logo fits in small square container)
+    var sig = document.getElementById('ta-sig');
+    if (sig) sig.setAttribute('show-name', 'false');
+
     var mobileTl = gsap.timeline({
       scrollTrigger: {
         trigger: hero,
@@ -44,23 +47,12 @@
           if (mobileGradient) {
             mobileGradient.style.opacity = Math.max(0, 1 - self.progress * 5);
           }
-          if (self.progress > 0.4 && !mobileNameHidden) {
-            mobileNameHidden = true;
-            document.getElementById('ta-sig').setAttribute('show-name', 'false');
-          } else if (self.progress <= 0.4 && mobileNameHidden) {
-            mobileNameHidden = false;
-            document.getElementById('ta-sig').setAttribute('show-name', 'true');
-          }
         },
         onLeave: function() {
           if (mobileGradient) mobileGradient.style.opacity = '0';
         },
         onEnterBack: function() {
           if (mobileGradient) mobileGradient.style.opacity = '1';
-        },
-        onLeaveBack: function() {
-          mobileNameHidden = false;
-          document.getElementById('ta-sig').setAttribute('show-name', 'true');
         }
       }
     });
