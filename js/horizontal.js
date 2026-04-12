@@ -133,12 +133,13 @@
       return Math.max(0, track.offsetWidth - window.innerWidth);
     }
 
-    /* Set outer section height = one full viewport + the runway distance.
-       One viewport height means the section first fully enters view,
-       then the runway scroll translates the track to the end. */
+    /* Set outer section height = exactly the runway distance.
+       Matches landonorris.com exactly: height = track.offsetWidth - window.innerWidth.
+       Combined with start:'top bottom' / end:'bottom bottom', the CSS sticky
+       element is visible the entire time the section scrolls through the viewport. */
     function setHeight() {
       var runway = getRunway();
-      section.style.height = (window.innerHeight + runway) + 'px';
+      section.style.height = runway + 'px';
     }
 
     /* ── Progress handler: dots, typewriter, color-active ── */
@@ -193,8 +194,12 @@
       st = ScrollTrigger.create({
         animation: trackTween,
         trigger:   section,
-        start:     'top top',
-        end:       function () { return '+=' + getRunway(); },
+        /* Exact Lando/Norris values:
+           start "top bottom" = section top hits viewport bottom (section entering)
+           end   "bottom bottom" = section bottom hits viewport bottom (section exiting)
+           Total scroll distance = section.height = runway. Translation = runway. 1:1. */
+        start:     'top bottom',
+        end:       'bottom bottom',
         scrub:     1,
         pin:       sticky,
         pinSpacing: false,       /* section height is set manually — no GSAP spacer needed */

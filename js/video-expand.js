@@ -77,15 +77,17 @@
   var mm = gsap.matchMedia();
 
   mm.add('(min-width: 769px)', function() {
-    var section     = document.getElementById('hscroll-gallery');
-    var items       = gsap.utils.toArray('.hscroll__item');
-    var lastItem    = items[items.length - 1];
-    var lastMedia   = lastItem ? (lastItem.querySelector('video') || lastItem.querySelector('img')) : null;
-    var heroVideo   = lastItem ? lastItem.querySelector('video') : null;
-    var lastCaption = lastItem ? lastItem.querySelector('.hscroll__caption') : null;
-    var zoomSpacer  = document.getElementById('video-expand');
-    var dotsEl      = document.getElementById('carousel-dots');
-    if (!lastItem || !lastMedia || !zoomSpacer || !section) return;
+    var section      = document.getElementById('hscroll-gallery');
+    var items        = gsap.utils.toArray('.hscroll__item');
+    var lastItem     = items[items.length - 1];
+    var lastMedia    = lastItem ? (lastItem.querySelector('video') || lastItem.querySelector('img')) : null;
+    var heroVideo    = lastItem ? lastItem.querySelector('video') : null;
+    var lastCaption  = lastItem ? lastItem.querySelector('.hscroll__caption') : null;
+    var zoomSpacer   = document.getElementById('video-expand');
+    var dotsEl       = document.getElementById('carousel-dots');
+    /* originalParent: the track — we restore here on collapse */
+    var originalParent = lastItem ? lastItem.parentElement : null;
+    if (!lastItem || !lastMedia || !zoomSpacer || !section || !originalParent) return;
 
     var lastIndex = items.length - 1;
 
@@ -204,11 +206,18 @@
     // ── Collapse back ──
     function collapseToCarousel() {
       if (!isExpanding) return;
+
+      // Restore lastItem to original parent (the horizontal track)
+      // before removing the expanding class so layout is correct
+      if (lastItem.parentElement !== originalParent) {
+        originalParent.appendChild(lastItem);
+      }
+
       lastItem.classList.remove('hscroll__item--expanding');
       lastItem.classList.remove('is-zooming');
-      lastItem.style.left = '';
-      lastItem.style.top = '';
-      lastItem.style.width = '';
+      lastItem.style.left   = '';
+      lastItem.style.top    = '';
+      lastItem.style.width  = '';
       lastItem.style.height = '';
       lastMedia.style.borderRadius = '';
       lastItem.style.filter = '';
@@ -257,9 +266,12 @@
 
         lastItem.classList.add('is-zooming');
 
-        // First frame: read live screen position from the DOM.
-        // getBoundingClientRect() is always current — works with horizontal
-        // scroll, CSS transforms, sticky positioning — no caching required.
+        // First frame: expand the last item to fullscreen.
+        // KEY: getBoundingClientRect() always returns true viewport coordinates,
+        // even accounting for GSAP transforms on ancestor elements.
+        // We then reparent to <body> so that position:fixed is relative to the
+        // VIEWPORT (not the transformed .hscroll__track ancestor), avoiding the
+        // CSS transform stacking-context bug that corrupts fixed positioning.
         if (!isExpanding) {
           var rect = lastItem.getBoundingClientRect();
           startRect = {
@@ -269,8 +281,8 @@
             height: rect.height
           };
 
-          // Clear any GSAP inline transforms before switching to fixed
-          gsap.set(lastItem, { clearProps: 'x,y,xPercent,yPercent,transform' });
+          // Reparent to <body> — escapes transformed ancestor stacking context
+          document.body.appendChild(lastItem);
 
           lastItem.classList.add('hscroll__item--expanding');
           lastItem.style.left   = startRect.left   + 'px';
