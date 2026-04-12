@@ -1776,7 +1776,8 @@
     if (!logo || !sig) return;
 
     var curState = null;
-    var bounds   = { landingEnd: 0, cobaltEnd: 0 };
+    // Start with Infinity so the logo defaults to 'landing' until GSAP is ready
+    var bounds   = { landingEnd: Infinity, cobaltEnd: Infinity };
 
     function buildBounds() {
       // Find the zoom-out ScrollTrigger (trigger = #zoom-out element)
@@ -1787,14 +1788,21 @@
           if (st.trigger === zoomEl) zoomST = st;
         });
       }
-      // landingEnd = scroll position where the hero pin releases
-      bounds.landingEnd = zoomST
-        ? zoomST.end
-        : (zoomEl ? zoomEl.offsetHeight * 3 : window.innerHeight * 3);
 
-      // Cobalt section (#hscroll-intro) immediately follows — it's 100vh
-      var introEl = document.getElementById('hscroll-intro');
-      bounds.cobaltEnd = bounds.landingEnd + (introEl ? introEl.offsetHeight : window.innerHeight);
+      // landingEnd = when the background is substantially cobalt.
+      // The BG tween fires at timeline 0.02 → 0.40 (38% duration).
+      // At 25% scroll progress the tween is ~60% done — bg is clearly dark,
+      // so the logo must switch to white for contrast.
+      var zoomStart = zoomST ? zoomST.start : 0;
+      var zoomEnd   = zoomST ? zoomST.end   : (zoomEl ? zoomEl.offsetHeight * 3 : window.innerHeight * 3);
+      bounds.landingEnd = zoomStart + (zoomEnd - zoomStart) * 0.25;
+
+      // cobaltEnd = document-top of the first beige section (#work-spotlight).
+      // This is where the beige background reaches the viewport top (logo area).
+      var workEl = document.getElementById('work-spotlight');
+      bounds.cobaltEnd = workEl
+        ? workEl.getBoundingClientRect().top + window.scrollY
+        : zoomEnd + window.innerHeight;
     }
 
     function isVideoMode(scrollY) {

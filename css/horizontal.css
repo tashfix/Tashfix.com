@@ -609,7 +609,7 @@
   position: fixed; top: clamp(64px, 7vh, 84px); left: 50%;
   transform: translateX(-50%); text-align: center;
   width: max-content; max-width: 90vw;
-  z-index: 8600; pointer-events: none;
+  z-index: 8400; pointer-events: none;
   opacity: 0; transition: opacity 0.4s ease;
 }
 .vq-hero-text.visible { opacity: 1; }
