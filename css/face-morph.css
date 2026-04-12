@@ -2269,8 +2269,9 @@ body.player-expanded .morph__menu-btn {
     display: block;
   }
 
-  /* Hide "Scroll to explore" hint on mobile */
-  .morph__scroll-hint {
+  /* Hide scroll hints on mobile */
+  .morph__scroll-hint,
+  .morph__hscroll-hint {
     display: none !important;
   }
 
