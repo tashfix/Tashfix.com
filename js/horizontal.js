@@ -1,447 +1,292 @@
 /* ═══════════════════════════════════════════════════════════
-   HORIZONTAL SCROLL — GSAP scroll, mesh canvas, typewriter, aura
+   HORIZONTAL SCROLL GALLERY — Lando/Norris approach
+   ───────────────────────────────────────────────────────────
+   Mechanics identical to landonorris.com:
+   • Outer section height = window.innerHeight + runway
+     (runway = track.offsetWidth - window.innerWidth)
+   • Inner #hscroll-sticky: position:sticky in CSS, never touched by JS
+   • GSAP scrubs track.x from 0 → -runway as page scrolls
+   • x value is a LAZY FUNCTION — re-evaluated on every refresh
+   • invalidateOnRefresh:true + onRefresh callback + ResizeObserver
+     on the track element = triple-layer resize safety
+   • No scrollWidth. No getBoundingClientRect caching. No reparenting.
    ═══════════════════════════════════════════════════════════ */
-(function() {
+(function () {
 
-  // ── Shared typewriter helper ──
-  function setupTypewriter(el, trigger, opts) {
-    if (!el) return;
-    // Measure full width
-    el.style.maxWidth = 'none';
+  /* ── Typewriter helper ── */
+  function makeTypewriter(el, opts) {
+    if (!el) return null;
+    el.style.maxWidth   = 'none';
     el.style.visibility = 'hidden';
-    el.style.position = 'absolute';
+    el.style.position   = 'absolute';
     var fullWidth = el.scrollWidth + 2;
-    el.style.maxWidth = '0';
+    el.style.maxWidth   = '0';
     el.style.visibility = '';
-    el.style.position = '';
+    el.style.position   = '';
 
-    var chars = el.textContent.length;
-    var steps = Math.max(10, chars);
+    var chars    = el.textContent.length;
+    var steps    = Math.max(10, chars);
     var duration = opts.duration || 0.8;
-    var delay = opts.delay || 0.1;
-    var onDone = opts.onComplete || null;
-    var onReset = opts.onReset || null;
+    var delay    = opts.delay    || 0.1;
 
-    var triggerOpts = {
-      trigger: trigger,
-      start: opts.start || 'top 85%',
-    };
-    if (opts.containerAnimation) {
-      triggerOpts.containerAnimation = opts.containerAnimation;
-      triggerOpts.start = opts.start || 'left 95%';
-    }
-
-    triggerOpts.onEnter = function() {
+    return function fire() {
+      if (el.classList.contains('done')) return;
       gsap.to(el, {
         maxWidth: fullWidth,
         ease: 'steps(' + steps + ')',
         duration: duration,
         delay: delay,
-        onComplete: function() {
+        onComplete: function () {
           el.classList.add('done');
           el.style.maxWidth = 'none';
-          if (onDone) onDone();
         }
       });
     };
-
-    if (opts.containerAnimation) {
-      triggerOpts.onLeaveBack = function() {
-        gsap.killTweensOf(el);
-        gsap.set(el, { maxWidth: 0 });
-        el.classList.remove('done');
-        if (onReset) onReset();
-      };
-    }
-
-    ScrollTrigger.create(triggerOpts);
   }
 
-  // ── Intro spacer reference ──
+  /* ── Intro spacer reveal ── */
   var introSpacer = document.getElementById('hscroll-intro');
-
-  // ── Intro hero text + wreath: reveal on scroll ──
-  var emblem   = introSpacer ? introSpacer.querySelector('.hscroll__emblem')   : null;
-  var heroText = introSpacer ? introSpacer.querySelector('.hscroll__hero-text') : null;
+  var emblem      = introSpacer ? introSpacer.querySelector('.hscroll__emblem')   : null;
+  var heroText    = introSpacer ? introSpacer.querySelector('.hscroll__hero-text') : null;
 
   if (emblem && heroText) {
     gsap.set([emblem, heroText], { autoAlpha: 0, y: 28 });
-
     gsap.timeline({
-      scrollTrigger: {
-        trigger: introSpacer,
-        start: 'center 85%',
-        once: true,
-      }
+      scrollTrigger: { trigger: introSpacer, start: 'center 85%', once: true }
     })
     .to(emblem,   { autoAlpha: 1, y: 0, duration: 0.6, ease: 'power2.out' }, 0)
     .to(heroText, { autoAlpha: 1, y: 0, duration: 0.7, ease: 'power2.out' }, 0.2);
   }
 
-  // ── Horizontal scroll (desktop) ──
+  /* ── TashBrand namespace ── */
+  window.TashBrand = window.TashBrand || {};
+
+  /* ═══════════════════════════════════
+     DESKTOP — Lando horizontal scroll
+     ═══════════════════════════════════ */
   var mm = gsap.matchMedia();
 
-  mm.add('(min-width: 769px)', function() {
-    var track = document.getElementById('hscroll-track');
-    var section = document.getElementById('hscroll-gallery');
-    var items = gsap.utils.toArray('.hscroll__item');
+  mm.add('(min-width: 769px)', function () {
 
-    function setTrackWidth() {
-      var lastItem = items[items.length - 1];
-      // End scroll when last item's center reaches viewport center
-      var lastCenter = lastItem.offsetLeft + lastItem.offsetWidth * 0.5;
-      track.style.width = (lastCenter + window.innerWidth * 0.5) + 'px'; // original
-    }
-    setTrackWidth();
+    var section  = document.getElementById('hscroll-gallery');
+    var sticky   = document.getElementById('hscroll-sticky');
+    var track    = document.getElementById('hscroll-track');
+    var dotsEl   = document.getElementById('carousel-dots');
+    if (!section || !sticky || !track) return;
 
-    var resizeTimer;
-    var preResizeScrollY  = null;
-    var preResizeWidth    = window.innerWidth;
-    var preResizeZoomDone = false;
-
-    window.addEventListener('resize', function() {
-      // Snapshot state on the very first resize event, before GSAP's
-      // own auto-refresh fires and corrupts scroll/progress values
-      if (preResizeScrollY === null) {
-        preResizeScrollY  = window.scrollY;
-        preResizeWidth    = window.innerWidth;
-        // Capture whether zoom-in sequence was already fully complete
-        var zoomSpacerSnap  = document.getElementById('video-expand');
-        var zoomTriggerSnap = zoomSpacerSnap
-          ? ScrollTrigger.getAll().find(function(t) { return t.trigger === zoomSpacerSnap; })
-          : null;
-        preResizeZoomDone = zoomTriggerSnap ? zoomTriggerSnap.progress >= 0.98 : false;
-      }
-
-      clearTimeout(resizeTimer);
-      resizeTimer = setTimeout(function() {
-        // Never run while player is animating
-        var playerEl = document.querySelector('.morph__player');
-        if (playerEl && (playerEl.classList.contains('expanded') || playerEl.classList.contains('transitioning'))) {
-          preResizeScrollY = null;
-          return;
-        }
-
-        var savedScrollY  = preResizeScrollY;
-        var savedWidth    = preResizeWidth;
-        var zoomWasDone   = preResizeZoomDone;
-        preResizeScrollY  = null;
-        preResizeZoomDone = false;
-
-        var widthDelta = Math.abs(window.innerWidth - savedWidth);
-
-        // Capture gallery start before refresh (it may shift slightly after)
-        var st = horizontalTween.scrollTrigger;
-        var galleryStart = st ? st.start : Infinity;
-
-        setTrackWidth();
-        ScrollTrigger.refresh();
-
-        if (widthDelta > 50 && savedScrollY >= galleryStart) {
-          if (zoomWasDone) {
-            // Zoom-in complete — stay in place and block reverse scroll.
-            // Gallery dimensions are stale for the new viewport; user can
-            // still navigate via logo or hamburger menu.
-            ScrollTrigger.update();
-            var _wheelLock = function(e) { if (e.deltaY < 0) e.preventDefault(); };
-            var _keyLock   = function(e) {
-              if (e.key === 'ArrowUp' || e.key === 'PageUp' || e.key === 'Home') e.preventDefault();
-            };
-            window.addEventListener('wheel',   _wheelLock, { passive: false });
-            window.addEventListener('keydown', _keyLock);
-            // Auto-release once they navigate above the gallery (e.g. logo click)
-            var _unlockCheck = function() {
-              if (window.scrollY < 10) {
-                window.removeEventListener('wheel',   _wheelLock, { passive: false });
-                window.removeEventListener('keydown', _keyLock);
-                window.removeEventListener('scroll',  _unlockCheck);
-              }
-            };
-            window.addEventListener('scroll', _unlockCheck, { passive: true });
-          } else {
-            // In gallery or mid zoom-in — teleport to gallery start to
-            // prevent any misalignment or out-of-bounds state
-            window.scrollTo({ top: Math.round(st.start), behavior: 'instant' });
-            ScrollTrigger.update();
-          }
-        }
-
-        recalcProgress();
-      }, 200);
-    });
-
-    function getScrollDistance() {
-      return track.scrollWidth - window.innerWidth;
-    }
-
-    var horizontalTween = gsap.to(track, {
-      x: function() { return -getScrollDistance(); },
-      ease: 'none',
-      scrollTrigger: {
-        trigger: section,
-        pin: true,
-        scrub: 0.8,
-        start: 'top top',
-        end: function() { return '+=' + getScrollDistance(); },
-        invalidateOnRefresh: true,
-      }
-    });
-
-    // Expose for video-expand.js to hook into onUpdate
-    window.TashBrand = window.TashBrand || {};
-    window.TashBrand.horizontalTween = horizontalTween;
-
-    // Logo + hamburger: track section state for color-active class
-    var siteLogo = document.getElementById('site-logo');
-
-    function enterHScroll() {
-      if (section) section.classList.add('color-active');
-    }
-    function leaveHScrollForward() {
-      // video-expand.js handles transition out
-    }
-    function leaveHScrollBack() {
-      if (section) section.classList.remove('color-active');
-    }
-
-    if (siteLogo) {
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: function() { return '+=' + getScrollDistance(); },
-        onEnter: enterHScroll,
-        onLeave: leaveHScrollForward,
-        onEnterBack: enterHScroll,
-        onLeaveBack: leaveHScrollBack,
-      });
-    }
-
-    // ── Progress indicator ──
-    var progressEl = document.getElementById('hscroll-progress');
-    var progressFill = document.getElementById('hscroll-progress-fill');
-    var notchesEl = document.getElementById('hscroll-progress-notches');
-
+    var items      = gsap.utils.toArray('#hscroll-track .hscroll__item');
     var totalItems = items.length;
-    var scrollDist = getScrollDistance();
-    var vpCenter = window.innerWidth * 0.5;
-    var itemFractions = [];
+    var lastIndex  = totalItems - 1;
 
-    function recalcProgress() {
-      if (!progressEl || !notchesEl) return;
-      scrollDist = getScrollDistance();
-      vpCenter = window.innerWidth * 0.5;
-      itemFractions = items.map(function(item) {
-        var center = item.offsetLeft + item.offsetWidth * 0.5;
-        return Math.max(0, Math.min(1, (center - vpCenter) / scrollDist));
-      });
-      // Rebuild notches
-      notchesEl.innerHTML = '';
-      for (var i = 0; i < totalItems; i++) {
-        var notch = document.createElement('div');
-        notch.className = 'hscroll__progress-notch';
-        notch.style.left = (itemFractions[i] * 100) + '%';
-        notchesEl.appendChild(notch);
-      }
-    }
+    /* Expose for video-expand.js.
+       carouselIndex is updated by onUpdate below.
+       Starts at lastIndex — when the spacer fires, we're always at the end. */
+    window.TashBrand.carouselIndex = lastIndex;
+    window.TashBrand.carouselTotal = totalItems;
 
-    if (progressEl && notchesEl) {
-      recalcProgress();
-
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: function() { return '+=' + getScrollDistance(); },
-        onEnter: function() { progressEl.classList.add('visible'); },
-        onLeave: function() { progressEl.classList.remove('visible'); },
-        onEnterBack: function() { progressEl.classList.add('visible'); },
-        onLeaveBack: function() { progressEl.classList.remove('visible'); },
-        onUpdate: function(self) {
-          var p = self.progress;
-          if (progressFill) progressFill.style.width = (p * 100) + '%';
-          var notches = notchesEl.querySelectorAll('.hscroll__progress-notch');
-          for (var i = 0; i < notches.length; i++) {
-            if (p >= itemFractions[i]) {
-              notches[i].classList.add('passed');
-            } else {
-              notches[i].classList.remove('passed');
-            }
-          }
-        }
-      });
-    }
-
-    // ── Drag-to-scroll (carousel + momentum) ──
-    (function() {
-      var isDragging    = false;
-      var hasMoved      = false;
-      var dragStartX    = 0;
-      var dragScrollStart = 0;
-
-      // Velocity tracking — rolling sample over last ~80 ms
-      var velSamples  = [];   // [{ x, t }, ...]
-      var momentumTween = null;
-
-      function getScrollBounds() {
-        var st = horizontalTween.scrollTrigger;
-        var expandSpacer = document.getElementById('video-expand');
-        return {
-          st: st,
-          min: st.start,
-          max: st.end + (expandSpacer ? expandSpacer.offsetHeight : 0)
-        };
-      }
-
-      function applyScroll(raw) {
-        var b = getScrollBounds();
-        raw = Math.max(b.min, Math.min(b.max, raw));
-        var p = Math.min(1, (raw - b.st.start) / (b.st.end - b.st.start));
-        horizontalTween.progress(p);
-        window.scrollTo(0, raw);
-      }
-
-      section.addEventListener('mousedown', function(e) {
-        if (e.button !== 0) return;
-        if (momentumTween) { momentumTween.kill(); momentumTween = null; }
-        isDragging      = true;
-        hasMoved        = false;
-        dragStartX      = e.clientX;
-        dragScrollStart = window.scrollY;
-        velSamples      = [{ x: e.clientX, t: Date.now() }];
-        document.body.classList.add('hscroll-dragging');
-        e.preventDefault();
-      });
-
-      window.addEventListener('mousemove', function(e) {
-        if (!isDragging) return;
-        var dx = e.clientX - dragStartX;
-        if (Math.abs(dx) > 4) hasMoved = true;
-
-        // Record velocity sample, keep only last 80 ms
-        var now = Date.now();
-        velSamples.push({ x: e.clientX, t: now });
-        while (velSamples.length > 1 && now - velSamples[0].t > 80) velSamples.shift();
-
-        applyScroll(dragScrollStart - dx);
-      });
-
-      window.addEventListener('mouseup', function(e) {
-        if (!isDragging) return;
-        isDragging = false;
-        document.body.classList.remove('hscroll-dragging');
-
-        // Compute velocity from recent samples (px/ms → scroll px)
-        var vel = 0;
-        if (velSamples.length >= 2) {
-          var first = velSamples[0];
-          var last  = velSamples[velSamples.length - 1];
-          var dt    = last.t - first.t;
-          if (dt > 0) vel = -(last.x - first.x) / dt; // negative: drag right = scroll up
-        }
-
-        // Minimum velocity threshold — below this feels like a deliberate stop
-        var MIN_VEL = 0.3; // px/ms
-        if (Math.abs(vel) < MIN_VEL) return;
-
-        // Throw distance — proportional to velocity with a cap
-        var distance = vel * 420;
-        var target   = window.scrollY + distance;
-        var proxy    = { y: window.scrollY };
-
-        momentumTween = gsap.to(proxy, {
-          y: target,
-          duration: Math.min(1.4, Math.abs(vel) * 0.6 + 0.4),
-          ease: 'power3.out',
-          onUpdate: function() { applyScroll(proxy.y); },
-          onComplete: function() { momentumTween = null; }
-        });
-      });
-
-      // Suppress clicks that follow a drag gesture
-      section.addEventListener('click', function(e) {
-        if (hasMoved) { e.stopPropagation(); e.preventDefault(); }
-        hasMoved = false;
-      }, true);
-    })();
-
-    // Per-item reveal + typewriter
-    items.forEach(function(item) {
+    /* ── Typewriter setup ── */
+    var typewriterFired = {};
+    var typewriterFns   = {};
+    items.forEach(function (item, i) {
       var tw = item.querySelector('.hscroll__typewriter-text');
-
-      gsap.fromTo(item,
-        { opacity: 0, scale: 0.88, y: 35 },
-        {
-          opacity: 1, scale: 1, y: 0,
-          duration: 1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: item,
-            containerAnimation: horizontalTween,
-            start: 'left 130%',
-            end: 'left 85%',
-            scrub: true,
-          }
-        }
-      );
-
-      if (tw) {
-        setupTypewriter(tw, item, {
-          containerAnimation: horizontalTween,
-          duration: 0.8,
-          delay: 0.1,
-        });
-      }
+      if (tw) typewriterFns[i] = makeTypewriter(tw, { duration: 0.8, delay: 0.1 });
     });
+    /* Fire first item immediately (it's in view on load) */
+    if (typewriterFns[0]) { typewriterFns[0](); typewriterFired[0] = true; }
 
-    // Per-testimonial reveal + typewriter
-    var testimonials = gsap.utils.toArray('.hscroll__testimonial');
-    testimonials.forEach(function(quote) {
-      var quoteText = quote.querySelector('blockquote p');
-      var citeEl = quote.querySelector('cite');
-
-      gsap.fromTo(quote,
-        { opacity: 0, y: 24 },
-        {
-          opacity: 1, y: 0,
-          duration: 1,
-          ease: 'power2.out',
-          scrollTrigger: {
-            trigger: quote,
-            containerAnimation: horizontalTween,
-            start: 'left 130%',
-            end: 'left 85%',
-            scrub: true,
-          }
-        }
-      );
-
-      if (quoteText) {
-        quoteText.style.overflow = 'hidden';
-        quoteText.style.whiteSpace = 'nowrap';
-        if (citeEl) citeEl.style.opacity = '0';
-
-        setupTypewriter(quoteText, quote, {
-          containerAnimation: horizontalTween,
-          duration: 1.5,
-          delay: 0.2,
-          onComplete: function() {
-            quoteText.style.whiteSpace = 'normal';
-            if (citeEl) {
-              gsap.to(citeEl, { opacity: 1, duration: 0.4, ease: 'power2.out' });
-            }
-          },
-          onReset: function() {
-            quoteText.style.whiteSpace = 'nowrap';
-            if (citeEl) { gsap.set(citeEl, { opacity: 0 }); }
-          }
-        });
+    /* ── Dot indicator ── */
+    if (dotsEl) {
+      dotsEl.innerHTML = '';
+      for (var d = 0; d < totalItems; d++) {
+        var dot = document.createElement('div');
+        dot.className = 'carousel__dot';
+        dot.setAttribute('data-index', d);
+        dotsEl.appendChild(dot);
       }
-    });
-  });
+    }
+    var dots = dotsEl ? gsap.utils.toArray('.carousel__dot') : [];
 
-  // ── Mobile fallback ──
-  mm.add('(max-width: 768px)', function() {
-    var items = gsap.utils.toArray('.hscroll__item');
-    items.forEach(function(item) {
+    function updateDots(idx) {
+      dots.forEach(function (dot, i) {
+        dot.classList.toggle('active', i === idx);
+      });
+    }
+
+    /* Dot click → scroll to that item's position in the runway */
+    if (dotsEl) {
+      dotsEl.addEventListener('click', function (e) {
+        var dot = e.target.closest('.carousel__dot');
+        if (!dot) return;
+        var idx = parseInt(dot.getAttribute('data-index'), 10);
+        if (isNaN(idx)) return;
+        var pct    = lastIndex > 0 ? idx / lastIndex : 0;
+        var runway = getRunway();
+        /* section.offsetTop is where the section starts in the document */
+        var target = section.offsetTop + Math.round(pct * runway);
+        window.scrollTo({ top: target, behavior: 'smooth' });
+      });
+    }
+
+    /* ── Runway helpers ──
+       THE KEY: offsetWidth (live), never scrollWidth, never cached. */
+    function getRunway() {
+      return Math.max(0, track.offsetWidth - window.innerWidth);
+    }
+
+    /* Set outer section height = one full viewport + the runway distance.
+       One viewport height means the section first fully enters view,
+       then the runway scroll translates the track to the end. */
+    function setHeight() {
+      var runway = getRunway();
+      section.style.height = (window.innerHeight + runway) + 'px';
+    }
+
+    /* ── Progress handler: dots, typewriter, color-active ── */
+    function onScrollProgress(progress) {
+      var rawIdx    = progress * lastIndex;
+      var activeIdx = Math.max(0, Math.min(lastIndex, Math.round(rawIdx)));
+
+      /* Sync carouselIndex for video-expand.js */
+      window.TashBrand.carouselIndex = activeIdx;
+
+      updateDots(activeIdx);
+
+      /* Typewriter — fire once per item on first reach */
+      if (!typewriterFired[activeIdx] && typewriterFns[activeIdx]) {
+        typewriterFns[activeIdx]();
+        typewriterFired[activeIdx] = true;
+      }
+
+      /* Videos: play current, pause others (loop videos only) */
+      items.forEach(function (item, i) {
+        var vid = item.querySelector('video[loop]');
+        if (!vid) return;
+        if (i === activeIdx) {
+          var p = vid.play();
+          if (p && p.catch) p.catch(function () {});
+        } else {
+          vid.pause();
+        }
+      });
+    }
+
+    /* ── Build the GSAP scroll animation ── */
+    var trackTween = null;
+    var st         = null;
+
+    function buildScrollTrigger() {
+      /* Kill previous instances before rebuilding */
+      if (st)         { st.kill();         st = null; }
+      if (trackTween) { trackTween.kill(); trackTween = null; }
+
+      /* Compute and set section height before creating ST */
+      setHeight();
+
+      /* The animation: translate track from x=0 to x=-runway.
+         Value is a FUNCTION so GSAP re-evaluates it on every invalidateOnRefresh. */
+      trackTween = gsap.to(track, {
+        x: function () { return -getRunway(); },
+        ease: 'none',
+        paused: true
+      });
+
+      st = ScrollTrigger.create({
+        animation: trackTween,
+        trigger:   section,
+        start:     'top top',
+        end:       function () { return '+=' + getRunway(); },
+        scrub:     1,
+        pin:       sticky,
+        pinSpacing: false,       /* section height is set manually — no GSAP spacer needed */
+        anticipatePin: 1,
+        invalidateOnRefresh: true,
+
+        onRefresh: function () {
+          /* Called on every ScrollTrigger.refresh() — reset height with live measurements */
+          setHeight();
+        },
+
+        onUpdate: function (self) {
+          onScrollProgress(self.progress);
+        },
+
+        onEnter: function () {
+          section.classList.add('color-active');
+          if (dotsEl) dotsEl.classList.add('visible');
+        },
+        onLeaveBack: function () {
+          section.classList.remove('color-active');
+          if (dotsEl) dotsEl.classList.remove('visible');
+        },
+        onLeave: function () {
+          /* Scrolled past the section — hide dots */
+          if (dotsEl) dotsEl.classList.remove('visible');
+        },
+        onEnterBack: function () {
+          section.classList.add('color-active');
+          if (dotsEl) dotsEl.classList.add('visible');
+        }
+      });
+    }
+
+    buildScrollTrigger();
+
+    /* ── ResizeObserver on the track ──
+       Catches changes from images loading, font changes, etc.
+       This is the same technique landonorris.com uses. */
+    var ro = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(function () {
+        setHeight();
+        ScrollTrigger.refresh();
+      });
+      ro.observe(track);
+    }
+
+    /* ── Window resize ──
+       Debounced — ScrollTrigger.refresh() triggers onRefresh callbacks. */
+    var resizeTimer = null;
+    function onResize() {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(function () {
+        setHeight();
+        ScrollTrigger.refresh();
+      }, 150);
+    }
+    window.addEventListener('resize', onResize);
+
+    /* ── Safari autoplay unlock ──
+       On first user gesture, play all loop videos. */
+    var safariUnlocked = false;
+    function unlockSafari() {
+      if (safariUnlocked) return;
+      safariUnlocked = true;
+      items.forEach(function (item) {
+        var vid = item.querySelector('video[loop]');
+        if (!vid) return;
+        var p = vid.play();
+        if (p && p.catch) p.catch(function () {});
+      });
+    }
+    document.addEventListener('touchstart', unlockSafari, { once: true, capture: true });
+    document.addEventListener('scroll',     unlockSafari, { once: true, capture: true });
+
+    /* ── matchMedia cleanup ── */
+    return function () {
+      window.removeEventListener('resize', onResize);
+      if (ro)         ro.disconnect();
+      if (st)         st.kill();
+      if (trackTween) trackTween.kill();
+    };
+
+  }); /* end desktop */
+
+  /* ═══════════════════
+     MOBILE — vertical stack, no pinning
+     ═══════════════════ */
+  mm.add('(max-width: 768px)', function () {
+    var items = gsap.utils.toArray('#hscroll-track .hscroll__item');
+    items.forEach(function (item) {
       var tw = item.querySelector('.hscroll__typewriter-text');
       gsap.fromTo(item,
         { opacity: 0, y: 30 },
@@ -453,194 +298,19 @@
             trigger: item,
             start: 'top 85%',
             toggleActions: 'play none none none',
-            onEnter: function() {
+            onEnter: function () {
               if (tw && !tw.classList.contains('done')) {
-                setupTypewriter(tw, item, {
-                  duration: 1.2,
-                  delay: 0.3,
-                });
+                var fire = makeTypewriter(tw, { duration: 1.2, delay: 0.3 });
+                if (fire) fire();
               }
             }
           }
         }
       );
     });
+
+    window.TashBrand = window.TashBrand || {};
+    window.TashBrand.mobileCollapseFullscreen = function () {};
   });
-
-  // ═══════════════════════════════════════════════════════════
-  // MESH GRID ANIMATION
-  // ═══════════════════════════════════════════════════════════
-  var meshCanvas = document.getElementById('hscroll-mesh');
-  if (!meshCanvas || window.innerWidth <= 768) return;
-  var meshCtx = meshCanvas.getContext('2d');
-  var dpr = Math.min(window.devicePixelRatio || 1, 2);
-
-  var ROWS = 32;
-  // Mesh starts after the second gallery item (~40vw) and spans to the end
-  var MESH_START_VW = 40;
-  var waves = [
-    { cx: 0.35, cy: 0.4, amp: 55, freq: 0.0025, speed: 0.8 },
-    { cx: 0.65, cy: 0.5, amp: 35, freq: 0.003, speed: -0.6 },
-    { cx: 0.5, cy: 0.3, amp: 25, freq: 0.004, speed: 1.1 },
-  ];
-  var maxH = waves.reduce(function(sum, w) { return sum + w.amp; }, 0);
-  var coolColor = window.TashBrand.coolColor;
-
-  // Virtual grid spans the full track; canvas is viewport-sized and scrolls with it
-  var meshStartPx = 0;
-  var meshTotalW = 0;
-
-  function getHeight(x, y, t, W, H) {
-    var h = 0;
-    for (var i = 0; i < waves.length; i++) {
-      var w = waves[i];
-      var dx = x - w.cx * W;
-      var dy = y - w.cy * H;
-      h += w.amp * Math.sin(Math.sqrt(dx * dx + dy * dy) * w.freq + t * w.speed);
-    }
-    return h;
-  }
-
-  function edgeAlpha(virtualX, row, totalW, H) {
-    var fadeIn = 0.06;    // left edge fade-in
-    var fadeOut = 0.02;   // right edge — grid runs to the end
-    var fadeY = 0.28;     // generous top/bottom fade — no hard stop lines
-    var cx = virtualX / totalW;
-    var cy = row / ROWS;
-    var ax = cx < fadeIn ? cx / fadeIn : cx > 1 - fadeOut ? (1 - cx) / fadeOut : 1;
-    var ay = cy < fadeY ? cy / fadeY : cy > 1 - fadeY ? (1 - cy) / fadeY : 1;
-    return ax * ay;
-  }
-
-  var meshTime = 0;
-  var meshAnimId = null;
-  var meshVisible = false;
-
-  function sizeMeshCanvas() {
-    var track = meshCanvas.parentElement;
-    meshStartPx = Math.round(MESH_START_VW / 100 * window.innerWidth);
-    meshTotalW = track.scrollWidth - meshStartPx;
-    // Canvas is viewport-sized — we only draw the visible slice each frame
-    var vw = window.innerWidth;
-    var H = track.offsetHeight;
-    meshCanvas.width = vw * dpr;
-    meshCanvas.height = H * dpr;
-    meshCanvas.style.width = vw + 'px';
-    meshCanvas.style.height = H + 'px';
-    meshCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-  }
-
-  function drawMesh() {
-    if (!meshVisible) { meshAnimId = null; return; }
-
-    var vw = window.innerWidth;
-    var H = meshCanvas.height / dpr;
-    meshCtx.clearRect(0, 0, vw, H);
-    meshTime += 0.015;
-
-    // Get current track scroll offset from GSAP transform
-    var track = meshCanvas.parentElement;
-    var mat = getComputedStyle(track).transform;
-    var scrollX = 0;
-    if (mat && mat !== 'none') {
-      var parts = mat.match(/matrix\((.+)\)/);
-      if (parts) scrollX = -parseFloat(parts[1].split(',')[4]);
-    }
-
-    // Visible slice in virtual grid coordinates (relative to mesh start)
-    var sliceLeft = scrollX - meshStartPx;
-    var sliceRight = sliceLeft + vw;
-
-    // If we're before the mesh start, nothing to draw
-    if (sliceRight < 0 || sliceLeft > meshTotalW) {
-      meshAnimId = requestAnimationFrame(drawMesh);
-      return;
-    }
-
-    // Position canvas to cover the viewport
-    meshCanvas.style.left = scrollX + 'px';
-
-    // Square cells: compute cell size from row count and height, apply same spacing horizontally
-    var cellSize = H / ROWS;
-    var COLS = Math.round(meshTotalW / cellSize);
-    var gridH = H;
-    var oY = 0;
-
-    // Find column range that's visible (with 1-col padding for line continuity)
-    var colStart = Math.max(0, Math.floor((sliceLeft / meshTotalW) * COLS) - 1);
-    var colEnd = Math.min(COLS, Math.ceil((sliceRight / meshTotalW) * COLS) + 1);
-
-    // Pre-compute grid points for visible columns only
-    var points = [], alphaGrid = [], heights = [];
-    for (var r = 0; r <= ROWS; r++) {
-      var rowP = [], rowA = [], rowH = [];
-      for (var c = colStart; c <= colEnd; c++) {
-        var virtualX = (c / COLS) * meshTotalW;
-        var screenX = virtualX - sliceLeft;
-        var y = oY + (r / ROWS) * gridH;
-        var z = getHeight(virtualX, y, meshTime, meshTotalW, H);
-        rowP.push({ x: screenX, y: y + z * 0.4 });
-        rowA.push(edgeAlpha(virtualX, r, meshTotalW, H));
-        rowH.push((z + maxH) / (2 * maxH));
-      }
-      points.push(rowP);
-      alphaGrid.push(rowA);
-      heights.push(rowH);
-    }
-
-    var breath = 0.45 + 0.2 * Math.sin(meshTime * 0.8);
-    meshCtx.lineWidth = 1.0;
-    var localCols = colEnd - colStart;
-
-    // Horizontal lines
-    for (var r = 0; r <= ROWS; r++) {
-      for (var c = 0; c < localCols; c++) {
-        var a = Math.min(alphaGrid[r][c], alphaGrid[r][c + 1]);
-        if (a < 0.01) continue;
-        var hN = (heights[r][c] + heights[r][c + 1]) / 2;
-        var col = coolColor(hN);
-        meshCtx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath).toFixed(3) + ')';
-        meshCtx.beginPath();
-        meshCtx.moveTo(points[r][c].x, points[r][c].y);
-        meshCtx.lineTo(points[r][c + 1].x, points[r][c + 1].y);
-        meshCtx.stroke();
-      }
-    }
-
-    // Vertical lines
-    for (var c = 0; c <= localCols; c++) {
-      for (var r = 0; r < ROWS; r++) {
-        var a = Math.min(alphaGrid[r][c], alphaGrid[r + 1][c]);
-        if (a < 0.01) continue;
-        var hN = (heights[r][c] + heights[r + 1][c]) / 2;
-        var col = coolColor(hN);
-        meshCtx.strokeStyle = 'rgba(' + col[0] + ',' + col[1] + ',' + col[2] + ',' + (a * breath).toFixed(3) + ')';
-        meshCtx.beginPath();
-        meshCtx.moveTo(points[r][c].x, points[r][c].y);
-        meshCtx.lineTo(points[r + 1][c].x, points[r + 1][c].y);
-        meshCtx.stroke();
-      }
-    }
-
-    meshAnimId = requestAnimationFrame(drawMesh);
-  }
-
-  // Only animate mesh when the gallery section is visible
-  var meshObs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(entry) {
-      meshVisible = entry.isIntersecting;
-      if (meshVisible && !meshAnimId) {
-        sizeMeshCanvas();
-        drawMesh();
-      }
-    });
-  }, { threshold: 0.01 });
-
-  var gallerySection = document.getElementById('hscroll-gallery');
-  if (gallerySection) meshObs.observe(gallerySection);
-
-  // Defer initial sizing — track width is set asynchronously by GSAP matchMedia
-  requestAnimationFrame(function() { sizeMeshCanvas(); });
-  window.addEventListener('resize', function() { sizeMeshCanvas(); });
 
 })();

@@ -1,13 +1,11 @@
-/* ═══════════════════════════════════════════════════════════
-   VIDEO EXPAND — last gallery item expands to fullscreen
-   Reparents item 14 to <body>, then manually interpolates
-   position / size each frame via ScrollTrigger.onUpdate.
-   ═══════════════════════════════════════════════════════════ */
+/* ═════════════════════════════════���════════════════════════��
+   VIDEO EXPAND — last carousel item expands to fullscreen.
+   Only activates when the carousel is on the last item.
+   No reparenting — item goes position:fixed directly.
+   ═════════���══════════════��═════════════════════════════════��� */
 (function() {
 
   // ── Safari autoplay fix ──
-  // Safari blocks autoplay until a user gesture occurs. On first scroll/touch,
-  // force-play all muted gallery videos so they don't show a play button.
   var safariVideosUnlocked = false;
   function unlockSafariVideos() {
     if (safariVideosUnlocked) return;
@@ -15,7 +13,6 @@
     var lastItemEl = document.getElementById('hscroll-last-item');
     var galleryVideos = document.querySelectorAll('.hscroll__item video');
     galleryVideos.forEach(function(v) {
-      // Skip item 14's hero video — it plays on expand, not in the gallery
       if (lastItemEl && lastItemEl.contains(v)) return;
       var p = v.play();
       if (p && p.catch) p.catch(function() {});
@@ -26,7 +23,7 @@
   document.addEventListener('touchstart', unlockSafariVideos, { once: true, capture: true });
   document.addEventListener('scroll', unlockSafariVideos, { once: true, capture: true });
 
-  // ── Text scramble effect (CodePen qkevinto/WQVNWO, ES5 port) ──
+  // ── Text scramble effect ──
   function TextScramble(el) {
     this.el = el;
     this.chars = '!<>-_\\/[]{}—=+*^?#';
@@ -80,28 +77,29 @@
   var mm = gsap.matchMedia();
 
   mm.add('(min-width: 769px)', function() {
+    var section     = document.getElementById('hscroll-gallery');
     var items       = gsap.utils.toArray('.hscroll__item');
     var lastItem    = items[items.length - 1];
     var lastMedia   = lastItem ? (lastItem.querySelector('video') || lastItem.querySelector('img')) : null;
     var heroVideo   = lastItem ? lastItem.querySelector('video') : null;
     var lastCaption = lastItem ? lastItem.querySelector('.hscroll__caption') : null;
     var zoomSpacer  = document.getElementById('video-expand');
-    var progressEl  = document.getElementById('hscroll-progress');
-    var originalParent = lastItem ? lastItem.parentElement : null;
-    if (!lastItem || !lastMedia || !zoomSpacer) return;
+    var dotsEl      = document.getElementById('carousel-dots');
+    if (!lastItem || !lastMedia || !zoomSpacer || !section) return;
+
+    var lastIndex = items.length - 1;
 
     var videoQuotes = document.getElementById('video-quotes');
     var quotesShown = false;
     var zoomInHint  = document.getElementById('zoom-in-hint');
     if (zoomInHint) {
       zoomInHint.addEventListener('click', function() {
-        // Scroll to end of spacer so p reaches 1 (full zoom + video plays)
         var target = zoomSpacer.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
         window.scrollTo({ top: target, behavior: 'smooth' });
       });
     }
 
-    // Case Studies CTA — triggers player fullscreen expand
+    // Case Studies CTA
     var caseStudyCta = document.getElementById('view-case-studies-cta');
     if (caseStudyCta) {
       caseStudyCta.addEventListener('click', function(e) {
@@ -112,16 +110,14 @@
         }
       });
     }
-    var siteLogo    = document.getElementById('site-logo');
-    var startRect   = null;
-    var isReparented = false;
-    var videoStarted = false;
 
-    // Track whether expansion is fully complete (scroll progress ≥ 0.98)
+    var startRect    = null;
+    var isExpanding  = false;
+    var videoStarted = false;
     var isFullyExpanded = false;
 
     // ── Hero text reveal ──
-    var heroTextShown  = false;
+    var heroTextShown   = false;
     var heroGlitchTimer = null;
     var heroTextEl    = document.getElementById('vq-hero-text');
     var heroHeadingEl = document.getElementById('vq-hero-heading');
@@ -142,15 +138,11 @@
             if (heroEmailBtn) heroEmailBtn.classList.add('ready');
           });
         }, 300);
-
-        // Glitch the heading every ~6s (±1.5s random jitter so it feels organic)
         function scheduleGlitch() {
-          var delay = 6000 + (Math.random() * 3000) - 1500; // 4.5s–7.5s
+          var delay = 6000 + (Math.random() * 3000) - 1500;
           heroGlitchTimer = setTimeout(function() {
             if (headingFx && heroTextShown) {
-              headingFx.setText('CRAFTED. NOT GENERATED.').then(function() {
-                scheduleGlitch(); // re-schedule after each glitch completes
-              });
+              headingFx.setText('CRAFTED. NOT GENERATED.').then(scheduleGlitch);
             }
           }, delay);
         }
@@ -169,7 +161,7 @@
       heroTextShown = false;
     }
 
-    // Copy-to-clipboard for hero email
+    // Copy-to-clipboard
     if (heroEmailBtn && heroTooltip) {
       heroEmailBtn.addEventListener('click', function(e) {
         e.preventDefault();
@@ -185,22 +177,18 @@
       });
     }
 
-    // Fade to black & white + fade in testimonial quotes at 1/3 of video
+    // Grayscale + quote reveal tied to video playback
     if (heroVideo) {
       heroVideo.addEventListener('timeupdate', function() {
         if (!heroVideo.duration) return;
         var third = heroVideo.duration / 3;
         var elapsed = heroVideo.currentTime;
-
-        // Grayscale filter from 1/3 onward
         if (elapsed >= third) {
-          var t = (elapsed - third) / (heroVideo.duration - third); // 0 → 1
+          var t = (elapsed - third) / (heroVideo.duration - third);
           heroVideo.style.filter = 'grayscale(' + t + ')';
         } else {
           heroVideo.style.filter = '';
         }
-
-        // Show quotes at 1/3 mark, but ONLY if fully expanded
         if (videoQuotes) {
           if (elapsed >= third && isFullyExpanded && !quotesShown) {
             videoQuotes.classList.add('visible');
@@ -213,83 +201,86 @@
       });
     }
 
-    function returnToTrack() {
-      if (isReparented) {
-        lastItem.classList.remove('hscroll__item--expanding');
-        lastItem.classList.remove('is-zooming');
-        lastItem.style.left = '';
-        lastItem.style.top = '';
-        lastItem.style.width = '';
-        lastItem.style.height = '';
-        lastMedia.style.borderRadius = '';
-        lastItem.style.filter = '';
-        if (lastCaption) lastCaption.style.opacity = '';
-        if (progressEl) progressEl.style.opacity = '';
-        if (heroVideo) {
-          heroVideo.pause();
-          heroVideo.currentTime = 0;
-          heroVideo.style.filter = '';
-        }
-        videoStarted = false;
-        // Hide quotes overlay
-        if (videoQuotes) {
-          videoQuotes.classList.remove('visible');
-          quotesShown = false;
-        }
-        if (zoomInHint) zoomInHint.style.opacity = '';
-        hideHeroText();
-        originalParent.appendChild(lastItem);
-        isReparented = false;
-        startRect = null;
+    // ── Collapse back ──
+    function collapseToCarousel() {
+      if (!isExpanding) return;
+      lastItem.classList.remove('hscroll__item--expanding');
+      lastItem.classList.remove('is-zooming');
+      lastItem.style.left = '';
+      lastItem.style.top = '';
+      lastItem.style.width = '';
+      lastItem.style.height = '';
+      lastMedia.style.borderRadius = '';
+      lastItem.style.filter = '';
+      if (lastCaption) lastCaption.style.opacity = '';
+      if (dotsEl) dotsEl.style.opacity = '';
+
+      if (heroVideo) {
+        heroVideo.pause();
+        heroVideo.currentTime = 0;
+        heroVideo.style.filter = '';
       }
+      videoStarted = false;
+      if (videoQuotes) { videoQuotes.classList.remove('visible'); quotesShown = false; }
+      if (zoomInHint) zoomInHint.style.opacity = '';
+      hideHeroText();
+      isExpanding = false;
+      startRect = null;
     }
 
+    // ── Scroll-driven expansion ──
     ScrollTrigger.create({
       trigger: zoomSpacer,
       start: 'top bottom',
       end: 'bottom bottom',
       scrub: 0.5,
-      invalidateOnRefresh: function() { startRect = null; },
+      invalidateOnRefresh: true,
       onUpdate: function(self) {
         var p = self.progress;
         var vw = window.innerWidth;
         var vh = window.innerHeight;
 
-        // If scrolled all the way back, return item to track
+        // Only zoom when carousel is on the last item
+        var onLastItem = window.TashBrand && window.TashBrand.carouselIndex === lastIndex;
+        if (!onLastItem) {
+          if (isExpanding) collapseToCarousel();
+          return;
+        }
+
         if (p <= 0.001) {
           lastItem.classList.remove('is-zooming');
-          // Force glint animation to restart from opacity:0
           lastItem.classList.add('glint-reset');
           requestAnimationFrame(function() { lastItem.classList.remove('glint-reset'); });
-          returnToTrack();
+          collapseToCarousel();
           return;
         }
 
         lastItem.classList.add('is-zooming');
 
-        // On first frame: compute item's film-strip size and derive the centred
-        // viewport position from it, rather than trusting getBoundingClientRect()
-        // whose left/top value may still be drifting while the horizontal-scroll
-        // GSAP scrub settles.  offsetWidth/offsetHeight are layout-accurate.
-        if (!isReparented) {
-          var iw = lastItem.offsetWidth;
-          var ih = lastItem.offsetHeight;
+        // First frame: read live screen position from the DOM.
+        // getBoundingClientRect() is always current — works with horizontal
+        // scroll, CSS transforms, sticky positioning — no caching required.
+        if (!isExpanding) {
+          var rect = lastItem.getBoundingClientRect();
           startRect = {
-            left:   (vw - iw) / 2,
-            top:    (vh - ih) / 2,
-            width:  iw,
-            height: ih
+            left:   rect.left,
+            top:    rect.top,
+            width:  rect.width,
+            height: rect.height
           };
+
+          // Clear any GSAP inline transforms before switching to fixed
+          gsap.set(lastItem, { clearProps: 'x,y,xPercent,yPercent,transform' });
+
           lastItem.classList.add('hscroll__item--expanding');
           lastItem.style.left   = startRect.left   + 'px';
           lastItem.style.top    = startRect.top    + 'px';
           lastItem.style.width  = startRect.width  + 'px';
           lastItem.style.height = startRect.height + 'px';
-          document.body.appendChild(lastItem);
-          isReparented = true;
+          isExpanding = true;
         }
 
-        // Single-phase expansion: grow from startRect → full viewport
+        // Interpolate → full viewport
         var curLeft   = startRect.left   * (1 - p);
         var curTop    = startRect.top    * (1 - p);
         var curWidth  = startRect.width  + (vw - startRect.width)  * p;
@@ -301,14 +292,12 @@
         lastItem.style.height = curHeight + 'px';
         lastMedia.style.borderRadius = (6 * (1 - p)) + 'px';
 
-        // Lift shadow — grows with p to simulate tile rising off the surface.
-        // Three layers: tight contact shadow (darkest), mid ambient spread, wide soft halo.
-        // All fade to 0 as p approaches 1 (full viewport = no shadow needed).
-        var shadowFade = p < 0.85 ? 1 : (1 - (p - 0.85) / 0.15); // hold full until 85%, then fade out
-        var offset  = Math.round(p * 28  * shadowFade);  // vertical offset grows with height
-        var blur1   = Math.round(p * 20  * shadowFade);  // tight shadow
-        var blur2   = Math.round(p * 60  * shadowFade);  // ambient spread
-        var blur3   = Math.round(p * 120 * shadowFade);  // wide halo
+        // Shadow
+        var shadowFade = p < 0.85 ? 1 : (1 - (p - 0.85) / 0.15);
+        var offset  = Math.round(p * 28  * shadowFade);
+        var blur1   = Math.round(p * 20  * shadowFade);
+        var blur2   = Math.round(p * 60  * shadowFade);
+        var blur3   = Math.round(p * 120 * shadowFade);
         var a1 = (0.55 * p * shadowFade).toFixed(3);
         var a2 = (0.30 * p * shadowFade).toFixed(3);
         var a3 = (0.12 * p * shadowFade).toFixed(3);
@@ -317,7 +306,7 @@
           'drop-shadow(0 ' + Math.round(offset * 0.6) + 'px ' + blur2 + 'px rgba(0,0,0,' + a2 + ')) ' +
           'drop-shadow(0 ' + Math.round(offset * 0.3) + 'px ' + blur3 + 'px rgba(0,0,0,' + a3 + '))';
 
-        // Start video from beginning once nearly fully expanded
+        // Video playback
         if (heroVideo && !videoStarted && p > 0.9) {
           heroVideo.currentTime = 0;
           heroVideo.play();
@@ -325,40 +314,28 @@
           if (zoomInHint) zoomInHint.style.opacity = '0';
         }
 
-        // Track full expansion state for quotes gating
         isFullyExpanded = (p >= 0.98);
 
-        // Trigger hero text scramble on first frame of full expansion
         if (isFullyExpanded && !heroTextShown) {
           heroTextShown = true;
           showHeroText();
         }
 
-        // Hide quotes + hero text immediately when scrolling back
         if (!isFullyExpanded && quotesShown && videoQuotes) {
           videoQuotes.classList.remove('visible');
           quotesShown = false;
         }
-        if (!isFullyExpanded && heroTextShown) {
-          hideHeroText();
-        }
-
-        // Fade caption quickly
+        if (!isFullyExpanded && heroTextShown) { hideHeroText(); }
         if (lastCaption) lastCaption.style.opacity = Math.max(0, 1 - p * 3);
-
-        // Fade progress indicator
-        if (progressEl) progressEl.style.opacity = Math.max(0, 1 - p * 5);
+        if (dotsEl) dotsEl.style.opacity = Math.max(0, 1 - p * 5);
       },
-      onLeaveBack: function() {
-        returnToTrack();
-      }
+      onLeaveBack: function() { collapseToCarousel(); }
     });
 
-  });
+  }); // end desktop
 
-  /* ── Mobile: no expand/collapse — item 14 scrolls like any other item ── */
+  // ── Mobile: no expand/collapse ──
   mm.add('(max-width: 768px)', function() {
-    // Case Studies CTA
     var caseStudyCtaMobile = document.getElementById('view-case-studies-cta');
     if (caseStudyCtaMobile) {
       caseStudyCtaMobile.addEventListener('click', function(e) {
@@ -369,9 +346,8 @@
         }
       });
     }
-
-    // No-op stub so face-morph.js logo-tap doesn't error
     window.TashBrand = window.TashBrand || {};
     window.TashBrand.mobileCollapseFullscreen = function() {};
   });
+
 })();
