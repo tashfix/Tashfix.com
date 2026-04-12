@@ -1,14 +1,10 @@
 /* ═══════════════════════════════════════════════════════════
-   HORIZONTAL SCROLL GALLERY — Lando/Norris approach
+   HORIZONTAL SCROLL GALLERY
    ───────────────────────────────────────────────────────────
-   Mechanics identical to landonorris.com:
-   • Outer section height = window.innerHeight + runway
-     (runway = track.offsetWidth - window.innerWidth)
-   • Inner #hscroll-sticky: position:sticky in CSS, never touched by JS
-   • GSAP scrubs track.x from 0 → -runway as page scrolls
-   • x value is a LAZY FUNCTION — re-evaluated on every refresh
-   • invalidateOnRefresh:true + onRefresh callback + ResizeObserver
-     on the track element = triple-layer resize safety
+   • GSAP pin:true on the section — pins it and manages its own spacer
+   • x: () => lazy function — re-evaluated on every invalidateOnRefresh
+   • end: () => lazy function — runway always live
+   • ResizeObserver on track → ScrollTrigger.refresh()
    • No scrollWidth. No getBoundingClientRect caching. No reparenting.
    ═══════════════════════════════════════════════════════════ */
 (function () {
@@ -69,10 +65,9 @@
   mm.add('(min-width: 769px)', function () {
 
     var section  = document.getElementById('hscroll-gallery');
-    var sticky   = document.getElementById('hscroll-sticky');
     var track    = document.getElementById('hscroll-track');
     var dotsEl   = document.getElementById('carousel-dots');
-    if (!section || !sticky || !track) return;
+    if (!section || !track) return;
 
     var items      = gsap.utils.toArray('#hscroll-track .hscroll__item');
     var totalItems = items.length;
@@ -133,21 +128,12 @@
       return Math.max(0, track.offsetWidth - window.innerWidth);
     }
 
-    /* Set outer section height = exactly the runway distance.
-       Matches landonorris.com exactly: height = track.offsetWidth - window.innerWidth.
-       Combined with start:'top bottom' / end:'bottom bottom', the CSS sticky
-       element is visible the entire time the section scrolls through the viewport. */
-    function setHeight() {
-      var runway = getRunway();
-      section.style.height = runway + 'px';
-    }
-
-    /* ── Progress handler: dots, typewriter, color-active ── */
+    /* ── Progress handler: dots, typewriter, color-active, videos ── */
     function onScrollProgress(progress) {
       var rawIdx    = progress * lastIndex;
       var activeIdx = Math.max(0, Math.min(lastIndex, Math.round(rawIdx)));
 
-      /* Sync carouselIndex for video-expand.js */
+      /* Sync carouselIndex so video-expand.js knows where we are */
       window.TashBrand.carouselIndex = activeIdx;
 
       updateDots(activeIdx);
@@ -158,7 +144,7 @@
         typewriterFired[activeIdx] = true;
       }
 
-      /* Videos: play current, pause others (loop videos only) */
+      /* Videos: play visible item's loop video, pause others */
       items.forEach(function (item, i) {
         var vid = item.querySelector('video[loop]');
         if (!vid) return;
@@ -171,50 +157,31 @@
       });
     }
 
-    /* ── Build the GSAP scroll animation ── */
-    var trackTween = null;
-    var st         = null;
+    /* ── Build GSAP horizontal scroll — canonical approach ──
+       pin:true on the section — GSAP pins it and adds its own spacer.
+       x and end are LAZY FUNCTIONS re-evaluated on every invalidateOnRefresh.
+       No manual height. No sticky wrapper. Resize-safe by design. */
+    var st = null;
 
     function buildScrollTrigger() {
-      /* Kill previous instances before rebuilding */
-      if (st)         { st.kill();         st = null; }
-      if (trackTween) { trackTween.kill(); trackTween = null; }
-
-      /* Compute and set section height before creating ST */
-      setHeight();
-
-      /* The animation: translate track from x=0 to x=-runway.
-         Value is a FUNCTION so GSAP re-evaluates it on every invalidateOnRefresh. */
-      trackTween = gsap.to(track, {
-        x: function () { return -getRunway(); },
-        ease: 'none',
-        paused: true
-      });
+      if (st) { st.kill(); st = null; }
 
       st = ScrollTrigger.create({
-        animation: trackTween,
-        trigger:   section,
-        /* Exact Lando/Norris values:
-           start "top bottom" = section top hits viewport bottom (section entering)
-           end   "bottom bottom" = section bottom hits viewport bottom (section exiting)
-           Total scroll distance = section.height = runway. Translation = runway. 1:1. */
-        start:     'top bottom',
-        end:       'bottom bottom',
-        scrub:     1,
-        pin:       sticky,
-        pinSpacing: false,       /* section height is set manually — no GSAP spacer needed */
-        anticipatePin: 1,
+        animation: gsap.to(track, {
+          x: function () { return -(track.offsetWidth - window.innerWidth); },
+          ease: 'none',
+          paused: true
+        }),
+        trigger: section,
+        start:   'top top',
+        end:     function () { return '+=' + (track.offsetWidth - window.innerWidth); },
+        scrub:   1,
+        pin:     true,          /* GSAP pins the section and manages its own spacer */
         invalidateOnRefresh: true,
-
-        onRefresh: function () {
-          /* Called on every ScrollTrigger.refresh() — reset height with live measurements */
-          setHeight();
-        },
 
         onUpdate: function (self) {
           onScrollProgress(self.progress);
         },
-
         onEnter: function () {
           section.classList.add('color-active');
           if (dotsEl) dotsEl.classList.add('visible');
@@ -224,7 +191,6 @@
           if (dotsEl) dotsEl.classList.remove('visible');
         },
         onLeave: function () {
-          /* Scrolled past the section — hide dots */
           if (dotsEl) dotsEl.classList.remove('visible');
         },
         onEnterBack: function () {
@@ -237,24 +203,22 @@
     buildScrollTrigger();
 
     /* ── ResizeObserver on the track ──
-       Catches changes from images loading, font changes, etc.
-       This is the same technique landonorris.com uses. */
+       Catches layout changes from images loading or font shifts.
+       ScrollTrigger.refresh() triggers invalidateOnRefresh → lazy functions
+       re-evaluate x and end with fresh track.offsetWidth. */
     var ro = null;
     if (typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(function () {
-        setHeight();
         ScrollTrigger.refresh();
       });
       ro.observe(track);
     }
 
-    /* ── Window resize ──
-       Debounced — ScrollTrigger.refresh() triggers onRefresh callbacks. */
+    /* ── Window resize — debounced ── */
     var resizeTimer = null;
     function onResize() {
       clearTimeout(resizeTimer);
       resizeTimer = setTimeout(function () {
-        setHeight();
         ScrollTrigger.refresh();
       }, 150);
     }
@@ -279,9 +243,8 @@
     /* ── matchMedia cleanup ── */
     return function () {
       window.removeEventListener('resize', onResize);
-      if (ro)         ro.disconnect();
-      if (st)         st.kill();
-      if (trackTween) trackTween.kill();
+      if (ro) ro.disconnect();
+      if (st) st.kill();
     };
 
   }); /* end desktop */

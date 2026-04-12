@@ -137,29 +137,20 @@
 
 
 /* ═══ HORIZONTAL SCROLL SECTION ═══
-   Height is set by JS = window.innerHeight + runway
-   (runway = track.offsetWidth - window.innerWidth)
-   ══════════════════════════════════════════════════ */
+   GSAP pins this section (pin:true) and adds its own spacer.
+   overflow:hidden clips the wide track. No manual height needed.
+   ══════════════════════════════════════════════════════════════ */
 .hscroll__section {
   position: relative;
-  background: var(--color-offwhite);
-  /* NO overflow:hidden — sticky mechanism needs to propagate */
-}
-
-/* ── Sticky viewport wrapper ──
-   Stays fixed at the top of the viewport while the outer section scrolls.
-   GSAP translates the track inside this element. */
-.hscroll__sticky {
-  position: sticky;
-  top: 0;
-  height: 100vh;
-  width: 100%;
   overflow: hidden;
+  background: var(--color-offwhite);
+  height: 100vh; /* natural height before GSAP pin takes over */
 }
 
 /* ── Horizontal flex track ──
-   Width is determined by its children (max-content).
-   GSAP animates translateX from 0 → -(offsetWidth - innerWidth). */
+   Width is determined by children (max-content).
+   GSAP animates x from 0 → -(offsetWidth - innerWidth).
+   x and end are lazy functions — re-evaluated on every refresh. */
 .hscroll__track {
   display: flex;
   flex-direction: row;
@@ -547,13 +538,10 @@
 
 /* ═══ MOBILE ═══ */
 @media (max-width: 768px) {
-  /* On mobile, disable sticky + horizontal layout entirely */
+  /* On mobile, disable the pinned horizontal layout entirely.
+     GSAP's matchMedia only runs the desktop ScrollTrigger on ≥769px,
+     so the pin/spacer never fires. We just override the track layout. */
   .hscroll__section {
-    height: auto !important; /* override JS-set height */
-  }
-
-  .hscroll__sticky {
-    position: relative !important;
     height: auto !important;
     overflow: visible !important;
   }
@@ -566,7 +554,7 @@
     overflow: visible !important;
     padding: 3rem 1.25rem 4rem !important;
     gap: 2.5rem !important;
-    transform: none !important; /* override GSAP translateX */
+    transform: none !important;
     will-change: auto !important;
   }
 
