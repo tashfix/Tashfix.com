@@ -28,9 +28,9 @@
   <link rel="stylesheet" href="css/tokens.css">
   <link rel="stylesheet" href="css/global.css">
   <link rel="stylesheet" href="css/loader.css">
-  <link rel="stylesheet" href="css/face-morph.css?v=9">
+  <link rel="stylesheet" href="css/face-morph.css?v=10">
   <link rel="stylesheet" href="css/zoom-out.css">
-  <link rel="stylesheet" href="css/horizontal.css?v=3">
+  <link rel="stylesheet" href="css/horizontal.css?v=8">
 
   <!-- Deferred CSS — below-fold sections -->
   <link rel="stylesheet" href="css/work-spotlight.css" media="print" onload="this.media='all'">
@@ -58,10 +58,10 @@
   <script src="js/about-reveal.js" defer></script>
   <script src="js/journey-reveal.js" defer></script>
   <script src="js/main.js" defer></script>
-  <script src="js/face-morph.js?v=9" defer></script>
+  <script src="js/face-morph.js?v=15" defer></script>
   <script src="js/zoom-out.js" defer></script>
-  <script src="js/horizontal.js" defer></script>
-  <script src="js/video-expand.js" defer></script>
+  <script src="js/horizontal.js?v=6" defer></script>
+  <script src="js/video-expand.js?v=6" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js" defer></script>
   <script src="js/vanta-init.js" defer></script>
@@ -423,85 +423,80 @@
   </section>
 
   <!-- ====== SECTION 5: HORIZONTAL SCROLL GALLERY ====== -->
+  <!-- Section height is set by JS = window.innerHeight + runway (track.offsetWidth - window.innerWidth) -->
   <section id="hscroll-gallery" class="hscroll__section">
-    <div class="hscroll__track" id="hscroll-track">
-      <canvas class="hscroll__mesh-canvas" id="hscroll-mesh"></canvas>
 
-      <!-- 3. Dragon's Den -->
-      <div class="hscroll__item hscroll__type-wide">
-        <video muted autoplay loop playsinline preload="metadata">
-        <source src="assets/video/3 dragonden.webm" type="video/webm">
-        <source src="assets/video/3 dragonden.mp4" type="video/mp4"></video>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Product I designed appearing on Dragon's Den</span></p>
-      </div>
+      <!-- Wide horizontal flex track — GSAP translates X -->
+      <div class="hscroll__track" id="hscroll-track">
 
-      <!-- 4. Smart Home Mobile App -->
-      <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
-        <video muted autoplay loop playsinline preload="metadata">
-        <source src="assets/video/4. smarthome.webm" type="video/webm">
-        <source src="assets/video/4. smarthome.mp4" type="video/mp4"></video>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Smart Home Mobile App I designed end to end</span></p>
-      </div>
-
-      <!-- 5. Winning 2 awards at CES -->
-      <div class="hscroll__item hscroll__type-square">
-        <picture><source srcset="assets/images/5 (Winning 2 awards at CES).webp" type="image/webp"><img src="assets/images/5 (Winning 2 awards at CES).png" alt="Winning 2 awards at CES" loading="lazy"></picture>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Winning 2 awards at CES</span></p>
-      </div>
-
-      <!-- 6. Marine ecosystem -->
-      <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
-        <picture><source srcset="assets/images/6. (Marine ecosystem I design end to end).webp" type="image/webp"><img src="assets/images/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy"></picture>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Marine ecosystem I designed end to end</span></p>
-      </div>
-
-      <!-- Microsoft AI -->
-      <div class="hscroll__item hscroll__type-standard">
-        <picture><source srcset="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .webp" type="image/webp"><img src="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .jpeg" alt="Recruited onto the MSAN team at Microsoft AI" loading="lazy"></picture>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Recruited onto the MSAN team at Microsoft AI</span></p>
-      </div>
-
-      <!-- YES! -->
-      <div class="hscroll__item hscroll__type-square">
-        <picture><source srcset="assets/images/8.(%22YES!%22).webp" type="image/webp"><img src="assets/images/8.(%22YES!%22).png" alt="YES!" loading="lazy"></picture>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">"YES!"</span></p>
-      </div>
-
-      <!-- Samsung -->
-      <div class="hscroll__item hscroll__type-square">
-        <picture><source srcset="assets/images/13. (Joing the Samsung Research Canada Team).webp" type="image/webp"><img src="assets/images/13. (Joing the Samsung Research Canada Team).png" alt="Joining the Samsung Research Canada Team" loading="lazy"></picture>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">Joining the Samsung Research Canada Team</span></p>
-      </div>
-
-      <!-- 15. And here we are -->
-      <div class="hscroll__item hscroll__type-square" id="hscroll-last-item">
-        <video poster="assets/images/hero-video-poster.jpg" muted playsinline preload="metadata">
-        <source src="assets/video/Hero%20Video%20Final%20(kling).webm" type="video/webm">
-        <source src="assets/video/Hero%20Video%20Final%20(kling).mp4" type="video/mp4"></video>
-        <p class="hscroll__caption"><span class="hscroll__typewriter-text">And here we are</span></p>
-        <div class="zoom-in-hint" id="zoom-in-hint">
-          <svg width="16" height="16" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
-            <line x1="9" y1="6" x2="9" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="6" y1="9" x2="12" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-            <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <span class="zoom-in-hint__label">Scroll to zoom in</span>
+        <!-- 3. Dragon's Den — 16:10 video -->
+        <div class="hscroll__item hscroll__type-wide">
+          <video muted autoplay loop playsinline preload="metadata">
+          <source src="assets/video/3 dragonden.webm" type="video/webm">
+          <source src="assets/video/3 dragonden.mp4" type="video/mp4"></video>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Product I designed appearing on Dragon's Den</span></p>
         </div>
-      </div>
-    </div>
 
-    <!-- Progress indicator -->
-    <div class="hscroll__progress" id="hscroll-progress">
-      <div class="hscroll__progress-track">
-        <div class="hscroll__progress-fill" id="hscroll-progress-fill"></div>
-        <div class="hscroll__progress-notches" id="hscroll-progress-notches"></div>
-      </div>
-    </div>
+        <!-- 4. Smart Home Mobile App — 16:10 video -->
+        <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
+          <video muted autoplay loop playsinline preload="metadata">
+          <source src="assets/video/4. smarthome.webm" type="video/webm">
+          <source src="assets/video/4. smarthome.mp4" type="video/mp4"></video>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Smart Home Mobile App I designed end to end</span></p>
+        </div>
+
+        <!-- 5. Winning 2 awards at CES — square photo -->
+        <div class="hscroll__item hscroll__type-square">
+          <picture><source srcset="assets/images/5 (Winning 2 awards at CES).webp" type="image/webp"><img src="assets/images/5 (Winning 2 awards at CES).png" alt="Winning 2 awards at CES" loading="lazy"></picture>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Winning 2 awards at CES</span></p>
+        </div>
+
+        <!-- 6. Marine ecosystem — 16:10 wide photo -->
+        <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
+          <picture><source srcset="assets/images/6. (Marine ecosystem I design end to end).webp" type="image/webp"><img src="assets/images/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy"></picture>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Marine ecosystem I designed end to end</span></p>
+        </div>
+
+        <!-- Microsoft AI — 4:3 standard photo -->
+        <div class="hscroll__item hscroll__type-standard">
+          <picture><source srcset="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .webp" type="image/webp"><img src="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .jpeg" alt="Recruited onto the MSAN team at Microsoft AI" loading="lazy"></picture>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Recruited onto the MSAN team at Microsoft AI</span></p>
+        </div>
+
+        <!-- YES! — square photo -->
+        <div class="hscroll__item hscroll__type-square">
+          <picture><source srcset="assets/images/8.(%22YES!%22).webp" type="image/webp"><img src="assets/images/8.(%22YES!%22).png" alt="YES!" loading="lazy"></picture>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">"YES!"</span></p>
+        </div>
+
+        <!-- Samsung — square photo -->
+        <div class="hscroll__item hscroll__type-square">
+          <picture><source srcset="assets/images/13. (Joing the Samsung Research Canada Team).webp" type="image/webp"><img src="assets/images/13. (Joing the Samsung Research Canada Team).png" alt="Joining the Samsung Research Canada Team" loading="lazy"></picture>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Joining the Samsung Research Canada Team</span></p>
+        </div>
+
+        <!-- 15. And here we are — square hero video -->
+        <div class="hscroll__item hscroll__type-square" id="hscroll-last-item">
+          <video poster="assets/images/hero-video-poster.jpg" muted playsinline preload="metadata">
+          <source src="assets/video/Hero%20Video%20Final%20(kling).webm" type="video/webm">
+          <source src="assets/video/Hero%20Video%20Final%20(kling).mp4" type="video/mp4"></video>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">And here we are</span></p>
+          <div class="zoom-in-hint" id="zoom-in-hint">
+            <svg width="16" height="16" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="9" cy="9" r="7" stroke="currentColor" stroke-width="1.5"/>
+              <line x1="9" y1="6" x2="9" y2="12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="6" y1="9" x2="12" y2="9" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+              <line x1="14.5" y1="14.5" x2="20" y2="20" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+            <span class="zoom-in-hint__label">Scroll to zoom in</span>
+          </div>
+        </div>
+
+      </div><!-- /.hscroll__track -->
+
+    <!-- Dot indicator — generated by JS, shows current item -->
+    <div class="carousel__dots" id="carousel-dots"></div>
   </section>
-
-  <!-- ====== VIDEO EXPANSION (scroll-driven) ====== -->
-  <section id="video-expand" class="video-expand" aria-hidden="true"></section>
 
   <!-- ====== FULLSCREEN VIDEO QUOTES OVERLAY ====== -->
   <div class="video-quotes" id="video-quotes">
@@ -1380,6 +1375,7 @@
 
 
 
+  <!-- Horizontal scroll hint — direct body child so position:fixed works inside GSAP pin -->
   <div class="morph__hscroll-hint" id="morph-hscroll-hint">
     <svg width="16" height="26" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg">
       <rect x="1" y="1" width="20" height="34" rx="10" stroke="currentColor" stroke-width="1.5"/>

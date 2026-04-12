@@ -1634,52 +1634,6 @@
     }
   })();
 
-  // Horizontal scroll hint — shows once when hscroll section begins
-  (function() {
-    var hHint = document.getElementById('morph-hscroll-hint');
-    if (!hHint) return;
-
-    var gallery = document.getElementById('hscroll-gallery');
-    if (!gallery) return;
-
-    var hintShown = false;
-    var hintDismissed = false;
-    var dismissTimer = null;
-
-    function showHint() {
-      if (hintDismissed || hintShown) return;
-      hintShown = true;
-      hHint.classList.add('visible');
-      // Auto-dismiss after 4 seconds
-      dismissTimer = setTimeout(function() {
-        dismissHint();
-      }, 4000);
-    }
-
-    function dismissHint() {
-      if (hintDismissed) return;
-      hintDismissed = true;
-      hHint.classList.remove('visible');
-      if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
-    }
-
-    function checkSection() {
-      var rect = gallery.getBoundingClientRect();
-      // Section is pinned at top — we're inside it when top <= 0 and bottom > viewport height
-      var inSection = rect.top <= 10 && rect.bottom > window.innerHeight * 0.3;
-      if (inSection) {
-        if (!hintDismissed) showHint();
-      } else {
-        // Hide immediately when the user scrolls out of the section
-        hHint.classList.remove('visible');
-        if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
-        hintShown = false; // allow re-show if they scroll back in
-      }
-    }
-
-    window.addEventListener('scroll', checkSection, { passive: true });
-  })();
-
   /* ── Context-aware LCD scrolling text ────────────────────────────────────
      Zones map page sections to strings. IntersectionObserver watches a narrow
      10% center-band (rootMargin '-45% 0px -45% 0px') so even very tall sections
@@ -1804,6 +1758,191 @@
     document.addEventListener('mouseup', function() {
       cursor3d.classList.remove('dragging');
     });
+  })();
+
+  // ── Logo context — section-aware color & backplate ──
+  // States:
+  //   landing → black, name=zoom-out.js, no plate
+  //   cobalt  → white, name=off,         no plate
+  //   beige   → black, name=off,         plate on
+  //   video   → white, name=on,          no plate
+  //
+  // Scaling trigger (zoom-out.js) is untouched.
+  // This system only manages --light and --plate classes,
+  // plus show-name for the video state.
+  (function() {
+    var logo = document.getElementById('site-logo');
+    var sig  = document.getElementById('ta-sig');
+    if (!logo || !sig) return;
+
+    var curState = null;
+    // Start with Infinity so the logo defaults to 'landing' until GSAP is ready
+    var bounds   = { landingEnd: Infinity, cobaltEnd: Infinity };
+
+    function buildBounds() {
+      // Find the zoom-out ScrollTrigger (trigger = #zoom-out element)
+      var zoomEl = document.getElementById('zoom-out');
+      var zoomST = null;
+      if (zoomEl) {
+        ScrollTrigger.getAll().forEach(function(st) {
+          if (st.trigger === zoomEl) zoomST = st;
+        });
+      }
+
+      // landingEnd = when the background is substantially cobalt.
+      // The BG tween fires at timeline 0.02 → 0.40 (38% duration).
+      // At 25% scroll progress the tween is ~60% done — bg is clearly dark,
+      // so the logo must switch to white for contrast.
+      var zoomStart = zoomST ? zoomST.start : 0;
+      var zoomEnd   = zoomST ? zoomST.end   : (zoomEl ? zoomEl.offsetHeight * 3 : window.innerHeight * 3);
+      bounds.landingEnd = zoomStart + (zoomEnd - zoomStart) * 0.25;
+
+      // cobaltEnd = document-top of the first beige section (#work-spotlight).
+      // This is where the beige background reaches the viewport top (logo area).
+      var workEl = document.getElementById('work-spotlight');
+      bounds.cobaltEnd = workEl
+        ? workEl.getBoundingClientRect().top + window.scrollY
+        : zoomEnd + window.innerHeight;
+    }
+
+    function isVideoMode(scrollY) {
+      // Compute zoom progress directly from _galleryST — no interception needed
+      var galST = window.TashBrand && window.TashBrand._galleryST;
+      if (!galST) return false;
+      if (scrollY < galST.start || scrollY > galST.end) {
+        // Past the end = video stays active (last state was video)
+        return scrollY >= galST.end;
+      }
+      var stProgress = galST.progress;
+      var track = document.getElementById('hscroll-track');
+      if (!track) return false;
+      var runway  = Math.max(0, track.offsetWidth - window.innerWidth);
+      var total   = galST.end - galST.start;
+      var hEnd    = total > 0 ? runway / total : 0.81;
+      if (stProgress <= hEnd) return false;
+      var zoomP = hEnd < 1 ? (stProgress - hEnd) / (1 - hEnd) : 1;
+      return zoomP > 0.6;
+    }
+
+    function computeState(scrollY) {
+      // Video state — highest priority
+      if (isVideoMode(scrollY)) return 'video';
+      // Within zoom-out hero section
+      if (scrollY < bounds.landingEnd) return 'landing';
+      // Cobalt intro section
+      if (scrollY < bounds.cobaltEnd) return 'cobalt';
+      // Everything after (work-spotlight, journey-intro, hscroll-gallery) = beige
+      return 'beige';
+    }
+
+    function applyState(state) {
+      if (state === curState) return;
+      var prev = curState;
+      curState = state;
+
+      switch (state) {
+        case 'landing':
+          logo.classList.remove('site-logo--light', 'site-logo--plate');
+          // show-name managed by zoom-out.js within the landing section
+          break;
+
+        case 'cobalt':
+          logo.classList.add('site-logo--light');
+          logo.classList.remove('site-logo--plate');
+          // Restore name=off if coming back from video
+          if (prev === 'video') sig.setAttribute('show-name', 'false');
+          break;
+
+        case 'beige':
+          logo.classList.remove('site-logo--light');
+          logo.classList.add('site-logo--plate');
+          // Restore name=off if coming back from video (or teleporting past landing)
+          if (prev === 'video' || prev === null) sig.setAttribute('show-name', 'false');
+          break;
+
+        case 'video':
+          logo.classList.add('site-logo--light');
+          logo.classList.remove('site-logo--plate');
+          sig.setAttribute('show-name', 'true');
+          break;
+      }
+    }
+
+    function update() {
+      applyState(computeState(window.scrollY));
+    }
+
+    function refresh() {
+      buildBounds();
+      update();
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    ScrollTrigger.addEventListener('refresh', refresh);
+    // Initial build — wait for GSAP spacers to settle
+    setTimeout(refresh, 500);
+  })();
+
+  // ── Horizontal scroll hint ──
+  // Shows once when the gallery section becomes pinned.
+  // Auto-dismisses after 4 s. Yields to the "Scroll to zoom in" hint
+  // by staying hidden whenever the last carousel item is active.
+  (function() {
+    var hHint = document.getElementById('morph-hscroll-hint');
+    if (!hHint) return;
+
+    var gallery = document.getElementById('hscroll-gallery');
+    if (!gallery) return;
+
+    var hintShown     = false;
+    var hintDismissed = false;
+    var dismissTimer  = null;
+
+    function showHint() {
+      if (hintDismissed || hintShown) return;
+      // Don't show if already on the last item — zoom-in hint takes precedence
+      var lastIndex = (window.TashBrand && window.TashBrand.carouselTotal)
+        ? window.TashBrand.carouselTotal - 1
+        : null;
+      if (lastIndex !== null && window.TashBrand.carouselIndex === lastIndex) return;
+      hintShown = true;
+      hHint.classList.add('visible');
+      dismissTimer = setTimeout(function() {
+        dismissHint();
+      }, 4000);
+    }
+
+    function dismissHint() {
+      if (hintDismissed) return;
+      hintDismissed = true;
+      hHint.classList.remove('visible');
+      if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+    }
+
+    function checkSection() {
+      var rect = gallery.getBoundingClientRect();
+      // Section is pinned at top when top ≈ 0 and still tall enough to fill viewport
+      var inSection = rect.top <= 10 && rect.bottom > window.innerHeight * 0.3;
+
+      // Also hide immediately if user reached the last item (zoom-in hint zone)
+      var lastIndex = (window.TashBrand && window.TashBrand.carouselTotal)
+        ? window.TashBrand.carouselTotal - 1
+        : null;
+      var onLastItem = lastIndex !== null && window.TashBrand.carouselIndex === lastIndex;
+
+      if (inSection && !onLastItem) {
+        if (!hintDismissed) showHint();
+      } else {
+        // Hide (but allow re-show on next section entry if not yet dismissed)
+        hHint.classList.remove('visible');
+        if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+        if (!inSection) hintShown = false; // reset so it can re-show if scrolled back
+      }
+    }
+
+    window.addEventListener('scroll', checkSection, { passive: true });
+    // Initial check in case page loads already scrolled into the gallery
+    setTimeout(checkSection, 300);
   })();
 
 })();
