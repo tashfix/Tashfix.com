@@ -1861,15 +1861,16 @@
           break;
 
         case 'video':
-          logo.classList.add('site-logo--light');
+          logo.classList.add('site-logo--light', 'site-logo--video-size');
           logo.classList.remove('site-logo--plate', 'small');
           sig.setAttribute('show-name', 'true');
           break;
       }
 
-      // Restore .small when leaving video state (zoom-out.js owns it otherwise)
+      // Restore .small and remove video-size override when leaving video state
       if (prev === 'video' && state !== 'video') {
         logo.classList.add('small');
+        logo.classList.remove('site-logo--video-size');
       }
     }
 

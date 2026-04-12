@@ -72,6 +72,12 @@
   /* no background/blur/shadow here — those live on --plate */
 }
 
+/* Video state: override GSAP's baked scale(0.54) so logo grows back to full size */
+.site-logo--video-size {
+  transform: scale(1) !important;
+  transform-origin: top left;
+}
+
 /* ── Context-aware logo modifiers ── */
 
 /* Frosted glass backplate — beige sections */
