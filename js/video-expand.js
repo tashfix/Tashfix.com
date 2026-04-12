@@ -1,8 +1,10 @@
-/* ═════════════════════════════════���════════════════════════��
+/* ═════════════════════════════════════════════════════════════
    VIDEO EXPAND — last carousel item expands to fullscreen.
-   Only activates when the carousel is on the last item.
-   No reparenting — item goes position:fixed directly.
-   ═════════���══════════════��═════════════════════════════════��� */
+   Driven by horizontal.js Phase 2 callback (_onVideoZoom).
+   No separate ScrollTrigger — zoom is part of the gallery pin.
+   No reparenting needed during Phase 2 since section stays pinned,
+   BUT we still reparent to <body> to escape CSS transform stacking.
+   ═════════════════════════════════════════════════════════════ */
 (function() {
 
   // ── Safari autoplay fix ──
@@ -83,11 +85,10 @@
     var lastMedia    = lastItem ? (lastItem.querySelector('video') || lastItem.querySelector('img')) : null;
     var heroVideo    = lastItem ? lastItem.querySelector('video') : null;
     var lastCaption  = lastItem ? lastItem.querySelector('.hscroll__caption') : null;
-    var zoomSpacer   = document.getElementById('video-expand');
     var dotsEl       = document.getElementById('carousel-dots');
     /* originalParent: the track — we restore here on collapse */
     var originalParent = lastItem ? lastItem.parentElement : null;
-    if (!lastItem || !lastMedia || !zoomSpacer || !section || !originalParent) return;
+    if (!lastItem || !lastMedia || !section || !originalParent) return;
 
     var lastIndex = items.length - 1;
 
@@ -96,8 +97,12 @@
     var zoomInHint  = document.getElementById('zoom-in-hint');
     if (zoomInHint) {
       zoomInHint.addEventListener('click', function() {
-        var target = zoomSpacer.getBoundingClientRect().bottom + window.scrollY - window.innerHeight;
-        window.scrollTo({ top: target, behavior: 'smooth' });
+        /* Scroll to the end of the gallery ScrollTrigger (zoom fully expanded) */
+        var galleryST = window.TashBrand && window.TashBrand._galleryST;
+        if (galleryST) {
+          var target = galleryST.end;
+          window.scrollTo({ top: target, behavior: 'smooth' });
+        }
       });
     }
 
@@ -207,8 +212,10 @@
     function collapseToCarousel() {
       if (!isExpanding) return;
 
+      /* Suppress ResizeObserver while restoring item to track */
+      window.TashBrand.suppressResize = true;
+
       // Restore lastItem to original parent (the horizontal track)
-      // before removing the expanding class so layout is correct
       if (lastItem.parentElement !== originalParent) {
         originalParent.appendChild(lastItem);
       }
@@ -235,114 +242,116 @@
       hideHeroText();
       isExpanding = false;
       startRect = null;
+      isFullyExpanded = false;
+
+      /* Re-enable ResizeObserver after restoring item to track */
+      requestAnimationFrame(function () {
+        window.TashBrand.suppressResize = false;
+        ScrollTrigger.refresh();
+      });
     }
 
-    // ── Scroll-driven expansion ──
-    ScrollTrigger.create({
-      trigger: zoomSpacer,
-      start: 'top bottom',
-      end: 'bottom bottom',
-      scrub: 0.5,
-      invalidateOnRefresh: true,
-      onUpdate: function(self) {
-        var p = self.progress;
-        var vw = window.innerWidth;
-        var vh = window.innerHeight;
+    // ── Register zoom callback — called by horizontal.js Phase 2 ──
+    window.TashBrand._onVideoZoom = function(p) {
+      var vw = window.innerWidth;
+      var vh = window.innerHeight;
 
-        // Only zoom when carousel is on the last item
-        var onLastItem = window.TashBrand && window.TashBrand.carouselIndex === lastIndex;
-        if (!onLastItem) {
-          if (isExpanding) collapseToCarousel();
-          return;
-        }
+      // Only zoom when carousel is on the last item
+      var onLastItem = window.TashBrand && window.TashBrand.carouselIndex === lastIndex;
+      if (!onLastItem) {
+        if (isExpanding) collapseToCarousel();
+        return;
+      }
 
-        if (p <= 0.001) {
-          lastItem.classList.remove('is-zooming');
-          lastItem.classList.add('glint-reset');
-          requestAnimationFrame(function() { lastItem.classList.remove('glint-reset'); });
-          collapseToCarousel();
-          return;
-        }
+      if (p <= 0.001) {
+        lastItem.classList.remove('is-zooming');
+        lastItem.classList.add('glint-reset');
+        requestAnimationFrame(function() { lastItem.classList.remove('glint-reset'); });
+        collapseToCarousel();
+        return;
+      }
 
-        lastItem.classList.add('is-zooming');
+      lastItem.classList.add('is-zooming');
 
-        // First frame: expand the last item to fullscreen.
-        // KEY: getBoundingClientRect() always returns true viewport coordinates,
-        // even accounting for GSAP transforms on ancestor elements.
-        // We then reparent to <body> so that position:fixed is relative to the
-        // VIEWPORT (not the transformed .hscroll__track ancestor), avoiding the
-        // CSS transform stacking-context bug that corrupts fixed positioning.
-        if (!isExpanding) {
-          var rect = lastItem.getBoundingClientRect();
-          startRect = {
-            left:   rect.left,
-            top:    rect.top,
-            width:  rect.width,
-            height: rect.height
-          };
+      // First frame: capture start position and reparent to <body>
+      // Section is still pinned so getBoundingClientRect() is correct
+      if (!isExpanding) {
+        var rect = lastItem.getBoundingClientRect();
+        startRect = {
+          left:   rect.left,
+          top:    rect.top,
+          width:  rect.width,
+          height: rect.height
+        };
 
-          // Reparent to <body> — escapes transformed ancestor stacking context
-          document.body.appendChild(lastItem);
+        /* Suppress ResizeObserver during reparenting so GSAP runway stays stable */
+        window.TashBrand.suppressResize = true;
 
-          lastItem.classList.add('hscroll__item--expanding');
-          lastItem.style.left   = startRect.left   + 'px';
-          lastItem.style.top    = startRect.top    + 'px';
-          lastItem.style.width  = startRect.width  + 'px';
-          lastItem.style.height = startRect.height + 'px';
-          isExpanding = true;
-        }
+        // Reparent to <body> — escapes transformed ancestor stacking context
+        document.body.appendChild(lastItem);
 
-        // Interpolate → full viewport
-        var curLeft   = startRect.left   * (1 - p);
-        var curTop    = startRect.top    * (1 - p);
-        var curWidth  = startRect.width  + (vw - startRect.width)  * p;
-        var curHeight = startRect.height + (vh - startRect.height) * p;
+        lastItem.classList.add('hscroll__item--expanding');
+        lastItem.style.left   = startRect.left   + 'px';
+        lastItem.style.top    = startRect.top    + 'px';
+        lastItem.style.width  = startRect.width  + 'px';
+        lastItem.style.height = startRect.height + 'px';
+        isExpanding = true;
 
-        lastItem.style.left   = curLeft   + 'px';
-        lastItem.style.top    = curTop    + 'px';
-        lastItem.style.width  = curWidth  + 'px';
-        lastItem.style.height = curHeight + 'px';
-        lastMedia.style.borderRadius = (6 * (1 - p)) + 'px';
+        /* Re-enable ResizeObserver now that reparenting is done */
+        requestAnimationFrame(function () {
+          window.TashBrand.suppressResize = false;
+        });
+      }
 
-        // Shadow
-        var shadowFade = p < 0.85 ? 1 : (1 - (p - 0.85) / 0.15);
-        var offset  = Math.round(p * 28  * shadowFade);
-        var blur1   = Math.round(p * 20  * shadowFade);
-        var blur2   = Math.round(p * 60  * shadowFade);
-        var blur3   = Math.round(p * 120 * shadowFade);
-        var a1 = (0.55 * p * shadowFade).toFixed(3);
-        var a2 = (0.30 * p * shadowFade).toFixed(3);
-        var a3 = (0.12 * p * shadowFade).toFixed(3);
-        lastItem.style.filter =
-          'drop-shadow(0 ' + offset + 'px ' + blur1 + 'px rgba(0,0,0,' + a1 + ')) ' +
-          'drop-shadow(0 ' + Math.round(offset * 0.6) + 'px ' + blur2 + 'px rgba(0,0,0,' + a2 + ')) ' +
-          'drop-shadow(0 ' + Math.round(offset * 0.3) + 'px ' + blur3 + 'px rgba(0,0,0,' + a3 + '))';
+      // Interpolate → full viewport
+      var curLeft   = startRect.left   * (1 - p);
+      var curTop    = startRect.top    * (1 - p);
+      var curWidth  = startRect.width  + (vw - startRect.width)  * p;
+      var curHeight = startRect.height + (vh - startRect.height) * p;
 
-        // Video playback
-        if (heroVideo && !videoStarted && p > 0.9) {
-          heroVideo.currentTime = 0;
-          heroVideo.play();
-          videoStarted = true;
-          if (zoomInHint) zoomInHint.style.opacity = '0';
-        }
+      lastItem.style.left   = curLeft   + 'px';
+      lastItem.style.top    = curTop    + 'px';
+      lastItem.style.width  = curWidth  + 'px';
+      lastItem.style.height = curHeight + 'px';
+      lastMedia.style.borderRadius = (6 * (1 - p)) + 'px';
 
-        isFullyExpanded = (p >= 0.98);
+      // Shadow
+      var shadowFade = p < 0.85 ? 1 : (1 - (p - 0.85) / 0.15);
+      var offset  = Math.round(p * 28  * shadowFade);
+      var blur1   = Math.round(p * 20  * shadowFade);
+      var blur2   = Math.round(p * 60  * shadowFade);
+      var blur3   = Math.round(p * 120 * shadowFade);
+      var a1 = (0.55 * p * shadowFade).toFixed(3);
+      var a2 = (0.30 * p * shadowFade).toFixed(3);
+      var a3 = (0.12 * p * shadowFade).toFixed(3);
+      lastItem.style.filter =
+        'drop-shadow(0 ' + offset + 'px ' + blur1 + 'px rgba(0,0,0,' + a1 + ')) ' +
+        'drop-shadow(0 ' + Math.round(offset * 0.6) + 'px ' + blur2 + 'px rgba(0,0,0,' + a2 + ')) ' +
+        'drop-shadow(0 ' + Math.round(offset * 0.3) + 'px ' + blur3 + 'px rgba(0,0,0,' + a3 + '))';
 
-        if (isFullyExpanded && !heroTextShown) {
-          heroTextShown = true;
-          showHeroText();
-        }
+      // Video playback
+      if (heroVideo && !videoStarted && p > 0.9) {
+        heroVideo.currentTime = 0;
+        heroVideo.play();
+        videoStarted = true;
+        if (zoomInHint) zoomInHint.style.opacity = '0';
+      }
 
-        if (!isFullyExpanded && quotesShown && videoQuotes) {
-          videoQuotes.classList.remove('visible');
-          quotesShown = false;
-        }
-        if (!isFullyExpanded && heroTextShown) { hideHeroText(); }
-        if (lastCaption) lastCaption.style.opacity = Math.max(0, 1 - p * 3);
-        if (dotsEl) dotsEl.style.opacity = Math.max(0, 1 - p * 5);
-      },
-      onLeaveBack: function() { collapseToCarousel(); }
-    });
+      isFullyExpanded = (p >= 0.98);
+
+      if (isFullyExpanded && !heroTextShown) {
+        heroTextShown = true;
+        showHeroText();
+      }
+
+      if (!isFullyExpanded && quotesShown && videoQuotes) {
+        videoQuotes.classList.remove('visible');
+        quotesShown = false;
+      }
+      if (!isFullyExpanded && heroTextShown) { hideHeroText(); }
+      if (lastCaption) lastCaption.style.opacity = Math.max(0, 1 - p * 3);
+      if (dotsEl) dotsEl.style.opacity = Math.max(0, 1 - p * 5);
+    };
 
   }); // end desktop
 

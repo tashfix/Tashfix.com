@@ -158,8 +158,8 @@
   height: 100vh;
   width: max-content;
   overflow: visible;
-  padding: 0 7vw;
-  gap: 4vw;
+  padding: 0 4vw;
+  gap: clamp(16px, 2.5vw, 40px);
   will-change: transform;
 }
 
@@ -168,26 +168,24 @@
   flex: 0 0 auto;
   position: relative;
   height: 78vh;
-  /* Default aspect ratio: 16:9 wide */
-  aspect-ratio: 16 / 9;
   overflow: hidden;
-  border-radius: 8px;
+  border-radius: 0;
   cursor: default;
 }
 
-/* Wide (16:9) — videos, landscape hero shots */
-.hscroll__item--wide {
-  aspect-ratio: 16 / 9;
+/* Wide (16:10) — videos, landscape hero shots */
+.hscroll__type-wide {
+  aspect-ratio: 16 / 10;
 }
 
 /* Standard (4:3) — landscape photos */
-.hscroll__item--standard {
+.hscroll__type-standard {
   aspect-ratio: 4 / 3;
 }
 
-/* Portrait (9:16) — mobile UI, vertical photos */
-.hscroll__item--portrait {
-  aspect-ratio: 9 / 16;
+/* Square (1:1) — portrait photos, square crops */
+.hscroll__type-square {
+  aspect-ratio: 1 / 1;
 }
 
 .hscroll__item img,
@@ -298,8 +296,8 @@
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.2);
   transition: all 0.3s ease;
-  cursor: pointer;
-  pointer-events: auto;
+  cursor: default;
+  pointer-events: none;
 }
 
 .carousel__dot.active {
@@ -308,13 +306,6 @@
   background: rgba(0, 0, 0, 0.6);
 }
 
-
-/* ═══ VIDEO EXPANSION SECTION ═══ */
-.video-expand {
-  height: 80vh;
-  position: relative;
-  background: var(--color-offwhite);
-}
 
 .hscroll__item--expanding {
   position: fixed !important;
@@ -582,8 +573,6 @@
   .hscroll__caption { position: relative; background: none; padding: 8px 0 0; font-size: 0.6rem; }
   .hscroll__mobile-hide { display: none !important; }
   .carousel__dots { display: none !important; }
-  .video-expand { display: none; }
-
   .video-quotes {
     position: relative; top: auto; left: auto; right: auto; bottom: auto;
     width: 100%; height: auto;
@@ -624,7 +613,7 @@
   opacity: 0; transition: opacity 0.4s ease;
 }
 .vq-hero-text.visible { opacity: 1; }
-.vq-hero-heading { font-family: 'Share Tech Mono', 'Consolas', monospace; font-size: clamp(1.6rem, 3vw, 3.8rem); font-weight: 400; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.05; margin: 0; min-height: 1.1em; text-shadow: 0 2px 12px rgba(0,0,0,0.45); }
+.vq-hero-heading { font-family: 'Share Tech Mono', 'Consolas', monospace; font-size: clamp(1.6rem, 3vw, 3.8rem); font-weight: 400; color: #fff; letter-spacing: 0.06em; text-transform: uppercase; line-height: 1.05; margin: 0; min-height: 1.1em; text-shadow: 0 1px 4px rgba(0,0,0,0.12); }
 .vq-hero-heading .vq-dud { color: rgba(255,255,255,0.35); }
 .vq-hero-email-row { margin-top: clamp(0.4rem, 0.8vh, 0.7rem); display: flex; justify-content: center; opacity: 0; transition: opacity 0.5s ease; }
 .vq-hero-email-row.visible { opacity: 1; }

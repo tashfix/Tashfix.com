@@ -1760,4 +1760,66 @@
     });
   })();
 
+  // ── Horizontal scroll hint ──
+  // Shows once when the gallery section becomes pinned.
+  // Auto-dismisses after 4 s. Yields to the "Scroll to zoom in" hint
+  // by staying hidden whenever the last carousel item is active.
+  (function() {
+    var hHint = document.getElementById('morph-hscroll-hint');
+    if (!hHint) return;
+
+    var gallery = document.getElementById('hscroll-gallery');
+    if (!gallery) return;
+
+    var hintShown     = false;
+    var hintDismissed = false;
+    var dismissTimer  = null;
+
+    function showHint() {
+      if (hintDismissed || hintShown) return;
+      // Don't show if already on the last item — zoom-in hint takes precedence
+      var lastIndex = (window.TashBrand && window.TashBrand.carouselTotal)
+        ? window.TashBrand.carouselTotal - 1
+        : null;
+      if (lastIndex !== null && window.TashBrand.carouselIndex === lastIndex) return;
+      hintShown = true;
+      hHint.classList.add('visible');
+      dismissTimer = setTimeout(function() {
+        dismissHint();
+      }, 4000);
+    }
+
+    function dismissHint() {
+      if (hintDismissed) return;
+      hintDismissed = true;
+      hHint.classList.remove('visible');
+      if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+    }
+
+    function checkSection() {
+      var rect = gallery.getBoundingClientRect();
+      // Section is pinned at top when top ≈ 0 and still tall enough to fill viewport
+      var inSection = rect.top <= 10 && rect.bottom > window.innerHeight * 0.3;
+
+      // Also hide immediately if user reached the last item (zoom-in hint zone)
+      var lastIndex = (window.TashBrand && window.TashBrand.carouselTotal)
+        ? window.TashBrand.carouselTotal - 1
+        : null;
+      var onLastItem = lastIndex !== null && window.TashBrand.carouselIndex === lastIndex;
+
+      if (inSection && !onLastItem) {
+        if (!hintDismissed) showHint();
+      } else {
+        // Hide (but allow re-show on next section entry if not yet dismissed)
+        hHint.classList.remove('visible');
+        if (dismissTimer) { clearTimeout(dismissTimer); dismissTimer = null; }
+        if (!inSection) hintShown = false; // reset so it can re-show if scrolled back
+      }
+    }
+
+    window.addEventListener('scroll', checkSection, { passive: true });
+    // Initial check in case page loads already scrolled into the gallery
+    setTimeout(checkSection, 300);
+  })();
+
 })();

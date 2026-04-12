@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="css/loader.css">
   <link rel="stylesheet" href="css/face-morph.css?v=9">
   <link rel="stylesheet" href="css/zoom-out.css">
-  <link rel="stylesheet" href="css/horizontal.css?v=3">
+  <link rel="stylesheet" href="css/horizontal.css?v=7">
 
   <!-- Deferred CSS — below-fold sections -->
   <link rel="stylesheet" href="css/work-spotlight.css" media="print" onload="this.media='all'">
@@ -58,10 +58,10 @@
   <script src="js/about-reveal.js" defer></script>
   <script src="js/journey-reveal.js" defer></script>
   <script src="js/main.js" defer></script>
-  <script src="js/face-morph.js?v=9" defer></script>
+  <script src="js/face-morph.js?v=10" defer></script>
   <script src="js/zoom-out.js" defer></script>
-  <script src="js/horizontal.js" defer></script>
-  <script src="js/video-expand.js" defer></script>
+  <script src="js/horizontal.js?v=6" defer></script>
+  <script src="js/video-expand.js?v=6" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js" defer></script>
   <script src="js/vanta-init.js" defer></script>
@@ -429,54 +429,54 @@
       <!-- Wide horizontal flex track — GSAP translates X -->
       <div class="hscroll__track" id="hscroll-track">
 
-        <!-- 3. Dragon's Den — 16:9 video -->
-        <div class="hscroll__item hscroll__item--wide">
+        <!-- 3. Dragon's Den — 16:10 video -->
+        <div class="hscroll__item hscroll__type-wide">
           <video muted autoplay loop playsinline preload="metadata">
           <source src="assets/video/3 dragonden.webm" type="video/webm">
           <source src="assets/video/3 dragonden.mp4" type="video/mp4"></video>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Product I designed appearing on Dragon's Den</span></p>
         </div>
 
-        <!-- 4. Smart Home Mobile App — portrait (mobile UI) -->
-        <div class="hscroll__item hscroll__item--portrait hscroll__mobile-hide">
+        <!-- 4. Smart Home Mobile App — 16:10 video -->
+        <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
           <video muted autoplay loop playsinline preload="metadata">
           <source src="assets/video/4. smarthome.webm" type="video/webm">
           <source src="assets/video/4. smarthome.mp4" type="video/mp4"></video>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Smart Home Mobile App I designed end to end</span></p>
         </div>
 
-        <!-- 5. Winning 2 awards at CES — landscape photo -->
-        <div class="hscroll__item hscroll__item--standard">
+        <!-- 5. Winning 2 awards at CES — square photo -->
+        <div class="hscroll__item hscroll__type-square">
           <picture><source srcset="assets/images/5 (Winning 2 awards at CES).webp" type="image/webp"><img src="assets/images/5 (Winning 2 awards at CES).png" alt="Winning 2 awards at CES" loading="lazy"></picture>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Winning 2 awards at CES</span></p>
         </div>
 
-        <!-- 6. Marine ecosystem — landscape photo -->
-        <div class="hscroll__item hscroll__item--standard hscroll__mobile-hide">
+        <!-- 6. Marine ecosystem — 16:10 wide photo -->
+        <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
           <picture><source srcset="assets/images/6. (Marine ecosystem I design end to end).webp" type="image/webp"><img src="assets/images/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy"></picture>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Marine ecosystem I designed end to end</span></p>
         </div>
 
-        <!-- Microsoft AI — landscape photo -->
-        <div class="hscroll__item hscroll__item--standard">
+        <!-- Microsoft AI — 4:3 standard photo -->
+        <div class="hscroll__item hscroll__type-standard">
           <picture><source srcset="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .webp" type="image/webp"><img src="assets/images/10. (Recruited onto the MSAN team at Microsoft AI) .jpeg" alt="Recruited onto the MSAN team at Microsoft AI" loading="lazy"></picture>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Recruited onto the MSAN team at Microsoft AI</span></p>
         </div>
 
-        <!-- YES! — portrait photo -->
-        <div class="hscroll__item hscroll__item--portrait">
+        <!-- YES! — square photo -->
+        <div class="hscroll__item hscroll__type-square">
           <picture><source srcset="assets/images/8.(%22YES!%22).webp" type="image/webp"><img src="assets/images/8.(%22YES!%22).png" alt="YES!" loading="lazy"></picture>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">"YES!"</span></p>
         </div>
 
-        <!-- Samsung — landscape photo -->
-        <div class="hscroll__item hscroll__item--standard">
+        <!-- Samsung — square photo -->
+        <div class="hscroll__item hscroll__type-square">
           <picture><source srcset="assets/images/13. (Joing the Samsung Research Canada Team).webp" type="image/webp"><img src="assets/images/13. (Joing the Samsung Research Canada Team).png" alt="Joining the Samsung Research Canada Team" loading="lazy"></picture>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Joining the Samsung Research Canada Team</span></p>
         </div>
 
-        <!-- 15. And here we are — 16:9 hero video -->
-        <div class="hscroll__item hscroll__item--wide" id="hscroll-last-item">
+        <!-- 15. And here we are — square hero video -->
+        <div class="hscroll__item hscroll__type-square" id="hscroll-last-item">
           <video poster="assets/images/hero-video-poster.jpg" muted playsinline preload="metadata">
           <source src="assets/video/Hero%20Video%20Final%20(kling).webm" type="video/webm">
           <source src="assets/video/Hero%20Video%20Final%20(kling).mp4" type="video/mp4"></video>
@@ -497,9 +497,6 @@
     <!-- Dot indicator — generated by JS, shows current item -->
     <div class="carousel__dots" id="carousel-dots"></div>
   </section>
-
-  <!-- ====== VIDEO EXPANSION (scroll-driven) ====== -->
-  <section id="video-expand" class="video-expand" aria-hidden="true"></section>
 
   <!-- ====== FULLSCREEN VIDEO QUOTES OVERLAY ====== -->
   <div class="video-quotes" id="video-quotes">
@@ -1377,6 +1374,21 @@
 
 
 
+
+  <!-- Horizontal scroll hint — direct body child so position:fixed works inside GSAP pin -->
+  <div class="morph__hscroll-hint" id="morph-hscroll-hint">
+    <svg width="16" height="26" viewBox="0 0 22 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="1" y="1" width="20" height="34" rx="10" stroke="currentColor" stroke-width="1.5"/>
+      <rect x="9" y="7" width="4" height="7" rx="2" fill="currentColor" id="morph-hscroll-wheel"/>
+    </svg>
+    <span class="morph__hscroll-hint-label">Scroll to view my journey</span>
+    <svg width="18" height="12" viewBox="0 0 24 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <g id="morph-hscroll-arrow">
+        <line x1="1" y1="8" x2="18" y2="8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <polyline points="12,2 19,8 12,14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      </g>
+    </svg>
+  </div>
 
   <!-- Scroll hint — direct body child so position:fixed isn't clobbered by GSAP -->
   <div class="morph__scroll-hint" id="morph-scroll-hint">

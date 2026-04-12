@@ -107,26 +107,16 @@
       });
     }
 
-    /* Dot click → scroll to that item's position in the runway */
-    if (dotsEl) {
-      dotsEl.addEventListener('click', function (e) {
-        var dot = e.target.closest('.carousel__dot');
-        if (!dot) return;
-        var idx = parseInt(dot.getAttribute('data-index'), 10);
-        if (isNaN(idx)) return;
-        var pct    = lastIndex > 0 ? idx / lastIndex : 0;
-        var runway = getRunway();
-        /* section.offsetTop is where the section starts in the document */
-        var target = section.offsetTop + Math.round(pct * runway);
-        window.scrollTo({ top: target, behavior: 'smooth' });
-      });
-    }
+    /* Dots are indicator-only — no click navigation */
 
     /* ── Runway helpers ──
        THE KEY: offsetWidth (live), never scrollWidth, never cached. */
     function getRunway() {
       return Math.max(0, track.offsetWidth - window.innerWidth);
     }
+
+    /* Zoom runway — 1.6× viewport height for the expansion phase */
+    var ZOOM_VH = 1.6;
 
     /* ── Progress handler: dots, typewriter, color-active, videos ── */
     function onScrollProgress(progress) {
@@ -157,30 +147,64 @@
       });
     }
 
-    /* ── Build GSAP horizontal scroll — canonical approach ──
+    /* ── Zoom callback — set by video-expand.js ── */
+    window.TashBrand._onVideoZoom = null;
+
+    /* ── Build GSAP horizontal scroll — two-phase approach ──
        pin:true on the section — GSAP pins it and adds its own spacer.
-       x and end are LAZY FUNCTIONS re-evaluated on every invalidateOnRefresh.
-       No manual height. No sticky wrapper. Resize-safe by design. */
+       Phase 1: horizontal scroll (track.x animates)
+       Phase 2: zoom expansion (last item → fullscreen)
+       end includes both runways so the section stays pinned through both.
+       We drive track.x manually via gsap.set() — no animation/scrub staleness. */
     var st = null;
 
     function buildScrollTrigger() {
       if (st) { st.kill(); st = null; }
 
       st = ScrollTrigger.create({
-        animation: gsap.to(track, {
-          x: function () { return -(track.offsetWidth - window.innerWidth); },
-          ease: 'none',
-          paused: true
-        }),
         trigger: section,
         start:   'top top',
-        end:     function () { return '+=' + (track.offsetWidth - window.innerWidth); },
-        scrub:   1,
-        pin:     true,          /* GSAP pins the section and manages its own spacer */
+        end:     function () {
+          var runway = getRunway();
+          var zoomRunway = window.innerHeight * ZOOM_VH;
+          return '+=' + (runway + zoomRunway);
+        },
+        scrub:   0,
+        pin:     true,
         invalidateOnRefresh: true,
 
         onUpdate: function (self) {
-          onScrollProgress(self.progress);
+          var p       = self.progress;
+          var runway  = getRunway();
+          var zoomRun = window.innerHeight * ZOOM_VH;
+          var total   = runway + zoomRun;
+          if (total <= 0) return;
+
+          /* hEnd = fraction of total progress where horizontal scroll ends */
+          var hEnd = runway / total;
+
+          if (p <= hEnd) {
+            /* ── Phase 1: Horizontal scroll ── */
+            var hProgress = hEnd > 0 ? (p / hEnd) : 1;
+            gsap.set(track, { x: -runway * hProgress });
+            onScrollProgress(hProgress);
+
+            /* Collapse zoom if it was active */
+            if (window.TashBrand._onVideoZoom) {
+              window.TashBrand._onVideoZoom(0);
+            }
+          } else {
+            /* ── Phase 2: Zoom expansion ── */
+            gsap.set(track, { x: -runway }); /* hold at end */
+            onScrollProgress(1); /* keep on last item */
+
+            var zoomP = hEnd < 1 ? ((p - hEnd) / (1 - hEnd)) : 1;
+            zoomP = Math.max(0, Math.min(1, zoomP));
+
+            if (window.TashBrand._onVideoZoom) {
+              window.TashBrand._onVideoZoom(zoomP);
+            }
+          }
         },
         onEnter: function () {
           section.classList.add('color-active');
@@ -198,6 +222,9 @@
           if (dotsEl) dotsEl.classList.add('visible');
         }
       });
+
+      /* Expose for video-expand.js (zoom-in-hint click target) */
+      window.TashBrand._galleryST = st;
     }
 
     buildScrollTrigger();
@@ -209,6 +236,8 @@
     var ro = null;
     if (typeof ResizeObserver !== 'undefined') {
       ro = new ResizeObserver(function () {
+        /* Suppress during video-expand reparenting to prevent runway recalc */
+        if (window.TashBrand && window.TashBrand.suppressResize) return;
         ScrollTrigger.refresh();
       });
       ro.observe(track);
