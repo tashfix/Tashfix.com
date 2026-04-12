@@ -67,8 +67,15 @@
               width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-/* Small mode — full frosted glass, matches hamburger */
+/* Small mode — size marker only; glass handled by --plate */
 .site-logo.small {
+  /* no background/blur/shadow here — those live on --plate */
+}
+
+/* ── Context-aware logo modifiers ── */
+
+/* Frosted glass backplate — beige sections */
+.site-logo--plate {
   background: rgba(255, 255, 255, 0.28);
   backdrop-filter: blur(12px) saturate(1.3);
   -webkit-backdrop-filter: blur(12px) saturate(1.3);
@@ -79,13 +86,22 @@
     inset 0 -1px 0 rgba(0,0,0,0.04);
 }
 
+/* Light (white) color — cobalt & video sections */
+.site-logo--light ta-signature#ta-sig {
+  filter: brightness(0) invert(1);
+}
+.site-logo--light .site-logo__initials {
+  color: #ffffff;
+}
+
 /* Signature logo — width controls size (SVG scales to fill) */
 ta-signature#ta-sig {
   --c: #0A1A4A;
   width: clamp(140px, 19.25vw, 220px);
   display: block;
   margin: -5px -22px;
-  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+              filter 0.3s ease;
 }
 
 /* TA initials — mobile logo mark, hidden on desktop */

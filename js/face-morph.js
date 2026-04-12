@@ -1760,6 +1760,121 @@
     });
   })();
 
+  // ── Logo context — section-aware color & backplate ──
+  // States:
+  //   landing → black, name=zoom-out.js, no plate
+  //   cobalt  → white, name=off,         no plate
+  //   beige   → black, name=off,         plate on
+  //   video   → white, name=on,          no plate
+  //
+  // Scaling trigger (zoom-out.js) is untouched.
+  // This system only manages --light and --plate classes,
+  // plus show-name for the video state.
+  (function() {
+    var logo = document.getElementById('site-logo');
+    var sig  = document.getElementById('ta-sig');
+    if (!logo || !sig) return;
+
+    var curState = null;
+    var bounds   = { landingEnd: 0, cobaltEnd: 0 };
+
+    function buildBounds() {
+      // Find the zoom-out ScrollTrigger (trigger = #zoom-out element)
+      var zoomEl = document.getElementById('zoom-out');
+      var zoomST = null;
+      if (zoomEl) {
+        ScrollTrigger.getAll().forEach(function(st) {
+          if (st.trigger === zoomEl) zoomST = st;
+        });
+      }
+      // landingEnd = scroll position where the hero pin releases
+      bounds.landingEnd = zoomST
+        ? zoomST.end
+        : (zoomEl ? zoomEl.offsetHeight * 3 : window.innerHeight * 3);
+
+      // Cobalt section (#hscroll-intro) immediately follows — it's 100vh
+      var introEl = document.getElementById('hscroll-intro');
+      bounds.cobaltEnd = bounds.landingEnd + (introEl ? introEl.offsetHeight : window.innerHeight);
+    }
+
+    function isVideoMode(scrollY) {
+      // Compute zoom progress directly from _galleryST — no interception needed
+      var galST = window.TashBrand && window.TashBrand._galleryST;
+      if (!galST) return false;
+      if (scrollY < galST.start || scrollY > galST.end) {
+        // Past the end = video stays active (last state was video)
+        return scrollY >= galST.end;
+      }
+      var stProgress = galST.progress;
+      var track = document.getElementById('hscroll-track');
+      if (!track) return false;
+      var runway  = Math.max(0, track.offsetWidth - window.innerWidth);
+      var total   = galST.end - galST.start;
+      var hEnd    = total > 0 ? runway / total : 0.81;
+      if (stProgress <= hEnd) return false;
+      var zoomP = hEnd < 1 ? (stProgress - hEnd) / (1 - hEnd) : 1;
+      return zoomP > 0.6;
+    }
+
+    function computeState(scrollY) {
+      // Video state — highest priority
+      if (isVideoMode(scrollY)) return 'video';
+      // Within zoom-out hero section
+      if (scrollY < bounds.landingEnd) return 'landing';
+      // Cobalt intro section
+      if (scrollY < bounds.cobaltEnd) return 'cobalt';
+      // Everything after (work-spotlight, journey-intro, hscroll-gallery) = beige
+      return 'beige';
+    }
+
+    function applyState(state) {
+      if (state === curState) return;
+      var prev = curState;
+      curState = state;
+
+      switch (state) {
+        case 'landing':
+          logo.classList.remove('site-logo--light', 'site-logo--plate');
+          // show-name managed by zoom-out.js within the landing section
+          break;
+
+        case 'cobalt':
+          logo.classList.add('site-logo--light');
+          logo.classList.remove('site-logo--plate');
+          // Restore name=off if coming back from video
+          if (prev === 'video') sig.setAttribute('show-name', 'false');
+          break;
+
+        case 'beige':
+          logo.classList.remove('site-logo--light');
+          logo.classList.add('site-logo--plate');
+          // Restore name=off if coming back from video (or teleporting past landing)
+          if (prev === 'video' || prev === null) sig.setAttribute('show-name', 'false');
+          break;
+
+        case 'video':
+          logo.classList.add('site-logo--light');
+          logo.classList.remove('site-logo--plate');
+          sig.setAttribute('show-name', 'true');
+          break;
+      }
+    }
+
+    function update() {
+      applyState(computeState(window.scrollY));
+    }
+
+    function refresh() {
+      buildBounds();
+      update();
+    }
+
+    window.addEventListener('scroll', update, { passive: true });
+    ScrollTrigger.addEventListener('refresh', refresh);
+    // Initial build — wait for GSAP spacers to settle
+    setTimeout(refresh, 500);
+  })();
+
   // ── Horizontal scroll hint ──
   // Shows once when the gallery section becomes pinned.
   // Auto-dismisses after 4 s. Yields to the "Scroll to zoom in" hint
