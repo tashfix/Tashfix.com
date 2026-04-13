@@ -295,15 +295,14 @@
   height: 8px;
   border-radius: 50%;
   background: rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
+  transition: background 0.3s ease, transform 0.3s ease;
   cursor: default;
   pointer-events: none;
 }
 
 .carousel__dot.active {
-  width: 10px;
-  height: 10px;
   background: rgba(0, 0, 0, 0.6);
+  transform: scale(1.25);
 }
 
 
