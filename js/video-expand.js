@@ -94,6 +94,7 @@
 
     var videoQuotes = document.getElementById('video-quotes');
     var quotesShown = false;
+    var ctaEls = videoQuotes ? videoQuotes.querySelectorAll('.video-quotes__cta') : [];
     var zoomInHint  = document.getElementById('zoom-in-hint');
     if (zoomInHint) {
       zoomInHint.addEventListener('click', function() {
@@ -144,6 +145,8 @@
           emailFx.setText('info@tashfix.com').then(function() {
             if (heroEmailBtn) heroEmailBtn.classList.add('ready');
           });
+          // CTAs appear with the email line — independent of video/quote timing
+          ctaEls.forEach(function(el) { el.classList.add('cta-shown'); });
         }, 300);
         function scheduleGlitch() {
           var delay = 6000 + (Math.random() * 3000) - 1500;
@@ -162,6 +165,7 @@
       heroTextEl.classList.remove('visible');
       if (heroEmailRow) heroEmailRow.classList.remove('visible');
       if (heroEmailBtn) heroEmailBtn.classList.remove('ready');
+      ctaEls.forEach(function(el) { el.classList.remove('cta-shown'); });
       if (heroHeadingEl) heroHeadingEl.innerHTML = '';
       if (heroEmailText) heroEmailText.innerHTML = '';
       if (heroGlitchTimer) { clearTimeout(heroGlitchTimer); heroGlitchTimer = null; }
