@@ -816,6 +816,10 @@ body.player-expanded .morph__scroll-hint {
    Y2K FLOATING PLAYER
    ═══════════════════════════════════════════════════════════ */
 .morph__player {
+  --chrome-x: 0px;
+  --chrome-y: 0px;
+  --chrome-boost: 0;
+  --fresnel-boost: 0;
   position: fixed;
   right: 28px;
   bottom: 28px;
@@ -1026,6 +1030,112 @@ body.player-expanded .morph__scroll-hint {
 .morph__flare-2 { top: 6px; left: 60px; width: 24px; height: 6px; background: radial-gradient(ellipse, rgba(255,255,255,0.55) 0%, rgba(255,255,255,0.15) 50%, transparent 85%); }
 .morph__flare-3 { bottom: 5px; left: 70px; width: 12px; height: 4px; background: radial-gradient(ellipse, rgba(255,255,255,0.2) 0%, transparent 70%); }
 .morph__flare-4 { top: 12px; right: 8px; width: 6px; height: 30px; border-radius: 3px; background: linear-gradient(180deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0.12) 50%, transparent 100%); }
+
+/* ── Chrome specular system — sharp, high-contrast, always-visible ── */
+/* --chrome-x/y: motion-driven focal point shift (parallax per band)
+   --chrome-boost: 0 at rest, 1 during fast motion (intensity boost) */
+
+/* Layer 1: Bright specular highlights (screen blend — additive light) */
+.morph__motion-sheen {
+  position: absolute;
+  inset: 0;
+  border-radius: 88px;
+  background:
+    /* Primary specular — sharp overhead light, tight elliptical band */
+    radial-gradient(
+      ellipse 100% 24% at calc(50% + var(--chrome-x)) calc(16% + var(--chrome-y)),
+      rgba(255,255,255,0.95) 0%,
+      rgba(255,255,255,0.70) 10%,
+      rgba(255,255,255,0.18) 26%,
+      transparent 38%),
+    /* Secondary kick — thinner defined band below primary */
+    radial-gradient(
+      ellipse 75% 11% at calc(47% + var(--chrome-x) * 0.7) calc(36% + var(--chrome-y) * 0.8),
+      rgba(255,255,255,0.50) 0%,
+      rgba(255,255,255,0.12) 22%,
+      transparent 45%),
+    /* Left capsule-end compressed glint */
+    radial-gradient(
+      ellipse 14% 52% at calc(4% + var(--chrome-x) * 0.15) calc(30% + var(--chrome-y) * 0.4),
+      rgba(255,255,255,0.80) 0%,
+      rgba(255,255,255,0.22) 28%,
+      transparent 55%),
+    /* Right capsule-end compressed glint */
+    radial-gradient(
+      ellipse 14% 52% at calc(96% + var(--chrome-x) * 0.15) calc(34% + var(--chrome-y) * 0.4),
+      rgba(255,255,255,0.60) 0%,
+      rgba(255,255,255,0.16) 28%,
+      transparent 55%),
+    /* Bottom bounce — thin bright line at base of curvature */
+    radial-gradient(
+      ellipse 60% 7% at calc(50% - var(--chrome-x) * 0.3) calc(90% - var(--chrome-y) * 0.2),
+      rgba(255,255,255,0.40) 0%,
+      rgba(255,255,255,0.08) 30%,
+      transparent 65%),
+    /* Warm environment band — lower mid, picks up beige/amber UI */
+    radial-gradient(
+      ellipse 110% 16% at calc(56% + var(--chrome-x) * 0.6) calc(62% + var(--chrome-y) * 0.4),
+      rgba(220,190,150,0.10) 0%,
+      transparent 42%),
+    /* Cool environment band — upper surface, picks up cobalt/sky */
+    radial-gradient(
+      ellipse 90% 14% at calc(42% + var(--chrome-x) * 0.8) calc(28% + var(--chrome-y) * 0.6),
+      rgba(140,170,220,0.08) 0%,
+      transparent 40%);
+  opacity: calc(0.35 + var(--chrome-boost) * 0.20);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  z-index: 24;
+  will-change: opacity;
+}
+
+/* Layer 2: Dark chrome bands + edge glints (soft-light — can darken AND lighten) */
+.morph__fresnel-edge {
+  position: absolute;
+  inset: 0;
+  border-radius: 88px;
+  background:
+    /* Dark horizon band — creates deep mirror region across mid-surface */
+    radial-gradient(
+      ellipse 92% 28% at calc(50% + var(--chrome-x) * 0.5) calc(56% + var(--chrome-y) * 0.4),
+      rgba(15,15,15,1) 0%,
+      rgba(35,35,35,0.85) 18%,
+      rgba(80,80,80,0.4) 38%,
+      rgba(128,128,128,0) 55%),
+    /* Secondary dark notch — below primary specular for contrast */
+    radial-gradient(
+      ellipse 70% 12% at calc(50% + var(--chrome-x) * 0.6) calc(42% + var(--chrome-y) * 0.5),
+      rgba(30,30,30,0.7) 0%,
+      rgba(70,70,70,0.3) 25%,
+      rgba(128,128,128,0) 50%),
+    /* Top edge glint — sharp thin specular line */
+    radial-gradient(
+      ellipse 80% 4% at calc(50% + var(--chrome-x) * 0.25) calc(2% + var(--chrome-y) * 0.1),
+      rgba(250,250,250,1) 0%,
+      rgba(220,220,220,0.5) 35%,
+      rgba(128,128,128,0) 80%),
+    /* Bottom edge glint — dimmer counter-reflection */
+    radial-gradient(
+      ellipse 62% 3.5% at calc(50% - var(--chrome-x) * 0.15) calc(98% - var(--chrome-y) * 0.08),
+      rgba(210,210,210,0.8) 0%,
+      rgba(180,180,180,0.3) 35%,
+      rgba(128,128,128,0) 80%),
+    /* Left capsule edge arc */
+    radial-gradient(
+      ellipse 5% 50% at calc(1.5% + var(--chrome-x) * 0.08) 48%,
+      rgba(230,230,230,0.9) 0%,
+      rgba(128,128,128,0) 60%),
+    /* Right capsule edge arc */
+    radial-gradient(
+      ellipse 5% 50% at calc(98.5% + var(--chrome-x) * 0.08) 52%,
+      rgba(210,210,210,0.7) 0%,
+      rgba(128,128,128,0) 60%);
+  opacity: calc(0.38 + var(--fresnel-boost) * 0.18);
+  mix-blend-mode: soft-light;
+  pointer-events: none;
+  z-index: 25;
+  will-change: opacity;
+}
 
 .morph__inner-panel {
   position: absolute; top: 10px; left: 18px; right: 18px; bottom: 10px;
@@ -1271,6 +1381,21 @@ body.player-expanded .morph__scroll-hint {
   pointer-events: none;
 }
 
+/* Motion-responsive dome highlight — slides across the convex button surface */
+.morph__play-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle at calc(36% + var(--chrome-x, 0px) * 1.5) calc(28% + var(--chrome-y, 0px) * 1.5),
+    rgba(255,255,255,0.65) 0%,
+    rgba(255,255,255,0.25) 18%,
+    transparent 40%);
+  pointer-events: none;
+  z-index: 2;
+}
+
 .morph__play-btn:active { transform: scale(0.96); box-shadow: inset 0 2px 6px rgba(0,0,0,0.2), 0 2px 4px rgba(0,0,0,0.25); }
 .morph__play-btn svg { width: 22px; height: 22px; fill: #3a3a3a; filter: drop-shadow(0 1px 0 rgba(255,255,255,0.35)); position: relative; z-index: 1; }
 .morph__play-icon, .morph__pause-icon { display: none; }
@@ -1429,7 +1554,9 @@ body.player-expanded .morph__menu-btn {
 .morph__player.expanded .morph__metal-noise,
 .morph__player.expanded .morph__specular-streak,
 .morph__player.expanded .morph__specular-streak-bottom,
-.morph__player.expanded .morph__flare { opacity: 0; }
+.morph__player.expanded .morph__flare,
+.morph__player.expanded .morph__motion-sheen,
+.morph__player.expanded .morph__fresnel-edge { opacity: 0 !important; display: none; }
 
 .morph__player.expanded .morph__inner-panel {
   border-radius: 0 0 6px 6px;
@@ -2406,6 +2533,8 @@ body.player-expanded .morph__menu-btn {
   .morph__player.expanded .morph__specular-streak,
   .morph__player.expanded .morph__specular-streak-bottom,
   .morph__player.expanded .morph__flare,
+  .morph__player.expanded .morph__motion-sheen,
+  .morph__player.expanded .morph__fresnel-edge,
   .morph__player.expanded .morph__chrome-bar,
   .morph__player.expanded .morph__progress-section,
   .morph__player.expanded .morph__bottom-controls { display: none; }
