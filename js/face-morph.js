@@ -1916,12 +1916,18 @@
         // Past the end = video stays active (last state was video)
         return scrollY >= galST.end;
       }
-      var stProgress = galST.progress;
+      // Compute progress from scrollY directly instead of reading galST.progress.
+      // GSAP may batch ScrollTrigger updates in rAF, so galST.progress can lag
+      // one frame behind the actual scroll position — causing the video state
+      // to never be reached when the logo scroll handler fires before GSAP's tick.
+      var stRange    = galST.end - galST.start;
+      var stProgress = stRange > 0 ? (scrollY - galST.start) / stRange : 0;
+      stProgress = Math.max(0, Math.min(1, stProgress));
       var track = document.getElementById('hscroll-track');
       if (!track) return false;
       var runway  = Math.max(0, track.offsetWidth - window.innerWidth);
-      var total   = galST.end - galST.start;
-      var hEnd    = total > 0 ? runway / total : 0.81;
+      var ratio   = (window.TashBrand && window.TashBrand.scrollRatio) || 1;
+      var hEnd    = stRange > 0 ? (runway * ratio) / stRange : 0.81;
       if (stProgress <= hEnd) return false;
       var zoomP = hEnd < 1 ? (stProgress - hEnd) / (1 - hEnd) : 1;
       return zoomP > 0.6;

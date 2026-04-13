@@ -341,11 +341,18 @@
         if (zoomInHint) zoomInHint.style.opacity = '0';
       }
 
-      isFullyExpanded = (p >= 0.98);
+      isFullyExpanded = (p >= 0.92);
 
       if (isFullyExpanded && !heroTextShown) {
         heroTextShown = true;
         showHeroText();
+      }
+
+      // Always sync CTA visibility directly — live query avoids stale NodeList issues
+      if (isFullyExpanded && videoQuotes) {
+        videoQuotes.querySelectorAll('.video-quotes__cta').forEach(function(el) {
+          el.classList.add('cta-shown');
+        });
       }
 
       if (!isFullyExpanded && quotesShown && videoQuotes) {

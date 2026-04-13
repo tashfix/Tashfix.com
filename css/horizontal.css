@@ -501,6 +501,8 @@
 }
 .video-quotes.visible .video-quotes__cta,
 .video-quotes__cta.cta-shown { transform: translateY(0); opacity: 1; pointer-events: auto; transition-delay: 0.5s; }
+/* Failsafe: hero text visible = CTAs must show, regardless of JS timing or threshold edge cases */
+body:has(#vq-hero-text.visible) .video-quotes__cta { transform: translateY(0) !important; opacity: 1 !important; pointer-events: auto !important; transition-delay: 0s !important; }
 .video-quotes__cta:hover { background: rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.3); color: #fff; }
 .video-quotes__cta-arrow { transition: transform 0.3s ease; }
 .video-quotes__cta:hover .video-quotes__cta-arrow { transform: translateX(3px); }

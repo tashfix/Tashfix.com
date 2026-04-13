@@ -115,13 +115,39 @@
       return Math.max(0, track.offsetWidth - window.innerWidth);
     }
 
+    /* ── Scroll compression ──
+       SCROLL_RATIO < 1 means the user scrolls less to traverse the gallery.
+       The track still moves the full runway; the scroll distance is compressed.
+       0.55 = ~45% less dead-scrolling while preserving visual pacing. */
+    var SCROLL_RATIO = 0.55;
+    window.TashBrand.scrollRatio = SCROLL_RATIO;
+
     /* Zoom runway — 1.6× viewport height for the expansion phase */
     var ZOOM_VH = 1.6;
 
+    /* ── Viewport-based active item detection ──
+       Uses real pixel positions so mixed-width items (wide vs square)
+       switch at the correct visual moment — not a mathematical midpoint. */
+    function getActiveIdx() {
+      var trackX      = gsap.getProperty(track, 'x') || 0;
+      var vw          = window.innerWidth;
+      var bestIdx     = 0;
+      var bestOverlap = -1;
+      items.forEach(function (item, i) {
+        var left    = item.offsetLeft + trackX;
+        var right   = left + item.offsetWidth;
+        var overlap = Math.max(0, Math.min(vw, right) - Math.max(0, left));
+        if (overlap >= bestOverlap) {
+          bestOverlap = overlap;
+          bestIdx     = i;
+        }
+      });
+      return bestIdx;
+    }
+
     /* ── Progress handler: dots, typewriter, color-active, videos ── */
-    function onScrollProgress(progress) {
-      var rawIdx    = progress * lastIndex;
-      var activeIdx = Math.max(0, Math.min(lastIndex, Math.round(rawIdx)));
+    function onScrollProgress() {
+      var activeIdx = getActiveIdx();
 
       /* Sync carouselIndex so video-expand.js knows where we are */
       window.TashBrand.carouselIndex = activeIdx;
@@ -134,7 +160,7 @@
         typewriterFired[activeIdx] = true;
       }
 
-      /* Videos: play visible item's loop video, pause others */
+      /* Videos: play the item with most viewport overlap, pause all others */
       items.forEach(function (item, i) {
         var vid = item.querySelector('video[loop]');
         if (!vid) return;
@@ -165,29 +191,32 @@
         trigger: section,
         start:   'top top',
         end:     function () {
-          var runway = getRunway();
-          var zoomRunway = window.innerHeight * ZOOM_VH;
-          return '+=' + (runway + zoomRunway);
+          var scrollRunway = getRunway() * SCROLL_RATIO;
+          var zoomRunway   = window.innerHeight * ZOOM_VH;
+          return '+=' + (scrollRunway + zoomRunway);
         },
         scrub:   0,
         pin:     true,
         invalidateOnRefresh: true,
 
         onUpdate: function (self) {
-          var p       = self.progress;
-          var runway  = getRunway();
-          var zoomRun = window.innerHeight * ZOOM_VH;
-          var total   = runway + zoomRun;
+          var p            = self.progress;
+          var runway       = getRunway();
+          var scrollRunway = runway * SCROLL_RATIO;
+          var zoomRun      = window.innerHeight * ZOOM_VH;
+          var total        = scrollRunway + zoomRun;
           if (total <= 0) return;
 
           /* hEnd = fraction of total progress where horizontal scroll ends */
-          var hEnd = runway / total;
+          var hEnd = scrollRunway / total;
 
           if (p <= hEnd) {
-            /* ── Phase 1: Horizontal scroll ── */
+            /* ── Phase 1: Horizontal scroll ──
+               hProgress 0→1 maps to track.x 0→-runway (full visual distance)
+               but driven by the compressed scroll distance. */
             var hProgress = hEnd > 0 ? (p / hEnd) : 1;
             gsap.set(track, { x: -runway * hProgress });
-            onScrollProgress(hProgress);
+            onScrollProgress();
 
             /* Collapse zoom if it was active */
             if (window.TashBrand._onVideoZoom) {
@@ -196,7 +225,10 @@
           } else {
             /* ── Phase 2: Zoom expansion ── */
             gsap.set(track, { x: -runway }); /* hold at end */
-            onScrollProgress(1); /* keep on last item */
+            onScrollProgress();
+            /* Force last-item state — at wide viewports a tie in overlap
+               can leave carouselIndex one short, blocking the zoom callback. */
+            window.TashBrand.carouselIndex = lastIndex;
 
             var zoomP = hEnd < 1 ? ((p - hEnd) / (1 - hEnd)) : 1;
             zoomP = Math.max(0, Math.min(1, zoomP));

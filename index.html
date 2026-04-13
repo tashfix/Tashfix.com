@@ -30,7 +30,7 @@
   <link rel="stylesheet" href="css/loader.css">
   <link rel="stylesheet" href="css/face-morph.css?v=15">
   <link rel="stylesheet" href="css/zoom-out.css">
-  <link rel="stylesheet" href="css/horizontal.css?v=10">
+  <link rel="stylesheet" href="css/horizontal.css?v=11">
 
   <!-- Deferred CSS — below-fold sections -->
   <link rel="stylesheet" href="css/work-spotlight.css" media="print" onload="this.media='all'">
@@ -58,10 +58,10 @@
   <script src="js/about-reveal.js" defer></script>
   <script src="js/journey-reveal.js" defer></script>
   <script src="js/main.js" defer></script>
-  <script src="js/face-morph.js?v=20" defer></script>
+  <script src="js/face-morph.js?v=21" defer></script>
   <script src="js/zoom-out.js" defer></script>
   <script src="js/horizontal.js?v=6" defer></script>
-  <script src="js/video-expand.js?v=7" defer></script>
+  <script src="js/video-expand.js?v=8" defer></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.globe.min.js" defer></script>
   <script src="js/vanta-init.js" defer></script>
@@ -437,12 +437,20 @@
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Product I designed appearing on Dragon's Den</span></p>
         </div>
 
+        <!-- 3b. VoltSafe Winter App Trailer — 16:10 video -->
+        <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
+          <video muted autoplay loop playsinline preload="metadata">
+          <source src="assets/video/VoltSafe Winter App Trailer.webm?v=2" type="video/webm">
+          <source src="assets/video/VoltSafe Winter App Trailer.mp4?v=2" type="video/mp4"></video>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">The app that shipped to Canadian Tire shelves</span></p>
+        </div>
+
         <!-- 4. Smart Home Mobile App — 16:10 video -->
         <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
           <video muted autoplay loop playsinline preload="metadata">
           <source src="assets/video/4. smarthome.webm" type="video/webm">
           <source src="assets/video/4. smarthome.mp4" type="video/mp4"></video>
-          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Smart Home Mobile App I designed end to end</span></p>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Smart home iOS App unveiled at the Consumer Electronics Show in Las Vegas, designed by me</span></p>
         </div>
 
         <!-- 5. Winning 2 awards at CES — square photo -->
@@ -455,6 +463,14 @@
         <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
           <picture><source srcset="assets/images/6. (Marine ecosystem I design end to end).webp" type="image/webp"><img src="assets/images/6. (Marine ecosystem I design end to end).JPG" alt="Marine ecosystem I designed end to end" loading="lazy"></picture>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">Marine ecosystem I designed end to end</span></p>
+        </div>
+
+        <!-- 6b. Marine CES Demo Tablet App — 16:10 video -->
+        <div class="hscroll__item hscroll__type-wide hscroll__mobile-hide">
+          <video muted autoplay loop playsinline preload="metadata">
+          <source src="assets/video/Marine CES Demo Tablet App.webm" type="video/webm">
+          <source src="assets/video/Marine CES Demo Tablet App.mp4" type="video/mp4"></video>
+          <p class="hscroll__caption"><span class="hscroll__typewriter-text">Marina dashboard demoed at CES — winner of the IBEX 2023 Innovation Award</span></p>
         </div>
 
         <!-- Microsoft AI — 4:3 standard photo -->
@@ -1199,94 +1215,97 @@
 
                 <!-- Marine Ecosystem Dashboard and App -->
                 <div class="morph__cs-detail-content" data-cs="marine">
-                  <h1>End-to-end design for VoltSafe&rsquo;s marine IoT ecosystem.</h1>
-                  <div class="morph__cs-detail-tags"><span>End-to-End Design</span><span>IoT</span><span>Figma</span></div>
+                  <h1>VoltSafe Marine &mdash; a complete IoT ecosystem for the marina industry, from dock to dashboard.</h1>
+                  <div class="morph__cs-detail-tags"><span>IoT Product Design</span><span>Enterprise UX</span><span>Mobile App</span><span>Hardware &amp; Software</span></div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659ae8f4046a0c4cb5cb62b8_Cover%20image%20final%20version%202.png" alt="VoltSafe Marine — cover" / loading="lazy">
+                    <picture>
+                      <source srcset="assets/images/6.%20(Marine%20ecosystem%20I%20design%20end%20to%20end).webp" type="image/webp">
+                      <img src="assets/images/6.%20(Marine%20ecosystem%20I%20design%20end%20to%20end).JPG" alt="VoltSafe Marine smart shore power pedestal installed on a dock" loading="lazy">
+                    </picture>
                   </div>
 
-                  <p>In my role as the end-to-end designer for the VoltSafe Marine ecosystem, I was entrusted with the responsibility of creating a cohesive, intuitive, and engaging experience across both digital platforms and physical hardware. My design journey was shaped by the real-world functionality and accessibility needs within the marina industry environment.</p>
+                  <h2>Marina operations in 2023 still ran on paper printouts and daily dock walks</h2>
+                  <p>Sterling, the Harbour Master at the Royal Vancouver Yacht Club &mdash; one of Canada&rsquo;s most prestigious yacht clubs &mdash; started every day the same way: walking the marina with a printed sheet of paper, manually checking which slips were occupied, which pedestals had issues, and which boaters needed attention. It was the industry standard. It was also entirely avoidable. VoltSafe Marine was designed to change that, and my job was to design the digital ecosystem that would make it real.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659ae9842cc4996768f9de87_plugging%20in.png" alt="VoltSafe's smart IoT shore power connector" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4e3aac962913172c16f6_HM%20pointing%20at%20slip%20split%20screen.png" alt="Sterling, Harbour Master at Royal Vancouver Yacht Club — printed marina map vs. dashboard" loading="lazy">
                   </div>
 
-                  <h2>The VoltSafe Marine ecosystem spans hardware, a web app, and a mobile app — I designed all three</h2>
-                  <p>The VoltSafe Marine ecosystem &mdash; comprising the power pedestal hardware, the enterprise web app, and the client mobile app &mdash; represents a harmonious blend of design and technology. My contribution as the end-to-end product designer spanned across this entire ecosystem, ensuring consistency, usability, and satisfaction at every touchpoint. Each element is a piece of a larger puzzle, designed to work together to create an efficient, user-friendly marina management system.</p>
+                  <h2>I was the end-to-end designer across three interconnected platforms: the power pedestal hardware, the enterprise web app, and the boater mobile app</h2>
+                  <p>This wasn&rsquo;t a single-surface project. The VoltSafe Marine ecosystem required a unified design language across physical hardware, a web dashboard for marina operators, and a mobile app for boat owners &mdash; all of which needed to communicate the same real-world device state in real time. I owned the design of all three, ensuring that what a marina attendant saw on the web matched what a boater saw on their phone, and what both saw matched what was physically happening on the dock.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a11268b0931a1a34c971e_Pedestal%20laptop%20and%20mobile.JPG" alt="VoltSafe Marine ecosystem — pedestal, web app, and mobile app" / loading="lazy">
+                    <picture>
+                      <source srcset="assets/images/case-studies/WIP%20Placeholders/Marine%20Ecosystem%20Dashboard%20and%20App.webp" type="image/webp">
+                      <img src="assets/images/case-studies/WIP%20Placeholders/Marine%20Ecosystem%20Dashboard%20and%20App.png" alt="VoltSafe Marine ecosystem — hardware pedestal, enterprise dashboard, and mobile app" loading="lazy">
+                    </picture>
                   </div>
 
-                  <h2>We sketched on paper, then physically laid out printed UI cards to find the right information architecture</h2>
-                  <p>During the ideation phase, I collaborated closely with the engineering team to define our MVP and MVE, ensuring alignment between technical capabilities and the envisioned user experience. This was followed by hands-on sketching, where initial concepts and features were drafted, setting the foundational blueprint for the project.</p>
+                  <h2>Before any screens were designed, we physically printed and arranged the dashboard components on a table</h2>
+                  <p>The ideation process started away from screens entirely. I brought together the product team and engineers for two collaborative sessions where we printed individual dashboard card elements, laid them out physically on a table, and rearranged them by hand. This tactile approach let everyone &mdash; designers and engineers alike &mdash; contribute to the information architecture in a way that a Figma file never could. A second more technical session followed to pressure-test the card interactions and scope the build. The resulting layout was grounded in what the team understood was both useful and buildable.</p>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4d676a43dcf0de498c7b_sketch%20side%20by%20side.png" alt="Sketching initial concepts for the web app layout" / loading="lazy">
-                  </div>
-                  <p>Transitioning these ideas from paper to digital form, we conducted collaborative sessions employing a tactile approach with printed dashboard elements. This allowed us to physically rearrange and fine-tune features, fostering a creative synergy between design and engineering expertise.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4dbbb26d4e6c1d170065_Paper%20Cutouts.png" alt="Physically laying out card printouts to combine features" / loading="lazy">
-                  </div>
-
-                  <h2>Atomic Design gave us consistency across three platforms — Agile kept us responsive to real user feedback</h2>
-                  <p>I applied the Atomic Design framework within an iterative Agile workflow to establish a robust yet adaptable design system. This dual approach enabled me to efficiently manage design tasks while staying attuned to users&rsquo; needs, resulting in a user experience that was both cohesive and responsive to the dynamic marina environment.</p>
-                  <p>Accessibility was a central theme throughout. Following Nielsen&rsquo;s usability heuristics, I implemented intuitive language and pictography, accommodated maximum font sizes, integrated large touch targets, and maintained high contrast ratios for optimal readability across a broad demographic.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a0b20aa81920504d298eb_Working%20From%20Home.jpeg" alt="Design methodology — agile workflow" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4dbbb26d4e6c1d170065_Paper%20Cutouts.png" alt="Team physically arranging printed dashboard card components on a table" loading="lazy">
                   </div>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b3be64ee19afb14414568_App%20Tutorial%20wide.png" alt="App accessibility — tutorial and font size compatibility" / loading="lazy">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4d676a43dcf0de498c7b_sketch%20side%20by%20side.png" alt="Early concept sketches for the web app layout" loading="lazy">
                   </div>
 
-                  <h2>The web dashboard lets marina staff see and control every slip in real time — no more walking the docks with printouts</h2>
-                  <p>At the heart of the marina&rsquo;s operations is the enterprise dashboard, a web application designed to be both visually appealing and functionally robust. It&rsquo;s a real-time visual representation of the marina, where each slip is colour-coded to reflect its current status, power state, and safety alerts. The dashboard empowers marina staff to remotely manage the power pedestals &mdash; an essential feature for both routine and emergency scenarios.</p>
-                  <h3>Each slip is colour-coded by occupancy, power state, and safety alerts at a glance</h3>
-                  <p>A visual representation of slip occupancy and status, crucial for managing marina operations efficiently. The spotlight card provides quick information and a live video feed for selected slips, with a toggle for a detailed list view. The slip map offers a comprehensive visual overview with three distinct lenses: occupancy, power state, and leakage status.</p>
+                  <h2>Designing for marina staff and boat owners at the same time meant solving two completely different problems with one system</h2>
+                  <p>Marina operators need to manage hundreds of slips simultaneously &mdash; knowing which are occupied, which have power issues, which boaters are overdue on payment. Boat owners need exactly the opposite: a single focused view of their one slip, with clear status, control, and alerts. A modular design approach let me serve both without compromising either. Customisable dashboards and app settings adapted to each user&rsquo;s role while maintaining a shared visual language across the ecosystem.</p>
+                  <h3>The real-world synchronisation problem</h3>
+                  <p>In an IoT product, the interface is only as trustworthy as its accuracy. When a pedestal changes state on the dock &mdash; a plug disconnects, a circuit trips, a boater connects &mdash; the app has to reflect that instantly. I designed buffer states to communicate data-gathering moments and built in visual indicators that only surfaced confirmed, verified information. A marina operator acting on stale data isn&rsquo;t just inconvenient &mdash; it&rsquo;s an operational and safety risk.</p>
+                  <div class="morph__cs-detail-asset">
+                    <picture>
+                      <source srcset="assets/images/Marina%20Management%20Dashboard.webp" type="image/webp">
+                      <img src="assets/images/Marina%20Management%20Dashboard.png" alt="Enterprise dashboard slip map showing colour-coded slip occupancy, power state, and safety alerts" loading="lazy">
+                    </picture>
+                  </div>
+
+                  <h2>The enterprise dashboard gave marina staff a live visual map of every slip &mdash; replacing the daily dock walk entirely</h2>
+                  <p>The slip map was the centrepiece of the web app: a real-time colour-coded visual of the entire marina where each slip reflected its current occupancy, power state, and any active alerts. The spotlight card provided quick-access information and live status for selected slips, with a toggle to a detailed list view for operators who preferred tabular data. I also integrated a full CRM interface &mdash; customer records, invoices, payment tracking, and slip assignments &mdash; and designed a progressive disclosure check-in flow that auto-generated invoices as attendants stepped through the booking process.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659de364c4ff6941e4e47b14_CRM%20mockup.png" alt="CRM management interface — customer data, invoices, and slip assignments" loading="lazy">
+                  </div>
+                  <div class="morph__cs-detail-asset">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d77c450a34b7efb58093e_Check%20in%20customer%20flow.png" alt="Client check-in flow — progressive disclosure with auto-invoice generation" loading="lazy">
+                  </div>
+
+                  <h2>The mobile app gave boat owners control, visibility, and peace of mind from anywhere</h2>
+                  <p>The boater-facing mobile app focused on a single slip &mdash; with power control, live energy monitoring, and safety alerts for critical conditions affecting their vessel. Dark mode was designed across all components from the start, not as an afterthought, improving usability in the low-light conditions that are standard in marina environments at night.</p>
+                  <div class="morph__cs-detail-asset">
+                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b604e80468e6edfbdf2f7_All%20Screens%20mobile.png" alt="Marine mobile app — boater slip view, notifications, and settings screens" loading="lazy">
+                  </div>
                   <div class="morph__cs-detail-asset morph__cs-detail-asset--video">
-                    <iframe src="https://www.youtube.com/embed/0ZxGr2qnrLE?enablejsapi=1" title="VoltSafe Marine — Slip Map interface" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                  </div>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d81c91e8c8fd745666624_leakage%20map.png" alt="Slip map — leakage status view" / loading="lazy">
-                  </div>
-                  <h3>Customer data, invoices, and slip assignments live in one place for marina staff</h3>
-                  <p>A central hub for managing customer information, payments, and invoicing, ensuring efficient and streamlined operations. I integrated a comprehensive CRM interface enabling marina employees to efficiently manage customer data, track invoices and payments, and log slip assignments for each customer.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659de364c4ff6941e4e47b14_CRM%20mockup.png" alt="CRM management interface" / loading="lazy">
-                  </div>
-                  <h3>Progressive disclosure guides attendants step-by-step through booking — and auto-generates the invoice</h3>
-                  <p>I designed the client check-in flow to employ progressive disclosure, guiding marina attendants step-by-step through booking available slips. This process automatically prepares invoices and payment details based on the information entered during check-in, enhancing efficiency and accuracy.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d77c450a34b7efb58093e_Check%20in%20customer%20flow.png" alt="Client check-in flow" / loading="lazy">
+                    <iframe src="https://www.youtube.com/embed/z6A2iwcjUXo?enablejsapi=1" title="VoltSafe Marine — mobile app demo" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
                   </div>
 
-                  <h2>Boat owners can monitor power, watch a live feed of their slip, and get safety alerts from anywhere</h2>
-                  <p>The mobile app, tailored for boaters, provides personalised control and insights. Users can manage their slip&rsquo;s power, monitor energy consumption, and stay informed through notifications designed to alert them to critical conditions affecting their vessel.</p>
+                  <h2>The IBEX Innovation Award from the National Marine Manufacturers Association validated the approach</h2>
+                  <p>VoltSafe Marine won the IBEX 2023 Innovation Award, presented by the National Marine Manufacturers Association &mdash; the body that sets standards for the recreational boating industry globally. The award recognised the system&rsquo;s ingenuity and outstanding contribution to marine product development. The $180,000 BC Fast Pilot grant from Innovate BC followed, specifically enabling real-world pilot testing at scale &mdash; de-risking the technology for early adopter marinas through field installation and live operation.</p>
+                  <h3>Recognition &amp; milestones</h3>
+                  <ul>
+                    <li><strong>IBEX 2023 Innovation Award</strong> &mdash; National Marine Manufacturers Association</li>
+                    <li><strong>$180,000 BC Fast Pilot Grant</strong> &mdash; Innovate BC / NRC IRAP</li>
+                    <li><strong>Pilot installations at:</strong> Royal Vancouver Yacht Club (Wigwam Inn), Sun Harbor Marina at Port of San Diego, and Wigwam Marina</li>
+                    <li><strong>Active rollout</strong> continues across marinas in British Columbia and North America</li>
+                  </ul>
                   <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b604e80468e6edfbdf2f7_All%20Screens%20mobile.png" alt="Marine mobile app — all screens overview" / loading="lazy">
-                  </div>
-                  <h3>Camera-equipped pedestals let owners check on their vessel remotely</h3>
-                  <p>The app includes a live video feed option for camera-equipped pedestals, enabling boat owners to view their slip remotely for added convenience and monitoring.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659d79922e3bb7844d08c861_mobile%20cam%20feed.png" alt="Mobile live video feed for boat slip monitoring" / loading="lazy">
-                  </div>
-                  <h3>All components were designed to work in dark mode — essential for low-light marina conditions</h3>
-                  <p>I integrated a Dark Mode feature providing a visually comfortable alternative for users in low-light conditions, enhancing usability and reducing eye strain. All components were designed to be compatible with a Dark Mode colour palette to improve low-light visibility.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b678b727339296234c573_mobile%20dark%20mode.png" alt="Mobile app — dark mode" / loading="lazy">
-                  </div>
-
-                  <h2>Sterling, the Harbour Master at Royal Vancouver Yacht Club, used to do daily walks with printed marina maps. Now it&rsquo;s one screen.</h2>
-                  <p>The effectiveness of the VoltSafe Marine ecosystem is most evident in its seamless integration. When changes occur in the marina&rsquo;s physical environment &mdash; whether a slip becomes occupied or a power pedestal is switched off &mdash; these updates are instantly reflected in the user&rsquo;s app. This immediate feedback loop is crucial, adhering to Jacob Nielsen&rsquo;s principle of matching the system with the real world, particularly critical in IoT product design.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659b4e3aac962913172c16f6_HM%20pointing%20at%20slip%20split%20screen.png" alt="Harbour Master — physical vs digital marina view" / loading="lazy">
+                    <picture>
+                      <source srcset="assets/images/7.%20(IBEX%20Award%20for%20Marine%20Enterprise%20Dashboard).webp" type="image/webp">
+                      <img src="assets/images/7.%20(IBEX%20Award%20for%20Marine%20Enterprise%20Dashboard).jpg" alt="IBEX 2023 Innovation Award for VoltSafe Marine Enterprise Dashboard" loading="lazy">
+                    </picture>
                   </div>
 
-                  <h2>IBEX Innovation Award, $180K BC Fast Pilot grant, and a growing number of marinas across North America signing on</h2>
-                  <p>The deployment of the VoltSafe Marine ecosystem across a growing number of marinas has yielded tangible success, evidenced by robust adoption rates and positive feedback from end-users. The project was recognised with the IBEX Innovation Award from the National Marine Manufacturers Association. The ecosystem&rsquo;s development was also bolstered by a $180,000 grant from BC Fast Pilot. The product is currently undergoing its pilot program, receiving positive reviews from marinas across British Columbia, with an increasing number of marinas across North America signing up to implement the ecosystem.</p>
-                  <div class="morph__cs-detail-asset">
-                    <img src="https://cdn.prod.website-files.com/64d645243d5ac55193384362/659a11ca4415cad2933d9dba_IBEX_Award.jpeg" alt="IBEX 2023 Innovation Award — VoltSafe Marine" / loading="lazy">
-                  </div>
+                  <div class="morph__cs-detail-pullquote">&ldquo;Sterling no longer walks the dock with a printout. That was the goal.&rdquo;</div>
 
-                  <h2>This project showed me what it takes to design a full IoT ecosystem — from the dock to the dashboard</h2>
-                  <p>Reflecting on the VoltSafe Marine project, my journey as the end-to-end designer has been comprehensive and rewarding. This endeavour has affirmed my commitment to design excellence and showcased my ability to translate complex requirements into user-friendly solutions. The VoltSafe Marine ecosystem is constantly evolving to meet and exceed safety, efficiency, and connectivity standards in the marina industry &mdash; representing the future of marina management technology.</p>
+                  <h2>Sterling no longer walks the dock with a printout. That was the goal.</h2>
+                  <p>The clearest measure of success on this project wasn&rsquo;t an award or a grant &mdash; it was watching Sterling and his team at the Royal Vancouver Yacht Club switch from printed paper to a single screen. I was on site during the pilot install, onboarding his team directly and watching how they actually used the software in a live marina environment. That proximity shaped the product. Seeing the Harbour Master of one of Canada&rsquo;s most recognised yacht clubs rely on something I designed, in real conditions, to manage real operations &mdash; that&rsquo;s the validation that mattered most.</p>
+
+                  <h2>What I&rsquo;d carry forward</h2>
+                  <ul>
+                    <li>Designing across hardware, web, and mobile simultaneously requires a shared source of truth for device state &mdash; the moment those surfaces diverge, user trust collapses</li>
+                    <li>The physical card printout sessions produced better IA decisions faster than any digital workshop tool I&rsquo;ve used &mdash; getting engineers in the room to co-own the layout changed what was scoped</li>
+                    <li>An IoT product&rsquo;s biggest UX risk is latency &mdash; buffer states and verified-data design patterns are not nice-to-haves, they&rsquo;re the core of the trust model</li>
+                    <li>Being on-site during pilot installation gave me design insight that no user interview could replicate &mdash; watching real operators use real software under real conditions is irreplaceable</li>
+                    <li>The modular dashboard approach that served both marina staff and boat owners proved that a shared design system doesn&rsquo;t mean a one-size-fits-all experience</li>
+                  </ul>
                 </div>
 
               </div>
