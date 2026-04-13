@@ -1043,7 +1043,7 @@
           e.preventDefault();
           var target = document.getElementById(h.id);
           if (target) {
-            csDetail.scrollTo({ top: target.offsetTop - 90, behavior: 'smooth' });
+            csDetail.scrollTo({ top: target.offsetTop - 90, behavior: 'instant' });
           }
         });
         li.appendChild(a);
@@ -1591,7 +1591,7 @@
               }
             }, 400);
           } else {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({ top: 0, behavior: 'instant' });
           }
         } else if (action === 'work-spotlight') {
           if (playerExpanded) {
@@ -1601,12 +1601,12 @@
               }
               setTimeout(function() {
                 var spotlightSection = document.getElementById('work-spotlight');
-                if (spotlightSection) spotlightSection.scrollIntoView({ behavior: 'smooth' });
+                if (spotlightSection) spotlightSection.scrollIntoView({ behavior: 'instant' });
               }, 1500);
             }, 400);
           } else {
             var spotlightSection = document.getElementById('work-spotlight');
-            if (spotlightSection) spotlightSection.scrollIntoView({ behavior: 'smooth' });
+            if (spotlightSection) spotlightSection.scrollIntoView({ behavior: 'instant' });
           }
         } else if (action === 'my-journey') {
           if (playerExpanded) {
@@ -1616,13 +1616,41 @@
               }
               setTimeout(function() {
                 var journeyIntro = document.getElementById('journey-intro');
-                if (journeyIntro) journeyIntro.scrollIntoView({ behavior: 'smooth' });
+                if (journeyIntro) journeyIntro.scrollIntoView({ behavior: 'instant' });
               }, 1500);
             }, 400);
           } else {
             var journeyIntro = document.getElementById('journey-intro');
             if (journeyIntro) {
-              journeyIntro.scrollIntoView({ behavior: 'smooth' });
+              journeyIntro.scrollIntoView({ behavior: 'instant' });
+            }
+          }
+        } else if (action === 'testimonies') {
+          if (playerExpanded) {
+            // Collapse player first, then scroll to testimonies
+            setTimeout(function() {
+              if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
+                window.TashBrand.togglePlayerExpanded();
+              }
+              setTimeout(function() {
+                // Scroll to the end of the gallery ScrollTrigger to reach the zoom/testimonies phase
+                var galST = window.TashBrand && window.TashBrand._galleryST;
+                if (galST) {
+                  window.scrollTo({ top: galST.end - 1, behavior: 'instant' });
+                } else {
+                  var vq = document.getElementById('video-quotes');
+                  if (vq) vq.scrollIntoView({ behavior: 'instant' });
+                }
+              }, 1500);
+            }, 400);
+          } else {
+            // Scroll to the end of the gallery ScrollTrigger to reach the zoom/testimonies phase
+            var galST = window.TashBrand && window.TashBrand._galleryST;
+            if (galST) {
+              window.scrollTo({ top: galST.end - 1, behavior: 'instant' });
+            } else {
+              var vq = document.getElementById('video-quotes');
+              if (vq) vq.scrollIntoView({ behavior: 'instant' });
             }
           }
         } else if (action === 'case-studies') {
