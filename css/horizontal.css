@@ -429,6 +429,8 @@
 }
 
 @media (min-width: 769px) { .video-quotes__item:nth-child(5) { display: none; } }
+/* Hide card 4 before it wraps to a second line (~980px threshold) */
+@media (min-width: 769px) and (max-width: 980px) { .video-quotes__item:nth-child(4) { display: none; } }
 .video-quotes.visible { opacity: 1; }
 
 .video-quotes__item {
