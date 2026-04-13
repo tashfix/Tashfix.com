@@ -542,6 +542,76 @@
     var dragState = null;
     var playerScale = 1; // detected on drag start
 
+    // ── Motion-driven specular highlights (decorative only) ──
+    // ── Chrome reflection state — drives curved specular highlights ──
+    // Reflections are always visible; motion shifts gradient focal points
+    // with parallax and boosts intensity. Decays to idle, never to zero.
+    var sheenState = {
+      vx: 0, vy: 0,                // smoothed velocity (px/ms)
+      shiftX: 0, shiftY: 0,        // accumulated position shift (px, decays)
+      active: false, rafId: null,
+      scrollFresh: false
+    };
+
+    // Max shift clamp (% units in CSS, mapped from px)
+    var MAX_SHIFT = 8; // percentage points
+
+    function updateSheen() {
+      // Decay when no input is actively feeding velocity
+      if (!dragState && !sheenState.scrollFresh) {
+        sheenState.vx *= 0.92;
+        sheenState.vy *= 0.92;
+        sheenState.shiftX *= 0.93;
+        sheenState.shiftY *= 0.93;
+      }
+      sheenState.scrollFresh = false;
+
+      // Skip if player is expanded or transitioning
+      if (playerEl.classList.contains('expanded') || playerEl.classList.contains('transitioning')) {
+        sheenState.rafId = null;
+        sheenState.active = false;
+        return;
+      }
+
+      // Accumulate position shift from velocity (clamped)
+      sheenState.shiftX += sheenState.vx * 0.8;
+      sheenState.shiftY += sheenState.vy * 0.8;
+      sheenState.shiftX = Math.max(-MAX_SHIFT, Math.min(MAX_SHIFT, sheenState.shiftX));
+      sheenState.shiftY = Math.max(-MAX_SHIFT, Math.min(MAX_SHIFT, sheenState.shiftY));
+
+      var speed = Math.sqrt(sheenState.vx * sheenState.vx + sheenState.vy * sheenState.vy);
+      // Boost: 0 at idle, ramps to 1 at fast motion
+      var boost = Math.min(1, speed / 1.2);
+
+      // Write CSS custom properties — drives parallax shifts in radial gradients
+      playerEl.style.setProperty('--chrome-x', sheenState.shiftX.toFixed(2) + '%');
+      playerEl.style.setProperty('--chrome-y', sheenState.shiftY.toFixed(2) + '%');
+      playerEl.style.setProperty('--chrome-boost', boost.toFixed(3));
+      playerEl.style.setProperty('--fresnel-boost', boost.toFixed(3));
+
+      // Self-terminate when fully settled
+      var totalShift = Math.abs(sheenState.shiftX) + Math.abs(sheenState.shiftY);
+      if (speed < 0.003 && totalShift < 0.05) {
+        sheenState.active = false;
+        sheenState.rafId = null;
+        // Reset to exact idle values
+        playerEl.style.setProperty('--chrome-x', '0px');
+        playerEl.style.setProperty('--chrome-y', '0px');
+        playerEl.style.setProperty('--chrome-boost', '0');
+        playerEl.style.setProperty('--fresnel-boost', '0');
+        return;
+      }
+
+      sheenState.rafId = requestAnimationFrame(updateSheen);
+    }
+
+    function ensureSheenLoop() {
+      if (!sheenState.rafId) {
+        sheenState.active = true;
+        sheenState.rafId = requestAnimationFrame(updateSheen);
+      }
+    }
+
     function getPlayerScale() {
       var cssW = playerEl.offsetWidth;
       var renderedW = playerEl.getBoundingClientRect().width;
@@ -553,7 +623,7 @@
       if (playerEl.classList.contains('transitioning')) return;
       var rect = playerEl.getBoundingClientRect();
       playerScale = getPlayerScale();
-      dragState = { offsetX: clientX - rect.left, offsetY: clientY - rect.top };
+      dragState = { offsetX: clientX - rect.left, offsetY: clientY - rect.top, prevX: clientX, prevY: clientY, prevTime: performance.now() };
       // Disable transition so repositioning is instant
       playerEl.style.transition = 'none';
       // Switch to left/top positioning, preserve current scale
@@ -570,6 +640,20 @@
 
     function onDragMove(clientX, clientY) {
       if (!dragState) return;
+      // Velocity tracking for specular sheen (decorative, no impact on drag physics)
+      var now = performance.now();
+      var dt = now - dragState.prevTime;
+      if (dt > 0) {
+        var rawVx = (clientX - dragState.prevX) / dt;
+        var rawVy = (clientY - dragState.prevY) / dt;
+        sheenState.vx = sheenState.vx * 0.7 + rawVx * 0.3;
+        sheenState.vy = sheenState.vy * 0.7 + rawVy * 0.3;
+        ensureSheenLoop();
+      }
+      dragState.prevX = clientX;
+      dragState.prevY = clientY;
+      dragState.prevTime = now;
+
       var newLeft = clientX - dragState.offsetX;
       var newTop = clientY - dragState.offsetY;
       var rect = playerEl.getBoundingClientRect();
@@ -604,6 +688,25 @@
     }, { passive: true });
     document.addEventListener('touchmove', function(e) { if (dragState) onDragMove(e.touches[0].clientX, e.touches[0].clientY); }, { passive: true });
     document.addEventListener('touchend', onDragEnd);
+
+    // Scroll-driven sheen — responds to page scroll when player is visible but not dragged
+    var lastScrollY = window.scrollY;
+    var lastScrollTime = performance.now();
+    window.addEventListener('scroll', function() {
+      if (playerEl.classList.contains('expanded')) return;
+      if (dragState) return; // drag takes priority
+      var now = performance.now();
+      var dt = now - lastScrollTime;
+      if (dt > 0) {
+        var rawVy = (window.scrollY - lastScrollY) / dt;
+        sheenState.vx *= 0.7; // decay horizontal during scroll
+        sheenState.vy = sheenState.vy * 0.7 + rawVy * 0.3;
+        sheenState.scrollFresh = true;
+        ensureSheenLoop();
+      }
+      lastScrollY = window.scrollY;
+      lastScrollTime = now;
+    }, { passive: true });
   }
 
   // LCD screen — click to open fullscreen player
