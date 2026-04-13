@@ -122,8 +122,9 @@
     var SCROLL_RATIO = 0.55;
     window.TashBrand.scrollRatio = SCROLL_RATIO;
 
-    /* Zoom runway — 1.6× viewport height for the expansion phase */
-    var ZOOM_VH = 1.6;
+    /* Zoom runway — viewport-height multiplier for the expansion phase.
+       0.9 ≈ 2 scroll-wheel notches to complete the zoom. */
+    var ZOOM_VH = 0.9;
 
     /* ── Viewport-based active item detection ──
        Uses real pixel positions so mixed-width items (wide vs square)
