@@ -12,7 +12,13 @@
 
   :root {
     --mvault-z-panel: 9999;
-    --mvault-z-overlay: 8999;
+    --mvault-z-overlay: 9100; /* above hamburger (9002) and nav overlay (9000) */
+  }
+
+  /* Hide scroll hints on mobile — they're tied to desktop ScrollTrigger logic */
+  .morph__scroll-hint,
+  .morph__hscroll-hint {
+    display: none !important;
   }
 
   /* Chrome panel base */
@@ -112,7 +118,7 @@
     inset: 0;
     min-height: 100dvh;
     z-index: var(--mvault-z-overlay);
-    background: var(--color-cobalt, #0A1A4A);
+    background: #0d0d0d;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     opacity: 0;
@@ -273,19 +279,20 @@
     .spotlight--mobile-snap { height: 100vh; }
   }
 
-  /* Each card = one snap panel */
+  /* Each card = one snap panel, compact enough to hint at next card */
   .spotlight--mobile-snap .spotlight__card {
     scroll-snap-align: start;
     scroll-snap-stop: always;
-    min-height: 100dvh;
+    min-height: 72dvh;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-end;
     position: relative;
+    padding-bottom: 2rem;
   }
 
   @supports not (height: 100dvh) {
-    .spotlight--mobile-snap .spotlight__card { min-height: 100vh; }
+    .spotlight--mobile-snap .spotlight__card { min-height: 72vh; }
   }
 
   /* Chrome affordance — static placeholder, wired in Session 2 */

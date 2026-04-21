@@ -179,6 +179,21 @@
     });
   }
 
+  /* ── "View My Work" CTA → scroll to spotlight ───────────── */
+
+  function initHeroCta() {
+    var cta = document.querySelector('.morph__hero-cta');
+    if (!cta) return;
+    cta.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      var spotlight = document.getElementById('work-spotlight');
+      if (spotlight) {
+        spotlight.scrollIntoView({ behavior: REDUCE_MOTION ? 'auto' : 'smooth', block: 'start' });
+      }
+    }, true /* capture — fires before face-morph.js toggleExpanded handler */);
+  }
+
   /* ── Snap-scroll on #work-spotlight ─────────────────────── */
 
   function initSnapScroll() {
@@ -224,6 +239,7 @@
 
   function init() {
     resolveRefs();
+    initHeroCta();
     initSnapScroll();
     initVaultIntercept();
   }
