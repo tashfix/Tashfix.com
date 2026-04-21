@@ -1,0 +1,61 @@
+/* =============================================================
+   mobile.css — parallel mobile experience
+   All rules scoped to (max-width: 768px). Desktop untouched.
+   ============================================================= */
+
+/* ── Task 2: Snap-scroll on #work-spotlight ───────────────── */
+@media (max-width: 768px) {
+
+  /* Inner scroll container — spotlight becomes its own scroller */
+  .spotlight--mobile-snap {
+    height: 100dvh;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    /* Sit in normal document flow so hero/about scroll around it */
+    position: relative;
+  }
+
+  @supports not (height: 100dvh) {
+    .spotlight--mobile-snap { height: 100vh; }
+  }
+
+  /* Each card = one snap panel */
+  .spotlight--mobile-snap .spotlight__card {
+    scroll-snap-align: start;
+    scroll-snap-stop: always;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+  }
+
+  @supports not (height: 100dvh) {
+    .spotlight--mobile-snap .spotlight__card { min-height: 100vh; }
+  }
+
+  /* Chrome affordance — static placeholder, wired in Session 2 */
+  .spotlight__card-chrome-tab {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    background: linear-gradient(135deg, #d9d9d9 0%, #8a8a8a 50%, #e5e5e5 100%);
+    box-shadow:
+      inset 0 1px 0 rgba(255, 255, 255, 0.5),
+      0 2px 6px rgba(0, 0, 0, 0.2);
+    pointer-events: none;
+  }
+
+  /* Reduced-motion: keep snap, disable smooth-scroll tween */
+  @media (prefers-reduced-motion: reduce) {
+    .spotlight--mobile-snap {
+      scroll-behavior: auto;
+    }
+  }
+
+}
