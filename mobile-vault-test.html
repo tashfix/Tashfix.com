@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Vault Transition — Mobile Dev Test</title>
+
+  <!-- Fonts (subset matching the main site) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="css/mobile-vault.css">
+</head>
+<body>
+
+  <!-- ── Case study cards ─────────────────────────────────── -->
+  <main class="mvault-cards">
+
+    <button
+      class="mvault-card"
+      data-cs="marine"
+      data-title="VoltSafe Marine"
+      aria-label="Open VoltSafe Marine case study"
+    >
+      <span class="mvault-card__number">01</span>
+      <div class="mvault-card__chrome-chip" aria-hidden="true"></div>
+      <h2 class="mvault-card__title">VoltSafe Marine</h2>
+      <p class="mvault-card__desc">IoT ecosystem · dock to dashboard</p>
+    </button>
+
+    <button
+      class="mvault-card"
+      data-cs="msn"
+      data-title="MSN Reading Experience"
+      aria-label="Open MSN Reading Experience case study"
+    >
+      <span class="mvault-card__number">02</span>
+      <div class="mvault-card__chrome-chip" aria-hidden="true"></div>
+      <h2 class="mvault-card__title">MSN Reading</h2>
+      <p class="mvault-card__desc">Ad placement · UX research</p>
+    </button>
+
+    <button
+      class="mvault-card"
+      data-cs="samsung"
+      data-title="Samsung Design System"
+      aria-label="Open Samsung Design System case study"
+    >
+      <span class="mvault-card__number">03</span>
+      <div class="mvault-card__chrome-chip" aria-hidden="true"></div>
+      <h2 class="mvault-card__title">Samsung</h2>
+      <p class="mvault-card__desc">Design system unification</p>
+    </button>
+
+    <button
+      class="mvault-card"
+      data-cs="home"
+      data-title="VoltSafe Home"
+      aria-label="Open VoltSafe Home case study"
+    >
+      <span class="mvault-card__number">04</span>
+      <div class="mvault-card__chrome-chip" aria-hidden="true"></div>
+      <h2 class="mvault-card__title">VoltSafe Home</h2>
+      <p class="mvault-card__desc">Smart electrical plug · demo app</p>
+    </button>
+
+  </main>
+
+  <!-- ── Dev refire button ─────────────────────────────────── -->
+  <button class="mvault-refire" aria-label="Re-fire vault transition">
+    ↯ Re-fire
+  </button>
+
+  <!-- ── Vault panels ──────────────────────────────────────── -->
+  <div class="mvault-panel mvault-panel--left"  aria-hidden="true"></div>
+  <div class="mvault-panel mvault-panel--right" aria-hidden="true"></div>
+
+  <!-- ── Case study overlay ────────────────────────────────── -->
+  <section
+    class="mvault-study"
+    aria-hidden="true"
+    role="region"
+    aria-label="Case study detail"
+  >
+    <button class="mvault-study__close" aria-label="Close case study">✕</button>
+    <h1 class="mvault-study__title" tabindex="-1">Case study</h1>
+    <p class="mvault-study__body">
+      This is placeholder content for the vault test page. In Session 2,
+      the real case study content from <code>#cs-detail</code> in
+      <code>index.html</code> will mount here.
+    </p>
+    <p class="mvault-study__body">
+      Scroll this panel to verify overflow works correctly. The vault
+      panels are <code>position: fixed</code> above this overlay, which
+      is <code>position: fixed; z-index: 9000</code>.
+    </p>
+  </section>
+
+  <!-- ── Aria live region ──────────────────────────────────── -->
+  <div class="mvault-live" aria-live="polite" role="status"></div>
+
+  <script src="js/mobile-vault.js"></script>
+</body>
+</html>

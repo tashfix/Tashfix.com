@@ -1,0 +1,330 @@
+/* =============================================================
+   mobile-vault.css — vault door transition component
+   Loaded only by mobile-vault-test.html (standalone dev page).
+   Will be merged into mobile.css when wired into real flow (Session 2).
+   ============================================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --mvault-z-panel: 9999;
+  --mvault-z-study: 9000;
+  --mvault-cobalt: #0A1A4A;
+  --mvault-chrome-light: #e5e5e5;
+  --mvault-chrome-mid: #8a8a8a;
+  --mvault-chrome-dark: #4a4a4a;
+  --mvault-ease-close: cubic-bezier(0.22, 1, 0.36, 1);  /* mechanical settle */
+  --mvault-ease-open:  cubic-bezier(0.4, 0, 0.2, 1);    /* faster release */
+}
+
+/* ── Page / Cards ──────────────────────────────────────────── */
+
+html, body {
+  height: 100%;
+  background: var(--mvault-cobalt);
+  color: #f5f5f0;
+  font-family: 'Inter', system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mvault-cards {
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+           env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+}
+
+@supports not (height: 100dvh) {
+  .mvault-cards { min-height: 100vh; }
+}
+
+.mvault-card {
+  flex: 1;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-end;
+  padding: 2rem 1.5rem calc(2rem + env(safe-area-inset-bottom, 0px));
+  background: linear-gradient(160deg, #0d2060 0%, #0A1A4A 60%, #060f2a 100%);
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  text-align: left;
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  transition: background 0.2s ease;
+}
+
+@supports not (height: 100dvh) {
+  .mvault-card { min-height: 100vh; }
+}
+
+.mvault-card:focus-visible {
+  outline: 2px solid #FF6B35;
+  outline-offset: -2px;
+}
+
+.mvault-card__number {
+  position: absolute;
+  top: 1.5rem;
+  left: 1.5rem;
+  font-size: 0.7rem;
+  letter-spacing: 0.2em;
+  color: rgba(255, 255, 255, 0.35);
+  font-family: 'Share Tech Mono', monospace;
+}
+
+.mvault-card__title {
+  font-size: clamp(1.5rem, 6vw, 2.25rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+  margin-bottom: 0.5rem;
+}
+
+.mvault-card__desc {
+  font-size: 0.875rem;
+  color: rgba(255, 255, 255, 0.6);
+  line-height: 1.5;
+}
+
+/* Chrome affordance chip */
+.mvault-card__chrome-chip {
+  position: absolute;
+  top: 1.5rem;
+  right: 1.5rem;
+  width: 44px;
+  height: 44px;
+  border-radius: 8px;
+  background: linear-gradient(135deg,
+    var(--mvault-chrome-light) 0%,
+    var(--mvault-chrome-mid) 50%,
+    var(--mvault-chrome-light) 100%
+  );
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.6),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.15),
+    0 2px 8px rgba(0, 0, 0, 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mvault-card__chrome-chip::after {
+  content: '';
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(0, 0, 0, 0.4);
+  border-radius: 3px;
+}
+
+/* ── Vault Panels ──────────────────────────────────────────── */
+
+.mvault-panel {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  height: 100dvh;
+  z-index: var(--mvault-z-panel);
+  will-change: transform, background-position;
+  /* Metallic chrome gradient */
+  background:
+    linear-gradient(105deg,
+      rgba(255,255,255,0.0) 30%,
+      rgba(255,255,255,0.18) 50%,
+      rgba(255,255,255,0.0) 70%
+    ),
+    linear-gradient(168deg,
+      var(--mvault-chrome-light) 0%,
+      var(--mvault-chrome-mid) 40%,
+      var(--mvault-chrome-dark) 65%,
+      var(--mvault-chrome-mid) 82%,
+      var(--mvault-chrome-light) 100%
+    );
+  background-size: 200% 100%, 100% 100%;
+  transition:
+    transform 0.4s var(--mvault-ease-close),
+    background-position 0.6s ease;
+}
+
+@supports not (height: 100dvh) {
+  .mvault-panel { height: 100vh; }
+}
+
+.mvault-panel--left {
+  left: 0;
+  /* +1px overlap so there's never a gap at the seam */
+  width: calc(50vw + 1px + env(safe-area-inset-left, 0px));
+  transform: translate3d(-101%, 0, 0);
+}
+
+.mvault-panel--right {
+  right: 0;
+  width: calc(50vw + 1px + env(safe-area-inset-right, 0px));
+  transform: translate3d(101%, 0, 0);
+}
+
+/* Sealed state — panels meet at center */
+.mvault-panel.is-sealing,
+.mvault-panel.is-sealed {
+  transform: translate3d(0, 0, 0);
+}
+
+/* Specular sweep fires when sealing */
+.mvault-panel.is-sealing {
+  background-position: 100% 0, 0 0;
+  transition:
+    transform 0.4s var(--mvault-ease-close),
+    background-position 0.5s ease;
+}
+
+/* Opening — panels exit */
+.mvault-panel.is-opening {
+  transform: translate3d(0, 0, 0); /* start from sealed */
+  transition: none; /* will be overridden by JS removing is-sealed, adding this */
+}
+
+/* Edge highlight seam — subtle chrome line at center join */
+.mvault-panel--left::after {
+  content: '';
+  position: absolute;
+  top: 0; bottom: 0; right: 0;
+  width: 1px;
+  background: linear-gradient(to bottom,
+    transparent 0%,
+    rgba(255,255,255,0.6) 30%,
+    rgba(255,255,255,0.8) 50%,
+    rgba(255,255,255,0.6) 70%,
+    transparent 100%
+  );
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+.mvault-panel--left.is-sealed::after,
+.mvault-panel--left.is-sealing::after {
+  opacity: 1;
+}
+
+/* ── Case Study Overlay ────────────────────────────────────── */
+
+.mvault-study {
+  position: fixed;
+  inset: 0;
+  min-height: 100dvh;
+  z-index: var(--mvault-z-study);
+  background: #0A1A4A;
+  padding:
+    calc(env(safe-area-inset-top, 0px) + 1.5rem)
+    calc(env(safe-area-inset-right, 0px) + 1.5rem)
+    calc(env(safe-area-inset-bottom, 0px) + 1.5rem)
+    calc(env(safe-area-inset-left, 0px) + 1.5rem);
+  opacity: 0;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  overflow-y: auto;
+}
+
+@supports not (height: 100dvh) {
+  .mvault-study { min-height: 100vh; }
+}
+
+.mvault-study.is-open {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.mvault-study__close {
+  align-self: flex-end;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.2);
+  background: rgba(255,255,255,0.07);
+  color: #f5f5f0;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mvault-study__close:focus-visible {
+  outline: 2px solid #FF6B35;
+  outline-offset: 2px;
+}
+
+.mvault-study__title {
+  font-size: clamp(1.75rem, 7vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.1;
+  letter-spacing: -0.02em;
+}
+
+.mvault-study__body {
+  font-size: 1rem;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.75);
+  max-width: 60ch;
+}
+
+/* ── Dev Refire Button ─────────────────────────────────────── */
+
+.mvault-refire {
+  position: fixed;
+  bottom: calc(1.5rem + env(safe-area-inset-bottom, 0px));
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10000;
+  padding: 0.625rem 1.25rem;
+  background: rgba(255,107,53,0.15);
+  border: 1px solid rgba(255,107,53,0.5);
+  border-radius: 100px;
+  color: #FF6B35;
+  font-size: 0.75rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-family: 'Share Tech Mono', monospace;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.mvault-refire:focus-visible {
+  outline: 2px solid #FF6B35;
+  outline-offset: 2px;
+}
+
+/* ── Aria live region — visually hidden ────────────────────── */
+
+.mvault-live {
+  position: absolute;
+  width: 1px; height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap;
+}
+
+/* ── Reduced-motion override ───────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  .mvault-panel {
+    /* Override the translate-based animation with a simple fade */
+    transform: none !important;
+    opacity: 0;
+    transition: opacity 0.2s linear !important;
+    background-position: 0 0, 0 0 !important;
+  }
+  .mvault-panel.is-sealing,
+  .mvault-panel.is-sealed {
+    opacity: 1;
+  }
+  .mvault-panel.is-opening {
+    opacity: 0 !important;
+  }
+}
