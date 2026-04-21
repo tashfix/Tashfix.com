@@ -1453,5 +1453,41 @@
     </div>
   </div>
 
+
+  <!-- ====== MOBILE VAULT (mobile-redesign) ====== -->
+  <!-- Panels hidden on desktop via css/mobile.css  -->
+  <div class="mvault-panel mvault-panel--left"  aria-hidden="true"></div>
+  <div class="mvault-panel mvault-panel--right" aria-hidden="true"></div>
+
+  <!-- Mobile case study overlay — content cloned in on tap -->
+  <div
+    id="mobile-cs-overlay"
+    class="mobile-cs-overlay"
+    role="region"
+    aria-label="Case study"
+    aria-hidden="true"
+  >
+    <div class="mobile-cs-overlay__bar">
+      <button
+        class="mobile-cs-overlay__close"
+        id="mobile-cs-close"
+        aria-label="Close case study"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div id="mobile-cs-content" class="mobile-cs-overlay__content">
+      <!-- .morph__cs-detail-content cloned here on vault open -->
+    </div>
+  </div>
+
+  <!-- Aria live — announces case study name to screen readers -->
+  <div id="mobile-vault-live" class="mobile-vault-live" aria-live="polite" role="status"></div>
+
 </body>
 </html>
