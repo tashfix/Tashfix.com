@@ -10,10 +10,13 @@
   };
 
   /* ── Vault timing ────────────────────────────────────────── */
+  /* The vault is core UX — the seal→hold→split is how the user knows
+     their tap registered and that a new surface is opening. Under iOS
+     Reduce Motion the previous {close:200, hold:0, open:200} collapsed
+     to a ~400ms flash where content never visibly landed. Using full
+     timings regardless keeps the interaction legible. */
 
-  var TIMINGS = REDUCE_MOTION
-    ? { close: 200, hold: 0, open: 200 }
-    : { close: 400, hold: 100, open: 350 };
+  var TIMINGS = { close: 400, hold: 100, open: 350 };
 
   /* ── State ───────────────────────────────────────────────── */
 
@@ -41,16 +44,30 @@
 
   /* ── Diagnostic trace ─────────────────────────────────────
      Read via sessionStorage.getItem('tash_vault_trace') in Web Inspector
-     to see the exact sequence of calls. Trimmed to last 30 entries. */
+     to see the exact sequence of calls. Trimmed to last 40 entries. */
 
   var vtrace = [];
   function vmark(step) {
     try {
       vtrace.push(step + '@' + Math.round(performance.now()) + 'ms');
-      if (vtrace.length > 30) vtrace.shift();
+      if (vtrace.length > 40) vtrace.shift();
       sessionStorage.setItem('tash_vault_trace', JSON.stringify(vtrace));
     } catch (e) {}
   }
+
+  /* Log every tap that lands anywhere on the page. Gives us the target
+     element's tag + id + class list so the next trace shows exactly
+     what the user tapped, even if no openVault/openCsList call followed. */
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t) return;
+    var tag = (t.tagName || '').toLowerCase();
+    var id  = t.id ? '#' + t.id : '';
+    var cls = (typeof t.className === 'string' && t.className) ? '.' + t.className.split(/\s+/).slice(0, 3).join('.') : '';
+    var card = t.closest && t.closest('.spotlight__card, .cs-list-card, #mobile-cs-list-trigger, #menu-btn, .morph__hero-cta');
+    var cardInfo = card ? (' closest=' + (card.id ? '#' + card.id : '.' + (card.className || '').toString().split(/\s+/)[0]) + (card.dataset && card.dataset.cs ? '[cs=' + card.dataset.cs + ']' : '')) : '';
+    vmark('click:' + tag + id + cls + cardInfo);
+  }, true);
 
   /* ── Panel helpers ───────────────────────────────────────── */
 
@@ -186,28 +203,38 @@
 
   /* Open the list overlay through the vault panels */
   function openCsList() {
-    if (busy) return;
+    vmark('openCsList-enter');
+    if (busy) { vmark('openCsList-busy-bail'); return; }
     busy = true;
     lockScroll(); /* prevents main page from scrolling while vault is open */
 
     sealPanels(function () {
-      if (csList) {
-        csList.classList.add('is-open');
-        csList.setAttribute('aria-hidden', 'false');
-        var firstCard = csList.querySelector('.cs-list-card');
-        if (firstCard) firstCard.focus();
-      }
-      history.pushState({ mobileCsList: true }, '', '#/case-studies');
+      try {
+        if (csList) {
+          csList.classList.add('is-open');
+          csList.setAttribute('aria-hidden', 'false');
+          var firstCard = csList.querySelector('.cs-list-card');
+          if (firstCard) firstCard.focus();
+          vmark('openCsList-is-open-applied:items=' + (csListItems ? csListItems.children.length : 'noref'));
+        } else {
+          vmark('openCsList-no-csList-ref');
+        }
+        history.pushState({ mobileCsList: true }, '', '#/case-studies');
 
-      setTimeout(function () {
-        splitPanels(function () { busy = false; });
-      }, TIMINGS.hold);
+        setTimeout(function () {
+          splitPanels(function () { busy = false; vmark('openCsList-done'); });
+        }, TIMINGS.hold);
+      } catch (e) {
+        vmark('openCsList-threw:' + (e && e.message));
+        splitPanels(function () { busy = false; unlockScroll(); });
+      }
     });
   }
 
   /* Close the list overlay through the vault panels — back to spotlight */
   function closeCsList() {
-    if (busy) return;
+    vmark('closeCsList-enter');
+    if (busy) { vmark('closeCsList-busy-bail'); return; }
     busy = true;
 
     sealPanels(function () {
@@ -221,6 +248,7 @@
         splitPanels(function () {
           busy = false;
           unlockScroll(); /* restore main-page scroll */
+          vmark('closeCsList-done');
           var trigger = document.getElementById('mobile-cs-list-trigger');
           if (trigger) trigger.focus();
         });
