@@ -46,6 +46,10 @@
     #zoomout-sticky { height: 100vh !important; }
   }
 
+  .zoomout__bg {
+    background: #ffffff !important;
+  }
+
   /* Kill the beige→cobalt gradient overlay — no soft transition, clean cut */
   .zoomout__bg::after {
     display: none !important;
