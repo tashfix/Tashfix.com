@@ -101,18 +101,31 @@
   function sealPanels(cb) {
     vmark('sealPanels-start');
     if (!panelLeft || !panelRight) { vmark('sealPanels-missing-refs'); if (cb) cb(); return; }
-    panelLeft.classList.remove('mvault--opening');
-    panelRight.classList.remove('mvault--opening');
-    panelLeft.classList.add('mvault--sealing');
-    panelRight.classList.add('mvault--sealing');
-    /* Force reflow so the browser commits the sealing class before we
-       change the inline transform — without this iOS can batch the two
-       style changes and skip the transition. */
+
+    /* Explicitly set the start position via inline style and clear any
+       stale state class. Without this iOS sometimes starts the seal
+       from wherever the panel last rendered (e.g. mid-split) instead
+       of fully off-screen — and the transition then appears to skip. */
+    panelLeft.classList.remove('mvault--opening', 'mvault--sealing', 'mvault--sealed');
+    panelRight.classList.remove('mvault--opening', 'mvault--sealing', 'mvault--sealed');
+    panelLeft.style.transform  = 'translate3d(-101%, 0, 0)';
+    panelRight.style.transform = 'translate3d(101%, 0, 0)';
     /* eslint-disable no-unused-expressions */
     panelLeft.offsetWidth;
     /* eslint-enable no-unused-expressions */
-    panelLeft.style.transform  = 'translate3d(0, 0, 0)';
-    panelRight.style.transform = 'translate3d(0, 0, 0)';
+
+    /* Double rAF: the first frame commits the start position, the
+       second frame applies the end position — guaranteeing iOS has a
+       distinct before/after to interpolate over the CSS transition. */
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        panelLeft.classList.add('mvault--sealing');
+        panelRight.classList.add('mvault--sealing');
+        panelLeft.style.transform  = 'translate3d(0, 0, 0)';
+        panelRight.style.transform = 'translate3d(0, 0, 0)';
+      });
+    });
+
     setTimeout(function () {
       panelLeft.classList.remove('mvault--sealing');
       panelRight.classList.remove('mvault--sealing');
@@ -128,11 +141,24 @@
   function splitPanels(cb) {
     vmark('splitPanels-start');
     if (!panelLeft || !panelRight) { vmark('splitPanels-missing-refs'); if (cb) cb(); return; }
-    panelLeft.classList.remove('mvault--sealed', 'mvault--sealing');
-    panelRight.classList.remove('mvault--sealed', 'mvault--sealing');
-    /* Inline transform guarantees iOS reapplies the off-screen position. */
-    panelLeft.style.transform  = 'translate3d(-101%, 0, 0)';
-    panelRight.style.transform = 'translate3d(101%, 0, 0)';
+
+    /* Pin to the sealed position first so iOS has a concrete starting
+       frame for the transition. */
+    panelLeft.style.transform  = 'translate3d(0, 0, 0)';
+    panelRight.style.transform = 'translate3d(0, 0, 0)';
+    /* eslint-disable no-unused-expressions */
+    panelLeft.offsetWidth;
+    /* eslint-enable no-unused-expressions */
+
+    requestAnimationFrame(function () {
+      requestAnimationFrame(function () {
+        panelLeft.classList.remove('mvault--sealed', 'mvault--sealing');
+        panelRight.classList.remove('mvault--sealed', 'mvault--sealing');
+        panelLeft.style.transform  = 'translate3d(-101%, 0, 0)';
+        panelRight.style.transform = 'translate3d(101%, 0, 0)';
+      });
+    });
+
     if (cb) setTimeout(function () {
       vmark('splitPanels-complete');
       try { cb(); } catch (e) { vmark('splitPanels-cb-threw:' + (e && e.message)); }
@@ -352,9 +378,7 @@
       csList.setAttribute('aria-hidden', 'true');
     }
 
-    /* Safety net: if anything inside the sealed callback throws (missing
-       DOM ref, bad content clone), force-release busy + scroll lock so the
-       user isn't stuck with a covered viewport and an unresponsive page. */
+    /* Safety net: if anything throws, force-release busy + scroll lock. */
     function bail(where) {
       vmark('openVault-bail:' + where);
       splitPanels(function () {
@@ -363,25 +387,48 @@
       });
     }
 
+    /* Pre-inject content BEFORE sealing starts. Keeping the main thread
+       busy with cloneNode + picture decode during the 400ms seal is what
+       was making the panel animation look like a flash on iOS — the
+       compositor can't render smooth frames while the main thread is
+       chewing through a large subtree clone. Panels cover an opacity-0
+       overlay while they slide in, so injecting now is invisible. */
+    try {
+      if (!overlayContent || !overlay) { bail('missing-overlay-refs'); return; }
+
+      var source = document.querySelector('.morph__cs-detail-content[data-cs="' + csKey + '"]');
+      overlayContent.innerHTML = '';
+      if (source) {
+        var clone = source.cloneNode(true);
+        clone.removeAttribute('style');
+        overlayContent.appendChild(clone);
+      } else {
+        vmark('openVault-no-source:' + csKey);
+      }
+
+      if (csBackBtn) {
+        if (fromList) csBackBtn.removeAttribute('hidden');
+        else          csBackBtn.setAttribute('hidden', '');
+      }
+
+      /* Also reset the overlay's scroll position so each open starts
+         from the top of the case study. */
+      if (overlay) overlay.scrollTop = 0;
+
+      history.pushState({ mobileCs: csKey }, '', '#' + csKey);
+      vmark('openVault-content-preloaded');
+    } catch (e) {
+      vmark('openVault-threw:' + (e && e.message));
+      bail('pre-inject-threw');
+      return;
+    }
+
     sealPanels(function () {
       try {
-        if (!overlayContent || !overlay) { bail('missing-overlay-refs'); return; }
-
-        var source = document.querySelector('.morph__cs-detail-content[data-cs="' + csKey + '"]');
-        overlayContent.innerHTML = '';
-        if (source) {
-          var clone = source.cloneNode(true);
-          clone.removeAttribute('style');
-          overlayContent.appendChild(clone);
-        } else {
-          vmark('openVault-no-source:' + csKey);
-        }
-
-        if (csBackBtn) {
-          if (fromList) csBackBtn.removeAttribute('hidden');
-          else          csBackBtn.setAttribute('hidden', '');
-        }
-
+        /* Content is already in the overlay. Just reveal it — the
+           panels are at center covering the viewport, so the opacity
+           transition on .mobile-cs-overlay is hidden from the user
+           until the split reveals it. */
         overlay.classList.add('is-open');
         overlay.setAttribute('aria-hidden', 'false');
 
@@ -390,12 +437,8 @@
         if (live) live.textContent = 'Case study: ' + title;
         if (h1) {
           h1.setAttribute('tabindex', '-1');
-          /* preventScroll avoids iOS focus() triggering a scroll that
-             can conflict with body position:fixed while vault is open. */
           try { h1.focus({ preventScroll: true }); } catch (_e) { h1.focus(); }
         }
-
-        history.pushState({ mobileCs: csKey }, '', '#' + csKey);
         vmark('openVault-content-ready');
 
         setTimeout(function () {
@@ -630,13 +673,10 @@
       /* Ease-out: early scroll → fast morph; slows near the end */
       var progress = 1 - Math.pow(1 - raw, 1.4);
 
-      if (REDUCE_MOTION) {
-        /* Instant swap at 50% — no animation */
-        var hidden = 'linear-gradient(to bottom, transparent 0%, transparent 100%)';
-        flesh.style.webkitMaskImage = progress >= 0.5 ? hidden : '';
-        flesh.style.maskImage       = flesh.style.webkitMaskImage;
-        return;
-      }
+      /* Portrait morph is core brand storytelling, not decorative motion,
+         so we run the progressive wipe even when iOS has Reduce Motion
+         enabled — the scroll-driven gradient is what makes the flesh →
+         metallic transition feel intentional instead of a hard swap. */
 
       if (progress <= 0) {
         /* Fully flesh — clear any lingering mask */
