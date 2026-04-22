@@ -39,9 +39,24 @@
     csBackBtn      = document.getElementById('mobile-cs-back');
   }
 
+  /* ── Diagnostic trace ─────────────────────────────────────
+     Read via sessionStorage.getItem('tash_vault_trace') in Web Inspector
+     to see the exact sequence of calls. Trimmed to last 30 entries. */
+
+  var vtrace = [];
+  function vmark(step) {
+    try {
+      vtrace.push(step + '@' + Math.round(performance.now()) + 'ms');
+      if (vtrace.length > 30) vtrace.shift();
+      sessionStorage.setItem('tash_vault_trace', JSON.stringify(vtrace));
+    } catch (e) {}
+  }
+
   /* ── Panel helpers ───────────────────────────────────────── */
 
   function sealPanels(cb) {
+    vmark('sealPanels-start');
+    if (!panelLeft || !panelRight) { vmark('sealPanels-missing-refs'); if (cb) cb(); return; }
     [panelLeft, panelRight].forEach(function (p) {
       p.classList.remove('mvault--opening');
       p.classList.add('mvault--sealing');
@@ -51,15 +66,23 @@
         p.classList.remove('mvault--sealing');
         p.classList.add('mvault--sealed');
       });
-      if (cb) cb();
+      vmark('sealPanels-sealed');
+      if (cb) {
+        try { cb(); } catch (e) { vmark('sealPanels-cb-threw:' + (e && e.message)); }
+      }
     }, TIMINGS.close);
   }
 
   function splitPanels(cb) {
+    vmark('splitPanels-start');
+    if (!panelLeft || !panelRight) { vmark('splitPanels-missing-refs'); if (cb) cb(); return; }
     [panelLeft, panelRight].forEach(function (p) {
       p.classList.remove('mvault--sealed', 'mvault--sealing');
     });
-    if (cb) setTimeout(cb, TIMINGS.open);
+    if (cb) setTimeout(function () {
+      vmark('splitPanels-complete');
+      try { cb(); } catch (e) { vmark('splitPanels-cb-threw:' + (e && e.message)); }
+    }, TIMINGS.open);
   }
 
   /* ── Case study list overlay ─────────────────────────────── */
@@ -221,7 +244,8 @@
   }
 
   function openVault(csKeyOrCard) {
-    if (busy) return;
+    vmark('openVault-enter');
+    if (busy) { vmark('openVault-busy-bail'); return; }
     busy = true;
     lockScroll(); /* prevent main-page scroll for the entire vaulted session */
 
@@ -234,6 +258,7 @@
       csKey   = domCard ? domCard.dataset.cs : '';
     }
     lastCard = domCard;
+    vmark('openVault-csKey:' + csKey);
 
     /* Hide list overlay behind sealing panels */
     if (csList && csList.classList.contains('is-open')) {
@@ -241,34 +266,54 @@
       csList.setAttribute('aria-hidden', 'true');
     }
 
+    /* Safety net: if anything inside the sealed callback throws (missing
+       DOM ref, bad content clone), force-release busy + scroll lock so the
+       user isn't stuck with a covered viewport and an unresponsive page. */
+    function bail(where) {
+      vmark('openVault-bail:' + where);
+      splitPanels(function () {
+        busy = false;
+        unlockScroll();
+      });
+    }
+
     sealPanels(function () {
-      var source = document.querySelector('.morph__cs-detail-content[data-cs="' + csKey + '"]');
+      try {
+        if (!overlayContent || !overlay) { bail('missing-overlay-refs'); return; }
 
-      overlayContent.innerHTML = '';
-      if (source) {
-        var clone = source.cloneNode(true);
-        clone.removeAttribute('style');
-        overlayContent.appendChild(clone);
+        var source = document.querySelector('.morph__cs-detail-content[data-cs="' + csKey + '"]');
+        overlayContent.innerHTML = '';
+        if (source) {
+          var clone = source.cloneNode(true);
+          clone.removeAttribute('style');
+          overlayContent.appendChild(clone);
+        } else {
+          vmark('openVault-no-source:' + csKey);
+        }
+
+        if (csBackBtn) {
+          if (fromList) csBackBtn.removeAttribute('hidden');
+          else          csBackBtn.setAttribute('hidden', '');
+        }
+
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+
+        var h1 = overlayContent.querySelector('h1');
+        var title = h1 ? h1.textContent.trim().slice(0, 60) : csKey;
+        if (live) live.textContent = 'Case study: ' + title;
+        if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus(); }
+
+        history.pushState({ mobileCs: csKey }, '', '#/case-studies/' + csKey);
+        vmark('openVault-content-ready');
+
+        setTimeout(function () {
+          splitPanels(function () { busy = false; vmark('openVault-done'); });
+        }, TIMINGS.hold);
+      } catch (e) {
+        vmark('openVault-threw:' + (e && e.message));
+        bail('caught-throw');
       }
-
-      if (csBackBtn) {
-        if (fromList) csBackBtn.removeAttribute('hidden');
-        else          csBackBtn.setAttribute('hidden', '');
-      }
-
-      overlay.classList.add('is-open');
-      overlay.setAttribute('aria-hidden', 'false');
-      /* Don't enter overlay scroll-progress mode; bar is hidden when vault is open */
-
-      var h1 = overlayContent.querySelector('h1');
-      var title = h1 ? h1.textContent.trim().slice(0, 60) : csKey;
-      if (live) live.textContent = 'Case study: ' + title;
-      if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus(); }
-
-      /* Distinct URL for each case study */
-      history.pushState({ mobileCs: csKey }, '', '#/case-studies/' + csKey);
-
-      setTimeout(function () { splitPanels(function () { busy = false; }); }, TIMINGS.hold);
     });
   }
 
