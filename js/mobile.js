@@ -69,24 +69,50 @@
   function initCsList() {
     if (!csListItems) return;
 
-    /* Supplement readtime from spotlight cards where available */
-    var rtMap = {};
+    /* Build a map from spotlight cards: logo HTML, date, readtime */
+    var spMap = {};
     document.querySelectorAll('#work-spotlight .spotlight__card').forEach(function (sc) {
-      var rtEl = sc.querySelector('.spotlight__readtime');
-      if (rtEl) rtMap[sc.dataset.cs] = rtEl.textContent.trim().replace(/\s+/g, ' ');
+      var key = sc.dataset.cs;
+      if (!key) return;
+
+      /* Clone the logo element and rewrite class names to cs-list-card__ prefix */
+      var logoEl  = sc.querySelector('.spotlight__logo');
+      var logoImg = logoEl ? logoEl.querySelector('img') : null;
+      var logoHtml = '';
+      if (logoEl && logoImg) {
+        var logoClass = logoEl.className
+          .replace(/\bspotlight__logo\b/g, 'cs-list-card__logo')
+          .replace(/\bspotlight__logo--/g, 'cs-list-card__logo--');
+        logoHtml =
+          '<div class="' + logoClass + '">' +
+            '<img src="' + logoImg.src + '" alt="' + (logoImg.alt || '').replace(/"/g, '&quot;') +
+            '" class="cs-list-card__logo-img" loading="lazy">' +
+          '</div>';
+      }
+
+      var rtEl   = sc.querySelector('.spotlight__readtime');
+      var dateEl = sc.querySelector('.spotlight__date');
+      spMap[key] = {
+        logoHtml : logoHtml,
+        date     : dateEl ? dateEl.textContent.trim() : '',
+        rt       : rtEl   ? rtEl.textContent.trim().replace(/\s+/g, ' ') : ''
+      };
     });
 
     var sourceCards = document.querySelectorAll('.morph__cs-card');
     var html = '';
 
     sourceCards.forEach(function (card) {
-      var csKey   = card.dataset.cs || '';
-      var thumbEl = card.querySelector('.morph__cs-thumb-img');
+      var csKey    = card.dataset.cs || '';
+      var thumbEl  = card.querySelector('.morph__cs-thumb-img');
       var thumbSrc = thumbEl ? thumbEl.src : '';
       var thumbAlt = thumbEl ? (thumbEl.alt || '') : '';
-      var client  = (card.querySelector('.morph__cs-client') || {}).textContent || '';
-      var title   = (card.querySelector('.morph__cs-title') || {}).textContent || '';
-      var rt      = rtMap[csKey] || '';
+      var client   = (card.querySelector('.morph__cs-client') || {}).textContent || '';
+      var title    = (card.querySelector('.morph__cs-title')  || {}).textContent || '';
+      var sp       = spMap[csKey] || {};
+      var logoHtml = sp.logoHtml ||
+        /* Fallback: circle with company initial */
+        '<div class="cs-list-card__logo">' + (client ? client.charAt(0) : '?') + '</div>';
 
       var tagEls = card.querySelectorAll('.morph__cs-tags span');
       var pillsHtml = '';
@@ -94,23 +120,32 @@
         pillsHtml += '<span class="cs-list-card__pill">' + t.textContent + '</span>';
       });
 
+      var clockSvg =
+        '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor"' +
+        ' stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/>' +
+        '<path d="M12 6v6l4 2"/></svg>';
+
       html +=
         '<div class="cs-list-card" data-cs="' + csKey + '" role="button" tabindex="0"' +
         ' aria-label="Open ' + title.replace(/"/g, '&quot;') + '">' +
           '<div class="cs-list-card__thumb">' +
             '<img src="' + thumbSrc + '" alt="' + thumbAlt.replace(/"/g, '&quot;') + '" loading="lazy">' +
           '</div>' +
-          '<div class="cs-list-card__body">' +
-            '<div class="cs-list-card__pills">' + pillsHtml + '</div>' +
+          '<div class="cs-list-card__content">' +
             '<p class="cs-list-card__title">' + title + '</p>' +
-            '<div class="cs-list-card__meta">' +
-              '<span class="cs-list-card__company">' + client + '</span>' +
-              (rt ?
-                '<span class="cs-list-card__readtime">' +
-                  '<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>' +
-                  rt +
-                '</span>' : '') +
-            '</div>' +
+            '<div class="cs-list-card__pills">' + pillsHtml + '</div>' +
+            '<footer class="cs-list-card__footer">' +
+              '<div class="cs-list-card__byline">' +
+                logoHtml +
+                '<div class="cs-list-card__byline-text">' +
+                  '<span class="cs-list-card__company">' + client + '</span>' +
+                  (sp.date ? '<span class="cs-list-card__date">' + sp.date + '</span>' : '') +
+                '</div>' +
+              '</div>' +
+              (sp.rt ?
+                '<span class="cs-list-card__readtime">' + clockSvg + sp.rt + '</span>'
+              : '') +
+            '</footer>' +
           '</div>' +
         '</div>';
     });
@@ -118,11 +153,7 @@
     csListItems.innerHTML = html;
 
     csListItems.querySelectorAll('.cs-list-card').forEach(function (row) {
-      function handleRowActivate() {
-        var key = row.dataset.cs;
-        /* Pass the csKey directly — openVaultFromList accepts a key or card */
-        openVaultFromList(key);
-      }
+      function handleRowActivate() { openVaultFromList(row.dataset.cs); }
       row.addEventListener('click', handleRowActivate);
       row.addEventListener('keydown', function (e) {
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); handleRowActivate(); }
