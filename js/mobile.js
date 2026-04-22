@@ -749,7 +749,6 @@
   /* ── Crafted-end signature draw animation ───────────────── */
 
   function initCraftedEndSig() {
-    if (REDUCE_MOTION) return;
     var sig     = document.querySelector('.mobile-crafted-end__sig');
     var section = document.getElementById('mobile-crafted-end');
     if (!sig || !section) return;
@@ -768,7 +767,6 @@
   function init() {
     resolveRefs();
     initPortraitMorph();
-    initScrollProgress();
     initTestimonialHeader();
     initTestimonialCleanup();
     initTextScramble();

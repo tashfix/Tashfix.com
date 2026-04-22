@@ -144,9 +144,9 @@ window.TashBrand = {
       // Logo reveal is scroll-driven in zoom-out.js — skip here
       if (menuBtn) menuBtn.classList.add('revealed');
       if (aura) aura.classList.add('revealed');
-      setTimeout(function() {
-        if (heroIntro) heroIntro.classList.add('revealed');
-      }, 200);
+      // Reveal hero-intro in lockstep with portrait + gradient so mobile
+      // doesn't show a portrait-first → gradient-second flash.
+      if (heroIntro) heroIntro.classList.add('revealed');
       setTimeout(function() {
         if (player) player.classList.add('revealed');
       }, 400);
