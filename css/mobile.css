@@ -54,13 +54,6 @@
   /* The hero section's own background is already cobalt (#0A1A4A via .zoomout).
      Fade the beige overlay layer out toward the bottom so the cobalt beneath
      matches the section that follows — no seam possible when both are identical. */
-  #zoom-out .zoomout__bg {
-    background: linear-gradient(
-      to bottom,
-      #ffffff 0%,
-      transparent 72%
-    ) !important;
-  }
 
   /* Prevent subpixel gap at the hero/hscroll-intro boundary */
   #zoom-out {
