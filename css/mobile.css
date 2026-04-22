@@ -449,7 +449,9 @@
 
   body.is-vault-open {
     overflow: hidden !important;
-    touch-action: none;
+    /* touch-action: none removed — overflow:hidden alone locks main-page
+       scroll, and touch-action was breaking gesture recovery on iOS
+       when the vault flow stalled. */
   }
 
   body.is-vault-open .scroll-progress {

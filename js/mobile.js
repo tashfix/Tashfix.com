@@ -243,10 +243,31 @@
     openVault(csKeyOrCard);
   }
 
+  /* Watchdog — if the open sequence stalls (network, iOS compositor issue,
+     uncaught error in deep content), force-cleanup so the user is never
+     stuck on a scroll-locked page with panels mid-state. */
+  var openWatchdog = null;
+  function armOpenWatchdog() {
+    if (openWatchdog) clearTimeout(openWatchdog);
+    openWatchdog = setTimeout(function () {
+      vmark('openVault-watchdog-fired');
+      if (panelLeft) panelLeft.classList.remove('mvault--sealing', 'mvault--sealed');
+      if (panelRight) panelRight.classList.remove('mvault--sealing', 'mvault--sealed');
+      if (overlay) { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden', 'true'); }
+      if (csList) { csList.classList.remove('is-open'); csList.setAttribute('aria-hidden', 'true'); }
+      busy = false;
+      unlockScroll();
+    }, 3000);
+  }
+  function disarmOpenWatchdog() {
+    if (openWatchdog) { clearTimeout(openWatchdog); openWatchdog = null; }
+  }
+
   function openVault(csKeyOrCard) {
     vmark('openVault-enter');
     if (busy) { vmark('openVault-busy-bail'); return; }
     busy = true;
+    armOpenWatchdog();
     lockScroll(); /* prevent main-page scroll for the entire vaulted session */
 
     var csKey, domCard;
@@ -308,7 +329,7 @@
         vmark('openVault-content-ready');
 
         setTimeout(function () {
-          splitPanels(function () { busy = false; vmark('openVault-done'); });
+          splitPanels(function () { busy = false; disarmOpenWatchdog(); vmark('openVault-done'); });
         }, TIMINGS.hold);
       } catch (e) {
         vmark('openVault-threw:' + (e && e.message));
