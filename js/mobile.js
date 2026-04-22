@@ -701,6 +701,23 @@
     }, true /* capture — fires before face-morph.js toggleExpanded handler */);
   }
 
+  /* ── Crafted-end signature draw animation ───────────────── */
+
+  function initCraftedEndSig() {
+    if (REDUCE_MOTION) return;
+    var sig     = document.querySelector('.mobile-crafted-end__sig');
+    var section = document.getElementById('mobile-crafted-end');
+    if (!sig || !section) return;
+
+    var obs = new IntersectionObserver(function (entries) {
+      if (!entries[0].isIntersecting) return;
+      obs.disconnect();
+      sig.classList.add('is-drawing');
+    }, { threshold: 0.35 });
+
+    obs.observe(section);
+  }
+
   /* ── Boot ────────────────────────────────────────────────── */
 
   function init() {
@@ -714,6 +731,7 @@
     initHeroCta();
     initCsList();        /* builds list cards before wiring intercepts */
     initVaultIntercept();
+    initCraftedEndSig();
   }
 
   if (document.readyState === 'loading') {

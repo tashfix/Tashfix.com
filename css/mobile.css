@@ -1166,48 +1166,73 @@
   .mobile-crafted-end {
     display: block;
     position: relative;
-    height: 100dvh;
-    overflow: hidden;
+    /* overflow hidden only on the marquee containers, not the section —
+       prevents the bottom marquee text from being clipped at the section edge */
+    overflow-x: clip; /* horizontal bleed blocked; vertical bleed allowed */
     background: var(--color-cobalt, #0A1A4A);
+    padding: 4.5rem 0 6rem;
   }
 
-  @supports not (height: 100dvh) {
-    .mobile-crafted-end { height: 100vh; }
-  }
-
-  /* Portrait: fills section, object-fit-cover centred */
+  /* Portrait: centered floating card — in-flow so section wraps its height */
   .mobile-crafted-end__portrait-wrap {
-    position: absolute;
-    inset: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    z-index: 1;
+    position: relative;
+    z-index: 3;
+  }
+
+  /* Inner card — sig positions relative to portrait, no clip so sig can bleed */
+  .mobile-crafted-end__portrait-inner {
+    position: relative;
+    width: 68vw;
+    flex-shrink: 0;
   }
 
   .mobile-crafted-end__portrait-img {
     width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: center top;
+    height: auto;
     display: block;
-    opacity: 0.88;
+    filter: grayscale(1) contrast(1.08);
   }
 
-  /* Signature SVG — tangerine stroke, centred over portrait */
+  /* Signature SVG — tangerine, small, centered on the portrait canvas */
   .mobile-crafted-end__sig {
     position: absolute;
-    top: 46%;
-    left: 48%;
+    top: 50%;
+    left: 50%;
     transform: translate(-50%, -50%);
-    width: 68%;
+    width: 40%;
     height: auto;
     pointer-events: none;
-    z-index: 3;
+    z-index: 1;
   }
 
   .mobile-crafted-end__sig .mce-pen {
     stroke: var(--color-tangerine, #FF6B35);
+  }
+
+  /* Signature draw-on: start fully hidden, draw fast when scrolled into view */
+  .mobile-crafted-end__sig use.mce-pen {
+    stroke-dasharray: 1000;
+    stroke-dashoffset: 1000;
+    transition: stroke-dashoffset 0.6s ease;
+  }
+
+  /* T stroke draws first */
+  .mobile-crafted-end__sig.is-drawing use:nth-child(n+3):nth-child(-n+7) {
+    stroke-dashoffset: 0;
+    transition-delay: 0s;
+  }
+  /* A stroke draws second */
+  .mobile-crafted-end__sig.is-drawing use:nth-child(n+8):nth-child(-n+12) {
+    stroke-dashoffset: 0;
+    transition-delay: 0.2s;
+  }
+  /* Cross-stroke draws last */
+  .mobile-crafted-end__sig.is-drawing use:nth-child(n+13):nth-child(-n+17) {
+    stroke-dashoffset: 0;
+    transition-delay: 0.38s;
   }
 
   /* Marquee bands — absolute, cross the portrait */
@@ -1219,15 +1244,16 @@
     pointer-events: none;
   }
 
+  /* Top marquee: slightly behind portrait, overlaps upper area */
   .mobile-crafted-end__marquee--top {
-    top: 30%;
-    z-index: 2; /* behind portrait container's z-index: 1 would hide it; use 4 to show above */
-    z-index: 4;
+    top: 36%;
+    z-index: 2;
   }
 
+  /* Bottom marquee: in front of portrait + signature, slightly overlaps bottom of image */
   .mobile-crafted-end__marquee--bottom {
-    top: 62%;
-    z-index: 5; /* above portrait */
+    top: 64%;
+    z-index: 4;
   }
 
   .mobile-crafted-end__track {
@@ -1243,7 +1269,7 @@
 
   .mobile-crafted-end__track span {
     font-family: var(--font-body, 'Inter', sans-serif);
-    font-size: clamp(3rem, 10vw, 5.5rem);
+    font-size: clamp(4rem, 13vw, 7rem); /* top marquee: 20% larger than previous */
     font-weight: 900;
     text-transform: uppercase;
     color: var(--color-cobalt, #0A1A4A);
@@ -1254,8 +1280,10 @@
     padding-right: 0.5em;
   }
 
+  /* Bottom marquee ~2× size, slight overlap with portrait bottom */
   .mobile-crafted-end__marquee--bottom .mobile-crafted-end__track span {
-    font-size: clamp(3.5rem, 12vw, 6.5rem);
+    font-size: clamp(5.5rem, 18vw, 10rem);
+    -webkit-text-stroke: 2.5px rgba(140, 163, 200, 0.85);
   }
 
   @keyframes mce-scroll-left {
