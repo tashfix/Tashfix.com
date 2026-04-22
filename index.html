@@ -416,6 +416,15 @@
       </a>
 
     </div>
+
+    <!-- View all case studies — mobile only (mobile.css controls display) -->
+    <div class="spotlight__view-all" id="spotlight-view-all">
+      <button class="spotlight__view-all-btn" id="mobile-cs-list-trigger" aria-label="View all case studies">
+        View all case studies
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17L17 7"/><path d="M7 7h10v10"/></svg>
+      </button>
+    </div>
+
   </section>
 
   <!-- ====== SECTION 4: MY JOURNEY INTRO ====== -->
@@ -483,7 +492,7 @@
         </div>
 
         <!-- YES! — square photo -->
-        <div class="hscroll__item hscroll__type-square">
+        <div id="hscroll-yes-item" class="hscroll__item hscroll__type-square hscroll__mobile-hide">
           <picture><source srcset="assets/images/8.(%22YES!%22).webp" type="image/webp"><img src="assets/images/8.(%22YES!%22).png" alt="YES!" loading="lazy"></picture>
           <p class="hscroll__caption"><span class="hscroll__typewriter-text">"YES!"</span></p>
         </div>
@@ -495,7 +504,7 @@
         </div>
 
         <!-- 15. And here we are — square hero video -->
-        <div class="hscroll__item hscroll__type-square" id="hscroll-last-item">
+        <div class="hscroll__item hscroll__type-square hscroll__mobile-hide" id="hscroll-last-item">
           <video poster="assets/images/hero-video-poster.jpg" muted playsinline preload="metadata">
           <source src="assets/video/Hero%20Video%20Final%20(kling).webm" type="video/webm">
           <source src="assets/video/Hero%20Video%20Final%20(kling).mp4" type="video/mp4"></video>
@@ -602,6 +611,83 @@
       </div>
     </div>
   </div>
+
+  <!-- ====== MOBILE CRAFTED-END — hidden on desktop ====== -->
+  <section id="mobile-crafted-end" class="mobile-crafted-end" aria-hidden="true">
+
+    <!-- Top marquee — scrolls left -->
+    <div class="mobile-crafted-end__marquee mobile-crafted-end__marquee--top" aria-hidden="true">
+      <div class="mobile-crafted-end__track">
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+      </div>
+    </div>
+
+    <!-- Portrait + signature -->
+    <div class="mobile-crafted-end__portrait-wrap">
+      <img
+        src="assets/images/metallic (mobile).png"
+        alt=""
+        loading="lazy"
+        class="mobile-crafted-end__portrait-img"
+      >
+      <!-- Signature SVG — same paths as the hero, tangerine stroke -->
+      <svg class="mobile-crafted-end__sig"
+           xmlns="http://www.w3.org/2000/svg" viewBox="-8 -8 295 278"
+           aria-hidden="true">
+        <style>.mce-pen{fill:none;stroke-linecap:round;stroke-linejoin:round}
+          .mce-n0{stroke-opacity:1}.mce-n1{stroke-opacity:0.78}.mce-n2{stroke-opacity:0.42}</style>
+        <defs>
+          <path id="mce-tp" pathLength="1000" d="M 252,33
+            C 252,33 239.937,23.741 222,29
+            C 222,29 112.974,57.844 34,96
+            C 34,96 99.465,76.1 91,138
+            C 91,138 78.415,221.344 62,242
+            C 62,242 46.245,256.58 96,134
+            L 145,26
+            C 156.243,5.905 129,87 129,87" />
+          <path id="mce-ap" pathLength="1000" d="M 97,239
+            C 97,239 178.325,64.977 185,65
+            L 154,220
+            C 154,220 150.052,233.522 162,210" />
+          <path id="mce-xp" pathLength="1000" d="M 89,186
+            C 89,186 141.163,157.289 207,142" />
+        </defs>
+        <use href="#mce-tp" class="mce-pen mce-n2" stroke-width="1.8" transform="translate(-3.45,-3.45)"/>
+        <use href="#mce-tp" class="mce-pen mce-n1" stroke-width="3.0" transform="translate(-1.74,-1.74)"/>
+        <use href="#mce-tp" class="mce-pen mce-n0" stroke-width="3.9"/>
+        <use href="#mce-tp" class="mce-pen mce-n1" stroke-width="3.0" transform="translate(1.74,1.74)"/>
+        <use href="#mce-tp" class="mce-pen mce-n2" stroke-width="1.8" transform="translate(3.45,3.45)"/>
+        <use href="#mce-ap" class="mce-pen mce-n2" stroke-width="1.8" transform="translate(-3.45,-3.45)"/>
+        <use href="#mce-ap" class="mce-pen mce-n1" stroke-width="3.0" transform="translate(-1.74,-1.74)"/>
+        <use href="#mce-ap" class="mce-pen mce-n0" stroke-width="3.9"/>
+        <use href="#mce-ap" class="mce-pen mce-n1" stroke-width="3.0" transform="translate(1.74,1.74)"/>
+        <use href="#mce-ap" class="mce-pen mce-n2" stroke-width="1.8" transform="translate(3.45,3.45)"/>
+        <use href="#mce-xp" class="mce-pen mce-n2" stroke-width="1.8" transform="translate(-3.45,-3.45)"/>
+        <use href="#mce-xp" class="mce-pen mce-n1" stroke-width="3.0" transform="translate(-1.74,-1.74)"/>
+        <use href="#mce-xp" class="mce-pen mce-n0" stroke-width="3.9"/>
+        <use href="#mce-xp" class="mce-pen mce-n1" stroke-width="3.0" transform="translate(1.74,1.74)"/>
+        <use href="#mce-xp" class="mce-pen mce-n2" stroke-width="1.8" transform="translate(3.45,3.45)"/>
+      </svg>
+    </div>
+
+    <!-- Bottom marquee — scrolls right (reverse) -->
+    <div class="mobile-crafted-end__marquee mobile-crafted-end__marquee--bottom" aria-hidden="true">
+      <div class="mobile-crafted-end__track mobile-crafted-end__track--reverse">
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+        <span>CRAFTED. NOT GENERATED.</span>
+      </div>
+    </div>
+
+  </section>
 
   <!-- ====== FOOTER ====== -->
   <footer class="site-footer" id="site-footer">
@@ -1373,6 +1459,7 @@
       <a href="#" class="nav-overlay__link" data-nav="my-journey">My Journey</a>
       <a href="#" class="nav-overlay__link" data-nav="testimonies">Testimonies</a>
       <a href="#" class="nav-overlay__link" data-nav="case-studies">Case Studies</a>
+      <a href="#" class="nav-overlay__link nav-overlay__link--vault" data-nav="case-studies-vault">All Case Studies</a>
     </nav>
     <div class="nav-overlay__footer">
       <div class="nav-overlay__contact">
@@ -1459,6 +1546,34 @@
   <div class="mvault-panel mvault-panel--left"  aria-hidden="true"></div>
   <div class="mvault-panel mvault-panel--right" aria-hidden="true"></div>
 
+  <!-- Mobile case study list overlay — shown via "View all case studies" vault transition -->
+  <div
+    id="mobile-cs-list"
+    class="mobile-cs-list"
+    role="region"
+    aria-label="All case studies"
+    aria-hidden="true"
+  >
+    <div class="mobile-cs-list__bar">
+      <span class="mobile-cs-list__heading">Case Studies</span>
+      <button
+        class="mobile-cs-overlay__close"
+        id="mobile-cs-list-close"
+        aria-label="Close"
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2.5"
+             stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"/>
+          <line x1="6" y1="6" x2="18" y2="18"/>
+        </svg>
+      </button>
+    </div>
+    <div id="mobile-cs-list-items" class="mobile-cs-list__items">
+      <!-- Case study rows built by mobile.js initCsList() -->
+    </div>
+  </div>
+
   <!-- Mobile case study overlay — content cloned in on tap -->
   <div
     id="mobile-cs-overlay"
@@ -1468,6 +1583,20 @@
     aria-hidden="true"
   >
     <div class="mobile-cs-overlay__bar">
+      <!-- Back button — shown only when navigating from the list overlay -->
+      <button
+        class="mobile-cs-overlay__back"
+        id="mobile-cs-back"
+        aria-label="Back to all case studies"
+        hidden
+      >
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+             stroke="currentColor" stroke-width="2" stroke-linecap="round"
+             stroke-linejoin="round" aria-hidden="true">
+          <polyline points="15 18 9 12 15 6"/>
+        </svg>
+        <span>All case studies</span>
+      </button>
       <button
         class="mobile-cs-overlay__close"
         id="mobile-cs-close"
