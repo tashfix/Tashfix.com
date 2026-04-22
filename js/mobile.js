@@ -358,13 +358,11 @@
       return;
     }
 
-    /* Show the overlay before sealing so the case study content is
-       pre-painted and visible to the compositor when the panels slide. */
-    overlay.classList.add('is-open');
-    overlay.setAttribute('aria-hidden', 'false');
-
     sealPanels(function () {
       try {
+        overlay.classList.add('is-open');
+        overlay.setAttribute('aria-hidden', 'false');
+
         var h1 = overlayContent.querySelector('h1');
         var title = h1 ? h1.textContent.trim().slice(0, 60) : csKey;
         if (live) live.textContent = 'Case study: ' + title;
