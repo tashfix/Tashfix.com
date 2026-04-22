@@ -2,6 +2,16 @@
    LOADING SEQUENCE — fixed overlay with canvas grid
    ═══════════════════════════════════════════════════════════ */
 
+/* Body scroll-lock during loader. iOS Safari needs this as a class so
+   a single toggle unlocks it from any code path (normal completion,
+   fallback timeout, or window error handler). */
+body.is-loading {
+  overflow: hidden;
+  position: fixed;
+  width: 100%;
+  top: 0;
+}
+
 #loader-overlay {
   position: fixed;
   inset: 0;
@@ -13,6 +23,13 @@
 #loader-overlay.fade-out {
   opacity: 0;
   pointer-events: none;
+}
+
+/* Belt-and-suspenders: once loader completes, keep it fully out of hit-testing
+   even if an iOS repaint race re-enables it. */
+#loader-overlay.is-done {
+  display: none !important;
+  pointer-events: none !important;
 }
 
 .loader__canvas {

@@ -33,17 +33,61 @@ window.TashBrand = {
 // ═══════════════════════════════════════════════════════════
 (function() {
   var overlay = document.getElementById('loader-overlay');
+  var loaderDone = false;
+  var progressInterval;
+  var loaderAnimId;
 
-  // Lock all scrolling during loader
+  // Diagnostic trace — inspect via sessionStorage.getItem('tash_loader_trace').
+  // On iPhone Safari, connecting Web Inspector and reading this reveals which
+  // path completed the loader (normal progress, 4s fallback, or window error).
+  var trace = [];
+  function mark(step) {
+    try {
+      trace.push(step + '@' + Math.round(performance.now()) + 'ms');
+      sessionStorage.setItem('tash_loader_trace', JSON.stringify(trace));
+    } catch (e) {}
+  }
+
+  // Lock scrolling via class, not inline styles — a single toggle unlocks
+  // from any safety-net path (normal, fallback, error).
   window.scrollTo(0, 0);
-  document.body.style.overflow = 'hidden';
-  document.body.style.position = 'fixed';
-  document.body.style.width = '100%';
-  document.body.style.top = '0';
+  document.body.classList.add('is-loading');
+  mark('lock-applied');
+
+  // Idempotent completion. Safe to call from the progress tick, the 4s
+  // fallback, or the window error handler.
+  function completeLoader(reason) {
+    if (loaderDone) return;
+    loaderDone = true;
+    mark(reason);
+    if (progressInterval) clearInterval(progressInterval);
+    if (overlay) overlay.classList.add('fade-out');
+    setTimeout(function() {
+      if (overlay) {
+        overlay.style.display = 'none';
+        overlay.classList.add('is-done');
+      }
+      if (loaderAnimId) cancelAnimationFrame(loaderAnimId);
+      try { window.removeEventListener('resize', resize); } catch (e) {}
+      document.body.classList.remove('is-loading');
+      window.scrollTo(0, 0);
+      mark('unlock-complete');
+    }, 350);
+    try { revealFaceMorph(); } catch (e) { mark('revealFaceMorph-threw'); }
+  }
+
+  // Safety nets — registered before canvas setup so they survive if setup throws.
+  setTimeout(function() {
+    if (!loaderDone) completeLoader('force-fallback-fired');
+  }, 4000);
+
+  window.addEventListener('error', function() {
+    if (!loaderDone) completeLoader('window-error-caught');
+  });
+
   var canvas = document.getElementById('loader-canvas');
   var ctx = canvas.getContext('2d');
   var W, H;
-  var loaderAnimId;
 
   function resize() {
     var dpr = window.devicePixelRatio || 1;
@@ -71,29 +115,12 @@ window.TashBrand = {
   var time = 0;
   var progress = 0;
   var maxH = waves.reduce(function(sum, w) { return sum + w.amp; }, 0);
-  var loaderDone = false;
 
-  var progressInterval = setInterval(function() {
+  progressInterval = setInterval(function() {
     progress++;
-    if (progress >= 100) {
-      clearInterval(progressInterval);
-      // Auto-dismiss loader — audio consent modal provides the user gesture
-      overlay.classList.add('fade-out');
-      setTimeout(function() {
-        overlay.style.display = 'none';
-        if (loaderAnimId) cancelAnimationFrame(loaderAnimId);
-        loaderDone = true;
-        window.removeEventListener('resize', resize);
-        // Unlock scrolling
-        document.body.style.overflow = '';
-        document.body.style.position = '';
-        document.body.style.width = '';
-        document.body.style.top = '';
-        window.scrollTo(0, 0);
-      }, 350);
-      revealFaceMorph();
-    }
+    if (progress >= 100) completeLoader('progress-100');
   }, 10);
+  mark('interval-started');
 
   function revealFaceMorph() {
     var player = document.getElementById('morph-player');

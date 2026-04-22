@@ -206,6 +206,10 @@
     bottom: 0;
     height: 100dvh;
     z-index: var(--mvault-z-panel);
+    /* iOS Safari hit-tests will-change: transform elements at their
+       pre-transform DOM position. Without this, two off-screen panels
+       (left+right) tile 100% of the viewport and eat every tap/scroll. */
+    pointer-events: none;
     will-change: transform, background-position;
     background:
       linear-gradient(105deg,
@@ -262,6 +266,7 @@
   .mvault-panel.mvault--sealing,
   .mvault-panel.mvault--sealed {
     transform: translate3d(0, 0, 0);
+    pointer-events: auto;
   }
 
   .mvault-panel.mvault--sealing {
