@@ -69,20 +69,35 @@
     vmark('click:' + tag + id + cls + cardInfo);
   }, true);
 
-  /* ── Panel helpers ───────────────────────────────────────── */
+  /* ── Panel helpers ─────────────────────────────────────────
+     iOS Safari bug workaround: with `will-change: transform` on the
+     panels, removing the .mvault--sealed class does NOT reliably revert
+     the cached transform layer — panels stay visually stuck at
+     translate3d(0,0,0) even though the CSS rules would resolve back to
+     translate3d(±101%,0,0). We force the transform via inline style so
+     iOS has to re-rasterize the layer. Classes are still used for the
+     background specular sweep and pointer-events state. */
 
   function sealPanels(cb) {
     vmark('sealPanels-start');
     if (!panelLeft || !panelRight) { vmark('sealPanels-missing-refs'); if (cb) cb(); return; }
-    [panelLeft, panelRight].forEach(function (p) {
-      p.classList.remove('mvault--opening');
-      p.classList.add('mvault--sealing');
-    });
+    panelLeft.classList.remove('mvault--opening');
+    panelRight.classList.remove('mvault--opening');
+    panelLeft.classList.add('mvault--sealing');
+    panelRight.classList.add('mvault--sealing');
+    /* Force reflow so the browser commits the sealing class before we
+       change the inline transform — without this iOS can batch the two
+       style changes and skip the transition. */
+    /* eslint-disable no-unused-expressions */
+    panelLeft.offsetWidth;
+    /* eslint-enable no-unused-expressions */
+    panelLeft.style.transform  = 'translate3d(0, 0, 0)';
+    panelRight.style.transform = 'translate3d(0, 0, 0)';
     setTimeout(function () {
-      [panelLeft, panelRight].forEach(function (p) {
-        p.classList.remove('mvault--sealing');
-        p.classList.add('mvault--sealed');
-      });
+      panelLeft.classList.remove('mvault--sealing');
+      panelRight.classList.remove('mvault--sealing');
+      panelLeft.classList.add('mvault--sealed');
+      panelRight.classList.add('mvault--sealed');
       vmark('sealPanels-sealed');
       if (cb) {
         try { cb(); } catch (e) { vmark('sealPanels-cb-threw:' + (e && e.message)); }
@@ -93,9 +108,11 @@
   function splitPanels(cb) {
     vmark('splitPanels-start');
     if (!panelLeft || !panelRight) { vmark('splitPanels-missing-refs'); if (cb) cb(); return; }
-    [panelLeft, panelRight].forEach(function (p) {
-      p.classList.remove('mvault--sealed', 'mvault--sealing');
-    });
+    panelLeft.classList.remove('mvault--sealed', 'mvault--sealing');
+    panelRight.classList.remove('mvault--sealed', 'mvault--sealing');
+    /* Inline transform guarantees iOS reapplies the off-screen position. */
+    panelLeft.style.transform  = 'translate3d(-101%, 0, 0)';
+    panelRight.style.transform = 'translate3d(101%, 0, 0)';
     if (cb) setTimeout(function () {
       vmark('splitPanels-complete');
       try { cb(); } catch (e) { vmark('splitPanels-cb-threw:' + (e && e.message)); }
