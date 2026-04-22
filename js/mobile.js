@@ -266,14 +266,22 @@
 
   /* ── Body scroll lock ────────────────────────────────────── */
 
-  var _themeMeta = document.getElementById('theme-color-meta');
+  var _themeMeta = null;
   function lockScroll() {
     document.body.classList.add('is-vault-open');
-    if (_themeMeta) _themeMeta.setAttribute('content', '#0d0d0d');
+    if (!_themeMeta) {
+      _themeMeta = document.createElement('meta');
+      _themeMeta.name = 'theme-color';
+      document.head.appendChild(_themeMeta);
+    }
+    _themeMeta.setAttribute('content', '#0d0d0d');
   }
   function unlockScroll() {
     document.body.classList.remove('is-vault-open');
-    if (_themeMeta) _themeMeta.removeAttribute('content');
+    if (_themeMeta && _themeMeta.parentNode) {
+      _themeMeta.parentNode.removeChild(_themeMeta);
+      _themeMeta = null;
+    }
   }
 
   /* ── Open: list card tap → vault → case study ────────────── */
