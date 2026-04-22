@@ -26,7 +26,8 @@
 
 /* Lift content above canvas */
 .spotlight__header,
-.spotlight__grid {
+.spotlight__grid,
+.spotlight__view-all {
   position: relative;
   z-index: 1;
 }
