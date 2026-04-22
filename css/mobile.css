@@ -276,37 +276,6 @@
     background-size: 200% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
   }
 
-  /* Seam highlight — subtle edge on both panels */
-  .mvault-panel--left::after,
-  .mvault-panel--right::after {
-    content: '';
-    position: absolute;
-    top: 0; bottom: 0;
-    width: 2px;
-    background: linear-gradient(to bottom,
-      transparent 0%,
-      rgba(41,121,255,0.20) 12%,
-      rgba(130,188,255,0.50) 35%,
-      rgba(185,225,255,0.65) 50%,
-      rgba(130,188,255,0.50) 65%,
-      rgba(41,121,255,0.20) 88%,
-      transparent 100%
-    );
-    box-shadow: 0 0 8px 2px rgba(41,121,255,0.12);
-    opacity: 0;
-    transition: opacity 0.15s ease;
-  }
-
-  .mvault-panel--left::after  { right: 0; }
-  .mvault-panel--right::after { left:  0; }
-
-  .mvault-panel--left.mvault--sealed::after,
-  .mvault-panel--left.mvault--sealing::after,
-  .mvault-panel--right.mvault--sealed::after,
-  .mvault-panel--right.mvault--sealing::after {
-    opacity: 1;
-  }
-
   /* Engraved initials on vault doors */
   .mvault-panel--left::before,
   .mvault-panel--right::before {
