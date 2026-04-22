@@ -122,10 +122,13 @@
     z-index: 1;
   }
 
-  /* Clip marquee to the half-width container */
+  /* Marquee spans full viewport width — break out of the 75vw hero-intro.
+     hero-intro starts at left: 1.25rem, so pull back by the same amount. */
   .morph__logo-marquee {
     overflow: hidden !important;
-    max-width: 100% !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+    margin-left: -1.25rem !important;
   }
 
   /* Hero text scale — mirrors desktop's type hierarchy at 3/4 viewport width.
