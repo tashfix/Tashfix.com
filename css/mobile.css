@@ -275,6 +275,10 @@
 }
 
 /* ── Mobile case study overlay ────────────────────────────── */
+.mobile-cs-overlay {
+  display: none; /* shown only inside the mobile media query below */
+}
+
 @media (max-width: 768px) {
 
   .mobile-cs-overlay {
@@ -469,9 +473,14 @@
 }
 
 /* ── Case study list overlay ────────────────────────────────── */
+.mobile-cs-list {
+  display: none; /* shown only inside the mobile media query below */
+}
+
 @media (max-width: 768px) {
 
   .mobile-cs-list {
+    display: block;
     position: fixed;
     inset: 0;
     min-height: 100dvh;
@@ -1268,6 +1277,10 @@
 }
 
 /* ── Nav overlay: hide stub Case Studies, show vault All Case Studies ── */
+.nav-overlay__link--vault {
+  display: none; /* shown only inside the mobile media query below */
+}
+
 @media (max-width: 768px) {
 
   /* Original stub link — no target page yet */
