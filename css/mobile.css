@@ -278,19 +278,9 @@
       background-position 0.5s ease;
   }
 
-  /* Reduced-motion: fade instead of slide */
-  @media (prefers-reduced-motion: reduce) {
-    .mvault-panel {
-      transform: none !important;
-      opacity: 0;
-      transition: opacity 0.2s linear !important;
-      background-position: 0 0, 0 0 !important;
-    }
-    .mvault-panel.mvault--sealing,
-    .mvault-panel.mvault--sealed {
-      opacity: 1;
-    }
-  }
+  /* Vault slide animation is core UX — intentionally not suppressed by
+     prefers-reduced-motion. The seal→hold→split is how the user knows
+     their tap registered and that a new surface is opening. */
 
 }
 
