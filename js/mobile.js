@@ -776,9 +776,11 @@
         if (!entries[0].isIntersecting || fired) return;
         fired = true;
         obs.disconnect();
+        el.style.minHeight = el.offsetHeight + 'px';
         var fx = new TextScramble(el);
         fx.setText(plainText).then(function() {
           el.innerHTML = savedHTML;
+          el.style.minHeight = '';
         });
       }, { threshold: 0.4 });
 
