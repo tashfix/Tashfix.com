@@ -274,6 +274,36 @@
   /* Accepts a csKey string (from list) or a DOM card element (from spotlight) */
   function openVaultFromList(csKeyOrCard) {
     fromList = true;
+    /* Already inside the vault section — swap content without panel animation. */
+    if (csList && csList.classList.contains('is-open')) {
+      if (busy) return;
+      busy = true;
+      var csKey = typeof csKeyOrCard === 'string' ? csKeyOrCard
+        : (csKeyOrCard ? csKeyOrCard.dataset.cs : '');
+      lastCard = typeof csKeyOrCard === 'string'
+        ? document.querySelector('#work-spotlight .spotlight__card[data-cs="' + csKey + '"]')
+        : csKeyOrCard;
+      csList.classList.remove('is-open');
+      csList.setAttribute('aria-hidden', 'true');
+      var source = document.querySelector('.morph__cs-detail-content[data-cs="' + csKey + '"]');
+      overlayContent.innerHTML = '';
+      if (source) {
+        var clone = source.cloneNode(true);
+        clone.removeAttribute('style');
+        overlayContent.appendChild(clone);
+      }
+      if (overlay) overlay.scrollTop = 0;
+      if (csBackBtn) csBackBtn.removeAttribute('hidden');
+      if (live) {
+        var h1El = overlayContent.querySelector('h1');
+        live.textContent = h1El ? 'Case study: ' + h1El.textContent.trim().slice(0, 60) : csKey;
+      }
+      history.pushState({ mobileCs: csKey }, '', '#' + csKey);
+      overlay.classList.add('is-open');
+      overlay.setAttribute('aria-hidden', 'false');
+      busy = false;
+      return;
+    }
     openVault(csKeyOrCard);
   }
 
@@ -459,13 +489,27 @@
     /* Case study close (X) — full close, even if from list */
     if (closeBtn) closeBtn.addEventListener('click', closeVaultFully);
 
-    /* Back button — return to list */
+    /* Back button — return to list without vault animation (already in vault section) */
     if (csBackBtn) {
       csBackBtn.addEventListener('click', function () {
         if (busy) return;
         busy = true;
+        overlayContent.querySelectorAll('iframe').forEach(function (f) {
+          try { f.contentWindow.postMessage('{"event":"command","func":"pauseVideo","args":""}', '*'); } catch (e) {}
+        });
+        overlay.classList.remove('is-open');
+        overlay.setAttribute('aria-hidden', 'true');
+        overlayContent.innerHTML = '';
+        if (live) live.textContent = '';
         fromList = false;
-        sealPanels(function () { doClose(true); });
+        if (csList) {
+          csList.classList.add('is-open');
+          csList.setAttribute('aria-hidden', 'false');
+          var firstCard = csList.querySelector('.cs-list-card');
+          if (firstCard) firstCard.focus();
+        }
+        history.pushState({ mobileCsList: true }, '', '#work');
+        busy = false;
       });
     }
 

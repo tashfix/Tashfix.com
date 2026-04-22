@@ -57,7 +57,7 @@
   #zoom-out .zoomout__bg {
     background: linear-gradient(
       to bottom,
-      var(--color-beige, #f5f0e8) 0%,
+      #ffffff 0%,
       transparent 72%
     ) !important;
   }
