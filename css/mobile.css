@@ -505,17 +505,14 @@
 
 }
 
-/* ── "View all case studies" button — mobile only ─────────────── */
-.spotlight__view-all {
-  display: none; /* hidden by default; shown inside mobile media query below */
-}
-
+/* ── "View all case studies" button — mobile overrides ─────────── */
 @media (max-width: 768px) {
 
   .spotlight__view-all {
     display: flex;
     justify-content: center;
     padding: 2rem 1.25rem 0.5rem;
+    margin-top: 0;
   }
 
   .spotlight__view-all-btn {

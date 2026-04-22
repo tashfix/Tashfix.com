@@ -298,7 +298,7 @@
         var h1El = overlayContent.querySelector('h1');
         live.textContent = h1El ? 'Case study: ' + h1El.textContent.trim().slice(0, 60) : csKey;
       }
-      history.pushState({ mobileCs: csKey }, '', '#' + csKey);
+      history.pushState({ mobileCs: csKey }, '', '#work/' + csKey);
       overlay.classList.add('is-open');
       overlay.setAttribute('aria-hidden', 'false');
       busy = false;
@@ -382,7 +382,7 @@
          from the top of the case study. */
       if (overlay) overlay.scrollTop = 0;
 
-      history.pushState({ mobileCs: csKey }, '', '#' + csKey);
+      history.pushState({ mobileCs: csKey }, '', '#work/' + csKey);
     } catch (e) {
       bail();
       return;
