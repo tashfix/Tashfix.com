@@ -1085,6 +1085,10 @@
   .mobile-cs-overlay__content h1:focus,
   .mobile-cs-overlay__content h1:focus-visible { outline: none; }
 
+  /* iOS synthesises a mousemove after every tap, which triggers the desktop
+     custom cursor circle in face-morph.js and leaves it stranded on screen. */
+  .morph__cursor { display: none !important; }
+
 }
 
 /* ── Gallery: hide removed items ───────────────────────────── */
