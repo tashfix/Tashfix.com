@@ -273,7 +273,7 @@
   }
   function unlockScroll() {
     document.body.classList.remove('is-vault-open');
-    if (_themeMeta) _themeMeta.setAttribute('content', '#ffffff');
+    if (_themeMeta) _themeMeta.removeAttribute('content');
   }
 
   /* ── Open: list card tap → vault → case study ────────────── */
