@@ -237,48 +237,55 @@
     background:
       /* 1. Shine sweep — animated (200% wide) */
       linear-gradient(108deg,
-        transparent 28%, rgba(255,255,255,0.15) 50%, transparent 72%),
-      /* 2. Inner vertical accent — near seam */
+        transparent 28%, rgba(255,255,255,0.22) 47%, rgba(255,255,255,0.06) 54%, transparent 70%),
+      /* 2. Broad blue reflection — mid sweep */
+      radial-gradient(ellipse 130% 30% at 58% 50%,
+        rgba(41,121,255,0.26) 0%, rgba(20,90,230,0.12) 50%, transparent 100%),
+      /* 3. Broad blue reflection — upper */
+      radial-gradient(ellipse 110% 22% at 62% 28%,
+        rgba(60,140,255,0.18) 0%, rgba(30,110,240,0.07) 55%, transparent 100%),
+      /* 4. Inner vertical accent — near seam */
       linear-gradient(to right,
         transparent calc(76% - 1px),
         rgba(41,121,255,0.60) calc(76% - 1px),
-        rgba(145,202,255,0.80) 76%,
+        rgba(145,202,255,0.85) 76%,
         rgba(41,121,255,0.60) calc(76% + 1px),
         transparent calc(76% + 2px)),
-      /* 3. Outer vertical accent */
+      /* 5. Outer vertical accent */
       linear-gradient(to right,
         transparent calc(22% - 1px),
         rgba(41,121,255,0.26) calc(22% - 1px),
         rgba(105,168,255,0.36) 22%,
         rgba(41,121,255,0.26) calc(22% + 1px),
         transparent calc(22% + 2px)),
-      /* 4. Horizontal accent — upper */
+      /* 6. Horizontal accent — upper */
       linear-gradient(to bottom,
         transparent calc(27% - 1px),
         rgba(41,121,255,0.42) calc(27% - 1px),
-        rgba(130,188,255,0.58) 27%,
+        rgba(145,205,255,0.65) 27%,
         rgba(41,121,255,0.42) calc(27% + 1px),
         transparent calc(27% + 2px)),
-      /* 5. Horizontal accent — lower */
+      /* 7. Horizontal accent — lower */
       linear-gradient(to bottom,
         transparent calc(73% - 1px),
         rgba(41,121,255,0.42) calc(73% - 1px),
-        rgba(130,188,255,0.58) 73%,
+        rgba(145,205,255,0.65) 73%,
         rgba(41,121,255,0.42) calc(73% + 1px),
         transparent calc(73% + 2px)),
-      /* 6. Circuit nodes at accent intersections */
-      radial-gradient(circle 3px at 76% 27%, rgba(160,215,255,0.90) 0%, transparent 100%),
-      radial-gradient(circle 3px at 76% 73%, rgba(160,215,255,0.90) 0%, transparent 100%),
-      /* 7. Blue ambient glow */
+      /* 8. Circuit nodes at accent intersections */
+      radial-gradient(circle 3px at 76% 27%, rgba(185,230,255,0.95) 0%, transparent 100%),
+      radial-gradient(circle 3px at 76% 73%, rgba(185,230,255,0.95) 0%, transparent 100%),
+      /* 9. Blue ambient glow */
       radial-gradient(ellipse 80% 52% at 58% 50%,
-        rgba(30,100,255,0.06) 0%, transparent 72%),
-      /* 8. Metallic base — cool steel tint */
+        rgba(30,100,255,0.08) 0%, transparent 72%),
+      /* 10. Metallic base — cool chrome */
       linear-gradient(168deg,
-        #d4ddf0 0%, #8696b2 36%, #43505f 62%, #8696b2 80%, #d4ddf0 100%);
+        #cdd8ee 0%, #8292ae 34%, #3c4858 60%, #8292ae 80%, #cdd8ee 100%);
     background-size:
       200% 100%,
       100% 100%, 100% 100%, 100% 100%, 100% 100%,
-      100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      100% 100%, 100% 100%, 100% 100%, 100% 100%,
+      100% 100%, 100% 100%;
   }
 
   .mvault-panel--right {
@@ -288,48 +295,55 @@
     background:
       /* 1. Shine sweep — animated (200% wide) */
       linear-gradient(108deg,
-        transparent 28%, rgba(255,255,255,0.15) 50%, transparent 72%),
-      /* 2. Inner vertical accent — near seam */
+        transparent 28%, rgba(255,255,255,0.22) 47%, rgba(255,255,255,0.06) 54%, transparent 70%),
+      /* 2. Broad blue reflection — mid sweep */
+      radial-gradient(ellipse 130% 30% at 42% 50%,
+        rgba(41,121,255,0.26) 0%, rgba(20,90,230,0.12) 50%, transparent 100%),
+      /* 3. Broad blue reflection — upper */
+      radial-gradient(ellipse 110% 22% at 38% 28%,
+        rgba(60,140,255,0.18) 0%, rgba(30,110,240,0.07) 55%, transparent 100%),
+      /* 4. Inner vertical accent — near seam */
       linear-gradient(to right,
         transparent calc(24% - 2px),
         rgba(41,121,255,0.60) calc(24% - 1px),
-        rgba(145,202,255,0.80) 24%,
+        rgba(145,202,255,0.85) 24%,
         rgba(41,121,255,0.60) calc(24% + 1px),
         transparent calc(24% + 2px)),
-      /* 3. Outer vertical accent */
+      /* 5. Outer vertical accent */
       linear-gradient(to right,
         transparent calc(78% - 1px),
         rgba(41,121,255,0.26) calc(78% - 1px),
         rgba(105,168,255,0.36) 78%,
         rgba(41,121,255,0.26) calc(78% + 1px),
         transparent calc(78% + 2px)),
-      /* 4. Horizontal accent — upper */
+      /* 6. Horizontal accent — upper */
       linear-gradient(to bottom,
         transparent calc(27% - 1px),
         rgba(41,121,255,0.42) calc(27% - 1px),
-        rgba(130,188,255,0.58) 27%,
+        rgba(145,205,255,0.65) 27%,
         rgba(41,121,255,0.42) calc(27% + 1px),
         transparent calc(27% + 2px)),
-      /* 5. Horizontal accent — lower */
+      /* 7. Horizontal accent — lower */
       linear-gradient(to bottom,
         transparent calc(73% - 1px),
         rgba(41,121,255,0.42) calc(73% - 1px),
-        rgba(130,188,255,0.58) 73%,
+        rgba(145,205,255,0.65) 73%,
         rgba(41,121,255,0.42) calc(73% + 1px),
         transparent calc(73% + 2px)),
-      /* 6. Circuit nodes at accent intersections */
-      radial-gradient(circle 3px at 24% 27%, rgba(160,215,255,0.90) 0%, transparent 100%),
-      radial-gradient(circle 3px at 24% 73%, rgba(160,215,255,0.90) 0%, transparent 100%),
-      /* 7. Blue ambient glow */
+      /* 8. Circuit nodes at accent intersections */
+      radial-gradient(circle 3px at 24% 27%, rgba(185,230,255,0.95) 0%, transparent 100%),
+      radial-gradient(circle 3px at 24% 73%, rgba(185,230,255,0.95) 0%, transparent 100%),
+      /* 9. Blue ambient glow */
       radial-gradient(ellipse 80% 52% at 42% 50%,
-        rgba(30,100,255,0.06) 0%, transparent 72%),
-      /* 8. Metallic base — cool steel tint */
+        rgba(30,100,255,0.08) 0%, transparent 72%),
+      /* 10. Metallic base — cool chrome */
       linear-gradient(168deg,
-        #d4ddf0 0%, #8696b2 36%, #43505f 62%, #8696b2 80%, #d4ddf0 100%);
+        #cdd8ee 0%, #8292ae 34%, #3c4858 60%, #8292ae 80%, #cdd8ee 100%);
     background-size:
       200% 100%,
       100% 100%, 100% 100%, 100% 100%, 100% 100%,
-      100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      100% 100%, 100% 100%, 100% 100%, 100% 100%,
+      100% 100%, 100% 100%;
   }
 
   /* Seam highlight — blue glowing edge on both panels */
@@ -374,13 +388,22 @@
     font-weight: 600;
     font-size: clamp(96px, 32vw, 210px);
     line-height: 1;
-    color: rgba(38, 38, 38, 0.52);
+    /* Blue-tinted semi-transparent so panel's blue ambient bleeds through letter forms */
+    color: rgba(12, 30, 80, 0.40);
     text-shadow:
-      0  2px  4px rgba(255, 255, 255, 0.65),
-      0 -1px  2px rgba(0,   0,   0,   0.88),
-      1px  0  1px rgba(255, 255, 255, 0.20),
-     -1px  0  1px rgba(0,   0,   0,   0.36),
-      0    0 48px rgba(41, 121, 255, 0.22);
+      /* Groove top edge — blue-white specular */
+      0  3px  6px rgba(185, 225, 255, 0.95),
+      0  1px  2px rgba(210, 238, 255, 0.70),
+      /* Groove bottom — deep blue-black shadow */
+      0 -2px  4px rgba(0,    8,  50, 0.98),
+      /* Side edge highlights */
+      2px  0  3px rgba(150, 205, 255, 0.42),
+     -2px  0  2px rgba(0,    8,  45, 0.52),
+      /* Inner glow — groove catching blue ambient light */
+      0    0 12px rgba(70,  150, 255, 0.78),
+      0    0 28px rgba(41,  121, 255, 0.58),
+      0    0 55px rgba(30,  100, 240, 0.35),
+      0    0 90px rgba(20,   80, 220, 0.18);
     pointer-events: none;
     user-select: none;
     -webkit-user-select: none;
@@ -397,7 +420,7 @@
   }
 
   .mvault-panel.mvault--sealing {
-    background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
+    background-position: 100% 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0, 0 0;
     transition:
       transform 0.4s cubic-bezier(0.22, 1, 0.36, 1),
       background-position 0.5s ease;
