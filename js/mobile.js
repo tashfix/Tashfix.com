@@ -910,6 +910,86 @@
     obs.observe(section);
   }
 
+  /* ── Mobile scroll-reveal (spotlight cards / gallery / testimonials) ── */
+
+  function initScrollReveal() {
+    if (REDUCE_MOTION) return;
+    if (!window.IntersectionObserver) return;
+
+    function revealGroup(selector, initTransform, revealTransition, staggerMs, threshold) {
+      var els = Array.from(document.querySelectorAll(selector));
+      if (!els.length) return;
+
+      /* Set initial hidden state via inline styles so they always win over
+         any CSS-specificity-based reveal rules (e.g. spotlight is-visible). */
+      els.forEach(function(el) {
+        el.style.opacity = '0';
+        el.style.transform = initTransform;
+        el.style.willChange = 'opacity, transform';
+      });
+
+      var pendingEls = [];
+      var rafId = null;
+
+      var io = new IntersectionObserver(function(entries) {
+        entries.forEach(function(entry) {
+          if (!entry.isIntersecting) return;
+          io.unobserve(entry.target);
+          pendingEls.push(entry.target);
+        });
+        /* Batch within a single animation frame so elements arriving
+           in the same scroll tick stagger relative to each other. */
+        if (pendingEls.length && !rafId) {
+          rafId = requestAnimationFrame(function() {
+            var batch = pendingEls.splice(0);
+            batch.forEach(function(el, i) {
+              setTimeout(function() {
+                el.style.transition = revealTransition;
+                el.style.opacity = '1';
+                el.style.transform = 'none';
+                /* Release compositing hint once transition ends */
+                el.addEventListener('transitionend', function cleanup() {
+                  el.style.willChange = 'auto';
+                  el.removeEventListener('transitionend', cleanup);
+                });
+              }, i * staggerMs);
+            });
+            rafId = null;
+          });
+        }
+      }, { threshold: threshold, rootMargin: '0px 0px -48px 0px' });
+
+      els.forEach(function(el) { io.observe(el); });
+    }
+
+    /* Spotlight cards — slide up + fade */
+    revealGroup(
+      '#work-spotlight .spotlight__card',
+      'translateY(38px)',
+      'opacity 0.6s cubic-bezier(0.25,0.46,0.45,0.94), transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94)',
+      90,
+      0.08
+    );
+
+    /* Gallery items — scale-up + fade */
+    revealGroup(
+      '#hscroll-gallery .hscroll__item',
+      'scale(0.94) translateY(16px)',
+      'opacity 0.55s cubic-bezier(0.22,0.61,0.36,1), transform 0.55s cubic-bezier(0.22,0.61,0.36,1)',
+      70,
+      0.05
+    );
+
+    /* Testimonial items — slide in from left + fade */
+    revealGroup(
+      '#video-quotes .video-quotes__item:not([hidden])',
+      'translateX(-22px)',
+      'opacity 0.5s ease-out, transform 0.5s ease-out',
+      80,
+      0.1
+    );
+  }
+
   /* ── Boot ────────────────────────────────────────────────── */
 
   function init() {
@@ -924,6 +1004,7 @@
     initCsList();              /* builds list cards before wiring intercepts */
     initVaultIntercept();
     initCraftedEndSig();
+    initScrollReveal();        /* must run last so other inits have settled the DOM */
   }
 
   if (document.readyState === 'loading') {
