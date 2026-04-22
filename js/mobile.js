@@ -622,8 +622,8 @@
       }
       img.src = mobileSrc;
     }
-    swapSrc(flesh,  'assets/images/Portrait (mobile).png');
-    swapSrc(chrome, 'assets/images/metallic (mobile).png');
+    swapSrc(flesh,  'assets/images/Portrait (mobile).webp');
+    swapSrc(chrome, 'assets/images/metallic (mobile).webp');
 
     /* Morph plays as the hero scrolls away — top-to-bottom wipe,
        head first then neck → shoulders → torso.
