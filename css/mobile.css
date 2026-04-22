@@ -302,6 +302,7 @@
 @media (max-width: 768px) {
 
   .mobile-cs-overlay {
+    display: block; /* override the top-level display:none that hides this on desktop */
     position: fixed;
     inset: 0;
     min-height: 100dvh;
