@@ -123,12 +123,35 @@
   }
 
   /* Marquee spans full viewport width — break out of the 75vw hero-intro.
-     hero-intro starts at left: 1.25rem, so pull back by the same amount. */
+     hero-intro starts at left: 1.25rem, so pull back by the same amount.
+     Size scales proportionally: images and gap use vw units so they grow
+     with viewport width rather than hitting the desktop clamp minimum. */
   .morph__logo-marquee {
     overflow: hidden !important;
     width: 100vw !important;
     max-width: 100vw !important;
     margin-left: -1.25rem !important;
+    /* Vertical breathing room scales with the larger track */
+    margin-top: clamp(10px, 2.5vw, 16px) !important;
+    margin-bottom: clamp(14px, 3.5vw, 22px) !important;
+  }
+
+  /* Track: gap scales with viewport */
+  .morph__logo-marquee-track {
+    gap: clamp(28px, 8vw, 52px) !important;
+  }
+
+  /* Logo images: vw-relative so they fill the wider track proportionally */
+  .morph__logo-marquee-track img {
+    height: clamp(20px, 5.5vw, 38px) !important;
+  }
+
+  .morph__logo-marquee-track img[alt="Microsoft"] {
+    height: clamp(15px, 4vw, 28px) !important;
+  }
+
+  .morph__logo-marquee-track img[alt="Copilot"] {
+    height: clamp(16px, 4.3vw, 30px) !important;
   }
 
   /* Hero text scale — mirrors desktop's type hierarchy at 3/4 viewport width.
