@@ -401,12 +401,38 @@
 }
 
 
-/* ── Spotlight entry: hide "Back" button inside player ── */
-/* The back button is only meaningful when navigating within the player's
-   own grid. When the user arrived via a spotlight card, X is the only
-   exit — so the back button is suppressed. */
-.morph__player.spotlight-entry #cs-detail-back {
-  display: none !important;
+/* ── "View all case studies" CTA — desktop ── */
+.spotlight__view-all {
+  display: flex;
+  justify-content: center;
+  margin-top: 4rem;
+}
+
+.spotlight__view-all-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: var(--font-body, 'Inter', sans-serif);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--color-ink, #1a1a1a);
+  background: transparent;
+  border: 1px solid rgba(26, 26, 26, 0.22);
+  padding: 1.05rem 2.25rem;
+  cursor: pointer;
+  transition: background 0.25s ease, border-color 0.25s ease, color 0.25s ease;
+}
+
+.spotlight__view-all-btn:hover {
+  background: rgba(26, 26, 26, 0.04);
+  border-color: rgba(26, 26, 26, 0.6);
+}
+
+.spotlight__view-all-btn:focus-visible {
+  outline: 2px solid var(--color-ink, #1a1a1a);
+  outline-offset: 3px;
 }
 
 

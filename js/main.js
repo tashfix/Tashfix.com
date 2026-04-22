@@ -314,14 +314,5 @@ window.TashBrand = {
   document.fonts.ready.then(function() { draw(); });
 })();
 
-// Hero CTA — open case study selection screen
-(function() {
-  var cta = document.querySelector('.morph__hero-cta');
-  if (!cta) return;
-  cta.addEventListener('click', function(e) {
-    e.preventDefault();
-    if (window.TashBrand && window.TashBrand.togglePlayerExpanded) {
-      window.TashBrand.togglePlayerExpanded();
-    }
-  });
-})();
+// Hero CTA click is wired in js/face-morph.js (desktop: scroll to spotlight)
+// and js/mobile.js (mobile: scroll to spotlight via capture phase).

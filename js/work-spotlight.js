@@ -141,9 +141,6 @@
           // Remember where we came from so X returns here
           window.TashBrand._fromSpotlight = true;
           window.TashBrand._spotlightScrollY = window.pageYOffset;
-          // Mark the player so the back button stays hidden
-          var playerEl = document.getElementById('morph-player');
-          if (playerEl) playerEl.classList.add('spotlight-entry');
           // Hide grid immediately — we're going straight to case study detail, not selection screen
           var gridCanvas = document.getElementById('cs-grid-canvas');
           if (gridCanvas) gridCanvas.style.display = 'none';

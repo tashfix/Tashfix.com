@@ -794,8 +794,12 @@
             if (window.TashBrand.csGridStart) window.TashBrand.csGridStart();
             // Let scroll-fade logic check initial state
             window.dispatchEvent(new Event('player-expanded'));
-            // URL: push #work when player finishes expanding
-            if (!isRestoringFromHash) history.pushState({ view: 'work' }, '', '#work');
+            // URL: push #work when player finishes expanding.
+            // Skip when entering from a spotlight card — the inner case study
+            // click that follows will push #work/<csKey> as the actual destination.
+            if (!isRestoringFromHash && !(window.TashBrand && window.TashBrand._fromSpotlight)) {
+              history.pushState({ view: 'work' }, '', '#work');
+            }
           }, 620);
         }, 350);
 
@@ -956,9 +960,22 @@
     window.TashBrand.isPlayerExpanded = function() { return isExpanded; };
 
     // Wire hero CTA directly — guarantees binding regardless of load order
+    // Desktop: scroll to Selected Work section (mobile is handled in capture phase by mobile.js)
     var heroCta = document.querySelector('.morph__hero-cta');
     if (heroCta) {
       heroCta.addEventListener('click', function(e) {
+        e.preventDefault();
+        var spotlight = document.getElementById('work-spotlight');
+        if (spotlight) spotlight.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    }
+
+    // Desktop "View all case studies" button (below spotlight cards)
+    // Mobile uses the same button ID but its handler in mobile.js opens the vault list instead.
+    var csListTrigger = document.getElementById('mobile-cs-list-trigger');
+    if (csListTrigger) {
+      csListTrigger.addEventListener('click', function(e) {
+        if (window.innerWidth <= 768) return; // mobile handler takes over
         e.preventDefault();
         toggleExpanded();
       });
