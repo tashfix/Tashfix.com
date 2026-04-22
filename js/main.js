@@ -37,29 +37,16 @@ window.TashBrand = {
   var progressInterval;
   var loaderAnimId;
 
-  // Diagnostic trace — inspect via sessionStorage.getItem('tash_loader_trace').
-  // On iPhone Safari, connecting Web Inspector and reading this reveals which
-  // path completed the loader (normal progress, 4s fallback, or window error).
-  var trace = [];
-  function mark(step) {
-    try {
-      trace.push(step + '@' + Math.round(performance.now()) + 'ms');
-      sessionStorage.setItem('tash_loader_trace', JSON.stringify(trace));
-    } catch (e) {}
-  }
-
   // Lock scrolling via class, not inline styles — a single toggle unlocks
   // from any safety-net path (normal, fallback, error).
   window.scrollTo(0, 0);
   document.body.classList.add('is-loading');
-  mark('lock-applied');
 
   // Idempotent completion. Safe to call from the progress tick, the 4s
   // fallback, or the window error handler.
-  function completeLoader(reason) {
+  function completeLoader() {
     if (loaderDone) return;
     loaderDone = true;
-    mark(reason);
     if (progressInterval) clearInterval(progressInterval);
     if (overlay) overlay.classList.add('fade-out');
     setTimeout(function() {
@@ -71,18 +58,17 @@ window.TashBrand = {
       try { window.removeEventListener('resize', resize); } catch (e) {}
       document.body.classList.remove('is-loading');
       window.scrollTo(0, 0);
-      mark('unlock-complete');
     }, 350);
-    try { revealFaceMorph(); } catch (e) { mark('revealFaceMorph-threw'); }
+    try { revealFaceMorph(); } catch (e) {}
   }
 
   // Safety nets — registered before canvas setup so they survive if setup throws.
   setTimeout(function() {
-    if (!loaderDone) completeLoader('force-fallback-fired');
+    if (!loaderDone) completeLoader();
   }, 4000);
 
   window.addEventListener('error', function() {
-    if (!loaderDone) completeLoader('window-error-caught');
+    if (!loaderDone) completeLoader();
   });
 
   var canvas = document.getElementById('loader-canvas');
@@ -120,7 +106,6 @@ window.TashBrand = {
     progress++;
     if (progress >= 100) completeLoader('progress-100');
   }, 10);
-  mark('interval-started');
 
   function revealFaceMorph() {
     var player = document.getElementById('morph-player');

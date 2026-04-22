@@ -41,53 +41,7 @@
     csListClose    = document.getElementById('mobile-cs-list-close');
     csBackBtn      = document.getElementById('mobile-cs-back');
 
-    /* Log every class-list change on the case study overlay. If something
-       is silently removing .is-open after openVault adds it, the trace
-       will show exactly when and what the class list looked like. */
-    if (overlay && window.MutationObserver) {
-      new MutationObserver(function (mutations) {
-        mutations.forEach(function (m) {
-          if (m.type !== 'attributes' || m.attributeName !== 'class') return;
-          vmark('overlay-class:' + (overlay.className || '(none)'));
-        });
-      }).observe(overlay, { attributes: true, attributeFilter: ['class'] });
-    }
-    if (csList && window.MutationObserver) {
-      new MutationObserver(function (mutations) {
-        mutations.forEach(function (m) {
-          if (m.type !== 'attributes' || m.attributeName !== 'class') return;
-          vmark('csList-class:' + (csList.className || '(none)'));
-        });
-      }).observe(csList, { attributes: true, attributeFilter: ['class'] });
-    }
   }
-
-  /* ── Diagnostic trace ─────────────────────────────────────
-     Read via sessionStorage.getItem('tash_vault_trace') in Web Inspector
-     to see the exact sequence of calls. Trimmed to last 40 entries. */
-
-  var vtrace = [];
-  function vmark(step) {
-    try {
-      vtrace.push(step + '@' + Math.round(performance.now()) + 'ms');
-      if (vtrace.length > 40) vtrace.shift();
-      sessionStorage.setItem('tash_vault_trace', JSON.stringify(vtrace));
-    } catch (e) {}
-  }
-
-  /* Log every tap that lands anywhere on the page. Gives us the target
-     element's tag + id + class list so the next trace shows exactly
-     what the user tapped, even if no openVault/openCsList call followed. */
-  document.addEventListener('click', function (e) {
-    var t = e.target;
-    if (!t) return;
-    var tag = (t.tagName || '').toLowerCase();
-    var id  = t.id ? '#' + t.id : '';
-    var cls = (typeof t.className === 'string' && t.className) ? '.' + t.className.split(/\s+/).slice(0, 3).join('.') : '';
-    var card = t.closest && t.closest('.spotlight__card, .cs-list-card, #mobile-cs-list-trigger, #menu-btn, .morph__hero-cta');
-    var cardInfo = card ? (' closest=' + (card.id ? '#' + card.id : '.' + (card.className || '').toString().split(/\s+/)[0]) + (card.dataset && card.dataset.cs ? '[cs=' + card.dataset.cs + ']' : '')) : '';
-    vmark('click:' + tag + id + cls + cardInfo);
-  }, true);
 
   /* ── Panel helpers ─────────────────────────────────────────
      iOS Safari bug workaround: with `will-change: transform` on the
@@ -99,8 +53,7 @@
      background specular sweep and pointer-events state. */
 
   function sealPanels(cb) {
-    vmark('sealPanels-start');
-    if (!panelLeft || !panelRight) { vmark('sealPanels-missing-refs'); if (cb) cb(); return; }
+    if (!panelLeft || !panelRight) { if (cb) cb(); return; }
 
     /* Explicitly set the start position via inline style and clear any
        stale state class. Without this iOS sometimes starts the seal
@@ -131,16 +84,14 @@
       panelRight.classList.remove('mvault--sealing');
       panelLeft.classList.add('mvault--sealed');
       panelRight.classList.add('mvault--sealed');
-      vmark('sealPanels-sealed');
       if (cb) {
-        try { cb(); } catch (e) { vmark('sealPanels-cb-threw:' + (e && e.message)); }
+        try { cb(); } catch (e) {}
       }
     }, TIMINGS.close);
   }
 
   function splitPanels(cb) {
-    vmark('splitPanels-start');
-    if (!panelLeft || !panelRight) { vmark('splitPanels-missing-refs'); if (cb) cb(); return; }
+    if (!panelLeft || !panelRight) { if (cb) cb(); return; }
 
     /* Pin to the sealed position first so iOS has a concrete starting
        frame for the transition. */
@@ -160,8 +111,7 @@
     });
 
     if (cb) setTimeout(function () {
-      vmark('splitPanels-complete');
-      try { cb(); } catch (e) { vmark('splitPanels-cb-threw:' + (e && e.message)); }
+      try { cb(); } catch (e) {}
     }, TIMINGS.open);
   }
 
@@ -266,8 +216,7 @@
 
   /* Open the list overlay through the vault panels */
   function openCsList() {
-    vmark('openCsList-enter');
-    if (busy) { vmark('openCsList-busy-bail'); return; }
+    if (busy) return;
     busy = true;
     lockScroll(); /* prevents main page from scrolling while vault is open */
 
@@ -278,17 +227,13 @@
           csList.setAttribute('aria-hidden', 'false');
           var firstCard = csList.querySelector('.cs-list-card');
           if (firstCard) firstCard.focus();
-          vmark('openCsList-is-open-applied:items=' + (csListItems ? csListItems.children.length : 'noref'));
-        } else {
-          vmark('openCsList-no-csList-ref');
         }
         history.pushState({ mobileCsList: true }, '', '#work');
 
         setTimeout(function () {
-          splitPanels(function () { busy = false; vmark('openCsList-done'); });
+          splitPanels(function () { busy = false; });
         }, TIMINGS.hold);
       } catch (e) {
-        vmark('openCsList-threw:' + (e && e.message));
         splitPanels(function () { busy = false; unlockScroll(); });
       }
     });
@@ -296,8 +241,7 @@
 
   /* Close the list overlay through the vault panels — back to spotlight */
   function closeCsList() {
-    vmark('closeCsList-enter');
-    if (busy) { vmark('closeCsList-busy-bail'); return; }
+    if (busy) return;
     busy = true;
 
     sealPanels(function () {
@@ -311,7 +255,6 @@
         splitPanels(function () {
           busy = false;
           unlockScroll(); /* restore main-page scroll */
-          vmark('closeCsList-done');
           var trigger = document.getElementById('mobile-cs-list-trigger');
           if (trigger) trigger.focus();
         });
@@ -341,7 +284,6 @@
   function armOpenWatchdog() {
     if (openWatchdog) clearTimeout(openWatchdog);
     openWatchdog = setTimeout(function () {
-      vmark('openVault-watchdog-fired');
       if (panelLeft) panelLeft.classList.remove('mvault--sealing', 'mvault--sealed');
       if (panelRight) panelRight.classList.remove('mvault--sealing', 'mvault--sealed');
       if (overlay) { overlay.classList.remove('is-open'); overlay.setAttribute('aria-hidden', 'true'); }
@@ -355,8 +297,7 @@
   }
 
   function openVault(csKeyOrCard) {
-    vmark('openVault-enter');
-    if (busy) { vmark('openVault-busy-bail'); return; }
+    if (busy) return;
     busy = true;
     armOpenWatchdog();
     lockScroll(); /* prevent main-page scroll for the entire vaulted session */
@@ -370,7 +311,6 @@
       csKey   = domCard ? domCard.dataset.cs : '';
     }
     lastCard = domCard;
-    vmark('openVault-csKey:' + csKey);
 
     /* Hide list overlay behind sealing panels */
     if (csList && csList.classList.contains('is-open')) {
@@ -379,8 +319,7 @@
     }
 
     /* Safety net: if anything throws, force-release busy + scroll lock. */
-    function bail(where) {
-      vmark('openVault-bail:' + where);
+    function bail() {
       splitPanels(function () {
         busy = false;
         unlockScroll();
@@ -394,7 +333,7 @@
        chewing through a large subtree clone. Panels cover an opacity-0
        overlay while they slide in, so injecting now is invisible. */
     try {
-      if (!overlayContent || !overlay) { bail('missing-overlay-refs'); return; }
+      if (!overlayContent || !overlay) { bail(); return; }
 
       var source = document.querySelector('.morph__cs-detail-content[data-cs="' + csKey + '"]');
       overlayContent.innerHTML = '';
@@ -402,8 +341,6 @@
         var clone = source.cloneNode(true);
         clone.removeAttribute('style');
         overlayContent.appendChild(clone);
-      } else {
-        vmark('openVault-no-source:' + csKey);
       }
 
       if (csBackBtn) {
@@ -416,10 +353,8 @@
       if (overlay) overlay.scrollTop = 0;
 
       history.pushState({ mobileCs: csKey }, '', '#' + csKey);
-      vmark('openVault-content-preloaded');
     } catch (e) {
-      vmark('openVault-threw:' + (e && e.message));
-      bail('pre-inject-threw');
+      bail();
       return;
     }
 
@@ -437,14 +372,11 @@
           h1.setAttribute('tabindex', '-1');
           try { h1.focus({ preventScroll: true }); } catch (_e) { h1.focus(); }
         }
-        vmark('openVault-content-ready');
-
         setTimeout(function () {
-          splitPanels(function () { busy = false; disarmOpenWatchdog(); vmark('openVault-done'); });
+          splitPanels(function () { busy = false; disarmOpenWatchdog(); });
         }, TIMINGS.hold);
       } catch (e) {
-        vmark('openVault-threw:' + (e && e.message));
-        bail('caught-throw');
+        bail();
       }
     });
   }
@@ -480,7 +412,6 @@
         splitPanels(function () {
           busy = false;
           unlockScroll();
-          if (lastCard) lastCard.focus();
           history.replaceState(null, '', location.pathname + location.search);
         });
       }, TIMINGS.hold);

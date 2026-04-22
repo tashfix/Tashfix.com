@@ -449,6 +449,7 @@
 
   body.is-vault-open {
     overflow: hidden !important;
+    background: #0d0d0d;
     /* touch-action: none removed — overflow:hidden alone locks main-page
        scroll, and touch-action was breaking gesture recovery on iOS
        when the vault flow stalled. */
@@ -1078,17 +1079,11 @@
     -webkit-tap-highlight-color: transparent;
   }
 
-  #work-spotlight .spotlight__card:focus { outline: none; }
-  #work-spotlight .spotlight__card:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 4px;
-  }
+  #work-spotlight .spotlight__card:focus,
+  #work-spotlight .spotlight__card:focus-visible { outline: none; }
 
-  .mobile-cs-overlay__content h1:focus { outline: none; }
-  .mobile-cs-overlay__content h1:focus-visible {
-    outline: 2px solid currentColor;
-    outline-offset: 4px;
-  }
+  .mobile-cs-overlay__content h1:focus,
+  .mobile-cs-overlay__content h1:focus-visible { outline: none; }
 
 }
 
