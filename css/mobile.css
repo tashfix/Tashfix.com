@@ -75,14 +75,27 @@
   }
 
   /* Hero text: left-aligned at 75% of the viewport width.
-     Portrait peeks through on the right. */
+     Portrait peeks through on the right.
+     Anchor only from the bottom — face-morph.css's desktop rule sets
+     top:50% + translateY(10%), which makes the block shrink-anchor to
+     viewport centre. On iOS Safari with toolbars visible, 100dvh shrinks,
+     the CTA rides up, and the scroll hint (viewport-bottom-anchored) rides
+     up even more, so they collide. Pure bottom anchoring keeps the CTA at
+     a predictable offset regardless of dvh changes. */
   .morph__hero-intro {
+    top: auto !important;
+    transform: none !important;
     left: 1.25rem !important;
     right: auto !important;
-    bottom: calc(env(safe-area-inset-bottom, 0px) + 2rem) !important;
+    bottom: calc(env(safe-area-inset-bottom, 0px) + 4.5rem) !important;
     width: 75vw !important;
     padding: 0 !important;
     box-sizing: border-box !important;
+  }
+
+  /* Keep revealed state working after we disabled the desktop transform */
+  .morph__hero-intro.revealed {
+    transform: none !important;
   }
 
   /* Legibility gradient — cobalt sweep from the bottom, blends seamlessly
