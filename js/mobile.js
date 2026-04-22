@@ -701,6 +701,20 @@
     }, true /* capture — fires before face-morph.js toggleExpanded handler */);
   }
 
+  /* ── Spotlight: move pills into content column for horizontal layout ── */
+
+  function initSpotlightHorizontal() {
+    document.querySelectorAll('#work-spotlight .spotlight__card').forEach(function (card) {
+      var pills   = card.querySelector('.spotlight__pills');
+      var title   = card.querySelector('.spotlight__title');
+      var content = card.querySelector('.spotlight__content');
+      if (!pills || !title || !content) return;
+      /* Relocate pills from inside .spotlight__thumb → .spotlight__content,
+         positioned immediately after the title so the order is: title → pills → footer */
+      content.insertBefore(pills, title.nextSibling);
+    });
+  }
+
   /* ── Crafted-end signature draw animation ───────────────── */
 
   function initCraftedEndSig() {
@@ -729,7 +743,8 @@
     initTextScramble();
     initScrollHint();
     initHeroCta();
-    initCsList();        /* builds list cards before wiring intercepts */
+    initSpotlightHorizontal(); /* move pills before initVaultIntercept wires cards */
+    initCsList();              /* builds list cards before wiring intercepts */
     initVaultIntercept();
     initCraftedEndSig();
   }
