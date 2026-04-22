@@ -423,15 +423,13 @@
       return;
     }
 
+    /* Show the overlay before sealing so the case study content is
+       pre-painted and visible to the compositor when the panels slide. */
+    overlay.classList.add('is-open');
+    overlay.setAttribute('aria-hidden', 'false');
+
     sealPanels(function () {
       try {
-        /* Content is already in the overlay. Just reveal it — the
-           panels are at center covering the viewport, so the opacity
-           transition on .mobile-cs-overlay is hidden from the user
-           until the split reveals it. */
-        overlay.classList.add('is-open');
-        overlay.setAttribute('aria-hidden', 'false');
-
         var h1 = overlayContent.querySelector('h1');
         var title = h1 ? h1.textContent.trim().slice(0, 60) : csKey;
         if (live) live.textContent = 'Case study: ' + title;
@@ -787,7 +785,6 @@
   /* ── TextScramble section headers ───────────────────────────── */
 
   function initTextScramble() {
-    if (REDUCE_MOTION) return;
 
     /* vq-mobile-header__title is injected by initTestimonialHeader — that
        must run first (see boot order in init()). */

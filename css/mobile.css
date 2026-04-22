@@ -278,6 +278,14 @@
       background-position 0.5s ease;
   }
 
+  /* Explicit transition on the sealed state so splitPanels() has a
+     defined transition to fire from, independent of cascade fallback. */
+  .mvault-panel.mvault--sealed {
+    transition:
+      transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+      background-position 0.5s ease;
+  }
+
   /* Vault slide animation is core UX — intentionally not suppressed by
      prefers-reduced-motion. The seal→hold→split is how the user knows
      their tap registered and that a new surface is opening. */
@@ -1058,6 +1066,27 @@
     border-left: none !important;
     border-top: none !important;
     padding-top: 0 !important;
+  }
+
+  /* ── Focus ring suppression ────────────────────────────────────
+     iOS Safari treats programmatic .focus() as keyboard-equivalent for
+     :focus-visible, painting the UA blue ring on elements that receive
+     focus via JS. Suppress the visual ring for touch; keep :focus-visible
+     for genuine keyboard navigation. */
+  #work-spotlight .spotlight__card {
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  #work-spotlight .spotlight__card:focus { outline: none; }
+  #work-spotlight .spotlight__card:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
+  }
+
+  .mobile-cs-overlay__content h1:focus { outline: none; }
+  .mobile-cs-overlay__content h1:focus-visible {
+    outline: 2px solid currentColor;
+    outline-offset: 4px;
   }
 
 }
