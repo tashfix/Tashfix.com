@@ -40,6 +40,26 @@
     csListItems    = document.getElementById('mobile-cs-list-items');
     csListClose    = document.getElementById('mobile-cs-list-close');
     csBackBtn      = document.getElementById('mobile-cs-back');
+
+    /* Log every class-list change on the case study overlay. If something
+       is silently removing .is-open after openVault adds it, the trace
+       will show exactly when and what the class list looked like. */
+    if (overlay && window.MutationObserver) {
+      new MutationObserver(function (mutations) {
+        mutations.forEach(function (m) {
+          if (m.type !== 'attributes' || m.attributeName !== 'class') return;
+          vmark('overlay-class:' + (overlay.className || '(none)'));
+        });
+      }).observe(overlay, { attributes: true, attributeFilter: ['class'] });
+    }
+    if (csList && window.MutationObserver) {
+      new MutationObserver(function (mutations) {
+        mutations.forEach(function (m) {
+          if (m.type !== 'attributes' || m.attributeName !== 'class') return;
+          vmark('csList-class:' + (csList.className || '(none)'));
+        });
+      }).observe(csList, { attributes: true, attributeFilter: ['class'] });
+    }
   }
 
   /* ── Diagnostic trace ─────────────────────────────────────
@@ -236,7 +256,7 @@
         } else {
           vmark('openCsList-no-csList-ref');
         }
-        history.pushState({ mobileCsList: true }, '', '#/case-studies');
+        history.pushState({ mobileCsList: true }, '', '#work');
 
         setTimeout(function () {
           splitPanels(function () { busy = false; vmark('openCsList-done'); });
@@ -368,9 +388,14 @@
         var h1 = overlayContent.querySelector('h1');
         var title = h1 ? h1.textContent.trim().slice(0, 60) : csKey;
         if (live) live.textContent = 'Case study: ' + title;
-        if (h1) { h1.setAttribute('tabindex', '-1'); h1.focus(); }
+        if (h1) {
+          h1.setAttribute('tabindex', '-1');
+          /* preventScroll avoids iOS focus() triggering a scroll that
+             can conflict with body position:fixed while vault is open. */
+          try { h1.focus({ preventScroll: true }); } catch (_e) { h1.focus(); }
+        }
 
-        history.pushState({ mobileCs: csKey }, '', '#/case-studies/' + csKey);
+        history.pushState({ mobileCs: csKey }, '', '#' + csKey);
         vmark('openVault-content-ready');
 
         setTimeout(function () {
@@ -404,7 +429,7 @@
           var firstCard = csList.querySelector('.cs-list-card');
           if (firstCard) firstCard.focus();
         }
-        history.pushState({ mobileCsList: true }, '', '#/case-studies');
+        history.pushState({ mobileCsList: true }, '', '#work');
         splitPanels(function () { busy = false; });
       }, TIMINGS.hold);
     } else {
