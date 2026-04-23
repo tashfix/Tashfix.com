@@ -180,7 +180,13 @@
     letter-spacing: 0.22em !important;
   }
 
-  /* "View My Work" — black on cobalt gradient, scales with the headline */
+  /* "View My Work" — black on cobalt gradient, scales with the headline.
+     The parent .morph__hero-intro is anchored at left:1.25rem and width:75vw,
+     so auto-margin centering only centres within that box.
+     Strategy: position:relative + left pushes the element's left edge to
+     exactly 50vw from the viewport left (container-offset cancels out), then
+     translateX(-50%) pulls it back by half its own width → true screen centre.
+     white-space:nowrap locks it to one line regardless of font scaling. */
   .morph__hero-cta {
     background: #111111 !important;
     border-color: #111111 !important;
@@ -188,14 +194,10 @@
     font-size: clamp(13px, 2.65vw, 18px) !important;
     padding: clamp(13px, 2.2vw, 18px) clamp(22px, 3.8vw, 36px) !important;
     -webkit-tap-highlight-color: transparent;
-    display: block;
-    width: fit-content;
-    /* Container sits at left:1.25rem, so auto-centering within it drifts left.
-       Push left edge to true 50vw, then translateX(-50%) pulls it back by
-       half its own width — result: perfectly screen-centred. */
-    margin-left: calc(50vw - 1.25rem);
-    margin-right: 0;
-    transform: translateX(-50%);
+    position: relative !important;
+    left: calc(50vw - 1.25rem) !important;
+    transform: translateX(-50%) !important;
+    white-space: nowrap !important;
   }
 
   /* Logo marquee: invert to white so logos read on the cobalt gradient */
