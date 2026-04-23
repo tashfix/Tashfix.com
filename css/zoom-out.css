@@ -173,8 +173,8 @@
     mask-image: linear-gradient(to bottom, black 40%, transparent 82%);
   }
 
-  /* ── Beige-to-cobalt gradient on the background layer ──
-     Softens the beige → cobalt boundary before the JS animation even starts. */
+  /* ── White-to-cobalt gradient on the background layer ──
+     Softens the white → cobalt boundary before the JS animation even starts. */
   .zoomout__bg::after {
     content: '';
     position: absolute;

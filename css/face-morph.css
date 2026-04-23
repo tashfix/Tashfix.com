@@ -80,7 +80,7 @@
 
 /* ── Context-aware logo modifiers ── */
 
-/* Frosted glass backplate — beige sections */
+/* Frosted glass backplate — light sections */
 .site-logo--plate {
   background: rgba(255, 255, 255, 0.28);
   backdrop-filter: blur(12px) saturate(1.3);
@@ -1075,10 +1075,10 @@ body.player-expanded .morph__scroll-hint {
       rgba(255,255,255,0.40) 0%,
       rgba(255,255,255,0.08) 30%,
       transparent 65%),
-    /* Warm environment band — lower mid, picks up beige/amber UI */
+    /* Neutral environment band — lower mid, picks up white UI */
     radial-gradient(
       ellipse 110% 16% at calc(56% + var(--chrome-x) * 0.6) calc(62% + var(--chrome-y) * 0.4),
-      rgba(220,190,150,0.10) 0%,
+      rgba(220,225,230,0.08) 0%,
       transparent 42%),
     /* Cool environment band — upper surface, picks up cobalt/sky */
     radial-gradient(

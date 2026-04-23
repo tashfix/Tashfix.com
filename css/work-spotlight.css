@@ -5,7 +5,7 @@
    ═══════════════════════════════════════════════════════════ */
 
 #work-spotlight {
-  background: var(--color-offwhite, #f5f5f0);
+  background: var(--color-offwhite, #ffffff);
   position: relative;
   z-index: 10;
   margin-top: -2px;
