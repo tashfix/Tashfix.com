@@ -190,8 +190,12 @@
     -webkit-tap-highlight-color: transparent;
     display: block;
     width: fit-content;
-    margin-left: auto;
-    margin-right: auto;
+    /* Container sits at left:1.25rem, so auto-centering within it drifts left.
+       Push left edge to true 50vw, then translateX(-50%) pulls it back by
+       half its own width — result: perfectly screen-centred. */
+    margin-left: calc(50vw - 1.25rem);
+    margin-right: 0;
+    transform: translateX(-50%);
   }
 
   /* Logo marquee: invert to white so logos read on the cobalt gradient */
