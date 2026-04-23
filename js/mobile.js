@@ -957,7 +957,7 @@
             rafId = null;
           });
         }
-      }, { threshold: threshold, rootMargin: '0px 0px -48px 0px' });
+      }, { threshold: threshold, rootMargin: '0px 0px -18% 0px' });
 
       els.forEach(function(el) { io.observe(el); });
     }
